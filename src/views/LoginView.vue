@@ -22,6 +22,7 @@ const login = async () => {
 </script>
 
 <template>
+
   <form action="" method="post" @submit.prevent="login">
     <div class="formgroup">
       <label for="">E-Mail</label>
@@ -34,5 +35,19 @@ const login = async () => {
     </div>
 
     <button type="submit">Login</button>
+ 
+    <img src="" alt="">
+
   </form>
 </template>
+
+<style>
+
+body {
+  background-image: url('../assets/bg.svg');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+</style>
