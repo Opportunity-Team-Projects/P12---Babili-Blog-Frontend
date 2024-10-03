@@ -37,7 +37,7 @@
     left: 0;
     right: 0;
     bottom: 0;
-    background: linear-gradient(90deg, rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, 0.6) 65%, rgba(0, 0, 0, 0.8) 75%, #000000 100%);
+    background: linear-gradient(90deg, rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, 0.6) 65%, rgba(0, 0, 0, 0.8) 75%, #000000 85%);
     display: flex;
     justify-content: flex-end;
   }
