@@ -139,4 +139,18 @@ onMounted(fetchAllPosts);
   transition: color 0.3s ease;
 }
 
+@media screen and (max-width: 768px) {
+.post-container {
+  margin-top: 25px;
+  margin-left: 25px;
+  margin-right: 25px;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-around;
+  padding: 20px;
+}
+
+
+}
+
 </style>
