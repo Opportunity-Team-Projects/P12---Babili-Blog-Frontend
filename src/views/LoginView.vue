@@ -27,17 +27,18 @@ const login = async () => {
     
     
   <div class="container">  
-    
+    <div class="a">
     <div class="header">
       <div class="logo">
         <img src="../assets/Nexus0.jpg" alt="Das Logo" class="logo">
       </div>
+     
       <div>
         <p class="without-logging-in">Continue without logging in?</p>
       </div>
     </div>
-    
-    <div>
+    </div>
+    <div class="text-container">
       <H1>Tech & Game Nexus</H1>
     
       <div class="text">
@@ -49,15 +50,18 @@ const login = async () => {
     
     <div class="login-container">
       <h2>Login</h2>
-      <div class="formgroup">
-        <label class="email" for="">E-Mail</label>
-        <input class="placeholder" type="email" name="email" v-model="user.email" />
-      </div>
+      
+        <div>
+          <div class="formgroup">
+            <label class="email" for="">E-Mail</label>
+            <input class="placeholder" type="email" name="email" v-model="user.email" />
+          </div>
 
-      <div class="formgroup">
-        <label class="email" for="">Passwort</label>
-        <input class="placeholder" type="password" name="password" v-model="user.password" />
-      </div>
+          <div class="formgroup">
+            <label class="email" for="">Passwort</label>
+            <input class="placeholder" type="password" name="password" v-model="user.password" />
+          </div>
+        </div>  
     </div>
 <div>
     <div class="sign-up-container">
@@ -89,6 +93,122 @@ body {
   background-position: center;
   background-repeat: no-repeat;
 }
+
+@media (max-width: 767px) {
+  
+  .logo{
+    width: 106px;
+    height: 64px;
+    border-radius: 40px;
+    margin-left: 15%;
+    
+  }
+  .header{
+    display: flex;
+    flex-direction: column;
+    margin-top: 5%;
+    color: #FFFF;
+  }
+  .a{
+    display: flex;
+    justify-content: center;
+  }
+  h1{
+    color: #D7A8FC;
+    size: 32px;
+    display: flex;
+    justify-content: center;
+    font-size: 32px;
+    padding-top: 5%;
+    padding-bottom: 2%;
+  }
+  
+  
+  .text{
+    color: #FFFF;
+    padding-left: 12%;
+    padding-right: 10%;
+    font-size: 24px;
+  }
+  h2{
+    padding-top: 5%;
+    color: #FFFF;
+    font-size: 24px;
+    display: flex;
+    justify-content: center;
+  }
+  .formgroup{
+  display: flex;
+  flex-direction: column;
+  color: #FFFF;
+  margin-left: 10%;
+  margin-right: 10%;
+  margin-top: 2%;
+  }
+  .email{
+  font-size: 20px;
+  margin-bottom: 5px;
+  }
+  .placeholder{
+  padding-left: 2%;
+  }
+  .sign-up-container{
+  display: flex;
+  flex-direction: row;
+  margin-left: 10%;
+  margin-right: 10%;
+  margin-top: 2%;
+  
+}
+.sign-up{
+  color: #FFFF;
+  font-size: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.login-one-container{
+  font-size: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-left: 10%;
+}
+.sign-button{
+  width: 107px;
+  height: 34px;
+  font-size: 20px;
+  color: #FFFF;
+  background-color: black;
+  border-radius: 10px;
+}
+.login-button{
+  width: 107px;
+  height: 34px;
+  background-color: #D7A8FC;
+  border-radius: 10px;
+  color: #FFFF;
+  font-size: 20px;
+}
+.footer{
+        color: #FFFF;
+        display: flex;
+        justify-content: center;
+        bottom: 15px;
+        position: fixed;
+        width: 100%;
+        font-size: 16px;
+}
+
+
+
+
+
+}
+
+
+
+@media (min-width: 768px) {
 .header{
   display: flex;
   flex-direction: row;
@@ -144,9 +264,7 @@ h2{
 }
 .placeholder{
   width: 400px;
-  height: 43px;
-  border-radius: 10px;
-  padding-left: 20px;
+  padding-left: 10px;
 
 }
 .sign-up-container{
@@ -198,6 +316,10 @@ h2{
         width: 100%;
         font-size: 16px;
 }
+}
+
+
+
 
 
 </style>
