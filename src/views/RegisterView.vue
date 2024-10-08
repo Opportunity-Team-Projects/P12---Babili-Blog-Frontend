@@ -34,7 +34,7 @@ const handleRegister = async () => {
 <template>
 <main>
     
-    
+  <div class="register-container">
     <form @submit.prevent="handleRegister">
         
         
@@ -61,51 +61,150 @@ const handleRegister = async () => {
 
     <div class="container-regist">
         <div class="form-group">
-            <label for="name">Name</label>
+            <label for="name">Name:</label>
             <input class="placholder" type="text" id="name" name="name" v-model="name" required>
         </div>
 
         <div class="form-group">
-            <label for="email">E-mail</label>
+            <label for="email">E-mail:</label>
             <input class="placholder" type="email" id="email" name="email" v-model="email" required>
         </div>
 
         <div class="form-group">
-            <label for="password">Password</label>
+            <label for="password">Password:</label>
             <input class="placholder" type="password" id="password" name="password" v-model="password" required>
         </div>
 
         <div class="form-group">
-            <label for="password_confirmation">Password</label>
+            <label for="password_confirmation">Confirm password:</label>
             <input class="placholder" type="password" id="password_confirmation" name="password_confirmation" v-model="password_confirmation" required>
         </div>
-    </div>
-        
-        <button type="submit">Register</button>
-    </form>
+     
 
-    <div class="footer">
-        <p>© 2024 Tech & Game Nexus       Terms</p>
-    </div>
     
+      <div>
+        <p>Already have an account?</p>
+      </div> 
+
+      <div class="button-container"> 
+        <RouterLink to="/register" v-if="!authUser"><button class="login-button">Login</button></RouterLink>
+        <button class="button" type="submit">Sign Up</button>
+      </div> 
+      
+      <div class="policy">
+        <p>By signing up I accept the Terms of Service and the Privacy Policy.</p>
+      </div>
+    
+    </div> 
+    
+  </form>
+    <div>
+      <div class="footer">
+        <p>© 2024 Tech & Game Nexus       Terms</p>
+      </div>
+    </div>
+  </div>   
 
 </main>
 </template>
 
 <style>
+
+
 body {
   background-image: url('../assets/bg.svg');
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
 }
+@media (max-width: 767px){
+    .register-container{
+     margin-left: 7%; 
+     color: #FFFF;
+    }  
+
+    .logo{
+      margin-top: 5%;
+      margin-left: 5%;
+      
+      width: 106px;
+      height: 64px;
+      border-radius: 40px;
+    }
+    .without-logging-in{
+      padding-top: 3%;
+      
+    }
+    h1{
+      color: #D7A8FC;
+      padding-top: 5%;
+      font-size: 32px;
+    }
+    .text{
+      padding-top: 5;
+      color: #FFFF;
+      width: 352px;
+      font-size: 24px;
+    }
+    .container-regist{
+      display: flex;
+      flex-direction: column;
+      color: #FFFF;
+      margin-right: 5%;
+      gap: 10px;
+    }
+    .form-group{
+      display: flex;
+      flex-direction: column;
+    }
+    .placholder{
+      width: 379px;
+      height: 43px;
+      border-radius: 10px;
+      padding-left: 15px;
+    }
+    .footer{
+        color: #FFFF;
+        display: flex;
+        justify-content: center;
+        bottom: 15px;
+        position: fixed;
+        width: 100%;
+        font-size: 16px;
+    }
+    .button{
+        height: 34px;
+        width: 107px;
+        background-color: #D7A8FC;
+        border-radius: 10px;
+        color: #FFFF;
+        margin-left: 170px;
+    }
+    .login-button{
+        width: 107px;
+        height: 34px;
+        font-size: 20px;
+        color: #FFFF;
+        background-color: black;
+        border-radius: 10px;
+    }
+    
+
+
+}
+
+
 @media (min-width: 768px) {
-.header{
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-  margin-right: 117px;
-  padding-top: 5%;
+  .register-container{
+      margin-left: 117px;
+  
+}
+  .header{
+      display: flex;
+      flex-direction: row;
+      justify-content: space-between;
+      margin-right: 117px;
+      padding-top: 5%;
 }
 .without-logging-in{
   color: #FFFF;
@@ -135,10 +234,18 @@ h1{
     color: #FFFF;
     width: 379px;
     height: 269px;
+    padding-top: 30px;
+    gap: 10px;
 }
 .form-group{
     display: flex;
     flex-direction: column;
+}
+.placholder{
+  width: 379px;
+  height: 43px;
+  border-radius: 10px;
+  padding-left: 15px;
 }
 .footer{
         color: #FFFF;
@@ -149,6 +256,35 @@ h1{
         width: 100%;
         font-size: 16px;
 }
+.button-container{
+        display: flex;
+        
+        
+        /* justify-content: space-between; */
+
+}
+.button{
+        height: 34px;
+        width: 107px;
+        background-color: #D7A8FC;
+        border-radius: 10px;
+        color: #FFFF;
+        margin-left: 170px;
+}
+.login-button{
+  width: 107px;
+  height: 34px;
+  font-size: 20px;
+  color: #FFFF;
+  background-color: black;
+  border-radius: 10px;
+}
+.policy{
+  padding-top: 10px;
+}
+
+
+
 
 }
 </style>
