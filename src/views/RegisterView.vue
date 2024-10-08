@@ -87,7 +87,7 @@ const handleRegister = async () => {
       </div> 
 
       <div class="button-container"> 
-        <RouterLink to="/register" v-if="!authUser"><button class="login-button">Login</button></RouterLink>
+        <RouterLink to="/login" v-if="!authUser"><button class="login-button">Login</button></RouterLink>
         <button class="button" type="submit">Sign Up</button>
       </div> 
       
