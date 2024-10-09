@@ -25,12 +25,15 @@
   
   <style scoped>
   .app-header {
+    z-index: 1002;
+    position: sticky;
     height: 84px;
     display: flex;
     align-items: center;
     justify-content: space-between;
     padding: 0 20px;
-    background-color: #f0f0f0;
+    background-color: #0E1217;
+    box-shadow: 0 -1px 5px rgba(255, 255, 255, 0.3);
   }
   
   .header-left, .header-center, .header-right {
@@ -40,7 +43,7 @@
   
   .logo-placeholder {
     padding: 10px 20px;
-    background-color: #ddd;
+    background-color: white;
     border: none;
     border-radius: 5px;
     cursor: pointer;
@@ -74,7 +77,7 @@
   .profile-icon {
     width: 40px;
     height: 40px;
-    background-color: #ddd;
+    background-color: white;
     border-radius: 50%;
     display: flex;
     justify-content: center;

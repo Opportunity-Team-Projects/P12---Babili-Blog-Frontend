@@ -1,31 +1,33 @@
 <template>
-  <div class="app-container">
-    <!-- Sidebar-Komponente mit Event-Listener für das Toggle-Event -->
-    <Sidebar @toggle="handleToggle" />
-    
-    <!-- Hauptinhalt, der sich basierend auf dem Sidebar-Zustand anpasst -->
-    <div :class="['main-content', { 'collapsed': isSidebarCollapsed }]">
-      <HeaderMain />
-      
-      <div class="post-container">
-        <!-- Korrekt verschachtelter v-for-Loop -->
-        <div v-for="post in posts" :key="post.id" class="post-card">
-          <div class="post-header">
-            <div class="profile-placeholder">
-              <i class="fas fa-user"></i>
-            </div>
-            <h2 class="post-title">{{ post.contentTitle }}</h2>
+  <HeaderMain />
+
+  <!-- Sidebar-Komponente mit Event-Listener für das Toggle-Event -->
+  <Sidebar @toggle="handleToggle" :collapsed="isSidebarCollapsed" />
+
+  <!-- Überlagerung, die erscheint, wenn die Sidebar geöffnet ist -->
+  <div v-if="!isSidebarCollapsed" class="overlay" @click="handleToggle(true)"></div>
+
+  <!-- Hauptinhalt -->
+  <div class="main-content">
+    <div class="post-container">
+      <div v-for="post in posts" :key="post.id" class="post-card">
+        <div class="post-header">
+          <div class="profile-placeholder">
+            <i class="fas fa-user"></i>
           </div>
-          <div class="post-image-placeholder">
-            <i class="fas fa-image"></i>
+          <h2 class="post-title">{{ post.contentTitle }}</h2>
+        </div>
+        <div class="post-image-placeholder">
+          <i class="fas fa-image"></i>
+        </div>
+        <p class="post-author">by {{ post.user ? post.user.name : 'Unknown' }}</p>
+        <p class="post-date">{{ formatDate(post.created_at) }}</p>
+        <div class="post-actions">
+          <div class="icon-left">
+          <i class="fas fa-heart action-icon"></i>
+          <i class="fas fa-comment action-icon"></i>
           </div>
-          <p class="post-author">by {{ post.user ? post.user.name : 'Unknown' }}</p>
-          <p class="post-date">{{ formatDate(post.created_at) }}</p>
-          <div class="post-actions">
-            <i class="fas fa-heart action-icon"></i>
-            <i class="fas fa-comment action-icon"></i>
-            <i class="fas fa-bookmark action-icon"></i>
-          </div>
+          <i class="fas fa-bookmark action-icon"></i>
         </div>
       </div>
     </div>
@@ -70,43 +72,47 @@ const handleToggle = (collapsed) => {
 </script>
 
 <style scoped>
+
 .app-container {
-  display: flex;
+  position: relative;
 }
 
-/* Hauptinhalt mit dynamischer Anpassung basierend auf dem Sidebar-Zustand */
 .main-content {
-  margin-left: 250px; /* Breite der Sidebar */
+  z-index: 1; 
   width: 100%;
-  transition: margin-left 0.3s ease;
+  transition: all 0.3s ease;
+  padding: 20px; 
+  background-color: #0E1217;
+  color: white;
 }
 
-.main-content.collapsed {
-  margin-left: 80px; /* Breite der eingeklappten Sidebar */
+
+.overlay {
+  position: fixed;
+
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1000; /* Unterhalb der Sidebar */
+  transition: opacity 0.3s ease;
 }
 
-@media screen and (max-width: 768px) {
-  .main-content {
-    margin-left: 80px;
-  }
 
-  .main-content.collapsed {
-    margin-left: 0;
-  }
-}
-
-/* Zusätzliche Styles für das Layout */
 .post-container {
+  margin-left: 101px;
+  margin-right: 101px;
   margin-top: 20px;
   display: flex;
+  justify-content: space-between;
   flex-wrap: wrap;
   gap: 20px;
   padding: 20px;
+  color: white;
 }
 
 .post-card {
   margin-top: 32px;
-  background-color: #F9F9F9; /* Entfernt die doppelte Definition */
+  background-color: #1C1F26;
   border-radius: 8px;
   padding: 15px;
   width: 300px;
@@ -124,12 +130,13 @@ const handleToggle = (collapsed) => {
   width: 40px;
   height: 40px;
   border-radius: 50%;
-  background-color: #ddd;
+  background-color: white;
+  border-color: black;
   margin-right: 10px;
   display: flex;
   justify-content: center;
   align-items: center;
-  color: #888;
+  color: black;
   margin-bottom: 12px;
 }
 
@@ -144,47 +151,59 @@ const handleToggle = (collapsed) => {
   line-height: 1.3em;
   height: 3.9em; 
   margin-bottom: 8px;
+  color: white;
 }
 
 .post-image-placeholder {
   width: 100%;
   height: 150px;
-  background-color: #eee;
+  background-color: white;
   margin-bottom: 10px;
   display: flex;
   justify-content: center;
   align-items: center;
   font-size: 3em;
-  color: #888;
+  color: rgba(0, 0, 0, 0.699);
 }
 
 .post-author{ 
   margin-top: 5px;
   font-size: 0.9em;
-  color: #666;
+  color: white;
 }
 .post-date {
   font-size: 0.9em;
-  color: #666;
+  color: white;
 }
 
 .post-actions {
   display: flex;
   justify-content: space-between;
   margin-top: auto;
+  gap: 10px;
   padding-top: 10px;
   border-top: 1px solid #eee;
+  color: white;
 }
+.post-actions .action-icon:not(:last-child) {
+  margin-right: 10px; /* Abstand nach rechts, außer beim letzten Icon */
+}
+
+
 
 .action-icon {
   font-size: 1.2em;
   cursor: pointer;
-  color: #888;
+  color: white;
   transition: color 0.3s ease;
-}
+  padding-right: 2px;
+  padding-left: 2px;
+  transition: transform 0.3s ease;}
 
 .action-icon:hover {
-  color: #555;
+  color: rgba(255, 255, 255, 0.918);
+  transform: scale(1.1);
+  
 }
 
 @media screen and (max-width: 768px) {

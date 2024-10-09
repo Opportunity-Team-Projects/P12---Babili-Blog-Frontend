@@ -1,143 +1,193 @@
-<!-- src/components/Sidebar.vue -->
 <template>
-    <div :class="['sidebar', { collapsed }]">
-      <!-- Toggle-Button als einfacher Button -->
-      <button class="toggle-button" @click="toggleSidebar">
-        {{ collapsed ? '>' : '<' }}
-      </button>
-      
-      <ul class="menu">
-        <li v-for="item in menuItems" :key="item.name" class="menu-item">
-          <!-- Platzhalter für Icons (können später durch tatsächliche Icons ersetzt werden) -->
-          <span class="menu-icon">🔹</span>
-          <span v-if="!collapsed" class="menu-text">{{ item.name }}</span>
+  <div :class="['sidebar', { collapsed: isCollapsed }]">
+    <button class="toggle-button" @click="toggleSidebar">
+      <span class="triangle" :class="{ 'rotated': !isCollapsed }"></span>
+    </button>
+    
+    <div class="sidebar-content">
+      <ul class="menu main-menu">
+        <li v-for="item in mainMenuItems" :key="item.name" class="menu-item">
+          <span class="menu-icon">
+            <i :class="item.icon"></i>
+          </span>
+          <span v-if="!isCollapsed" class="menu-text">{{ item.name }}</span>
+        </li>
+      </ul>
+
+      <ul class="menu bottom-menu">
+        <li v-for="item in bottomMenuItems" :key="item.name" class="menu-item">
+          <span class="menu-icon">
+            <i :class="item.icon"></i>
+          </span>
+          <span v-if="!isCollapsed" class="menu-text">{{ item.name }}</span>
         </li>
       </ul>
     </div>
-  </template>
-  
-  <script setup>
-  import { ref, defineEmits } from 'vue';
-  
-  // Emit-Funktion definieren, um Events nach außen zu senden
-  const emit = defineEmits(['toggle']);
-  
-  // Zustand der Sidebar (ausgeklappt oder eingeklappt)
-  const collapsed = ref(false);
-  
-  // Menüelemente mit Namen und Platzhalter-Icons
-  const menuItems = [
-    { name: 'My Feed' },
-    { name: 'Custom Feed' },
-    { name: 'My Bookmarks' },
-    { name: 'My Posts' },
-    { name: 'Explore All' },
-    { name: 'Contact' },
-    { name: 'Terms' },
-    { name: 'Logout' },
-  ];
-  
-  // Funktion zum Umschalten der Sidebar
-  const toggleSidebar = () => {
-    collapsed.value = !collapsed.value;
-    emit('toggle', collapsed.value); // Zustand nach außen senden
-  };
-  </script>
-  
-  <style scoped>
+  </div>
+</template>
+
+<script setup>
+import { ref, defineEmits, watch } from 'vue';
+
+const emit = defineEmits(['toggle']);
+
+const props = defineProps({
+  collapsed: {
+    type: Boolean,
+    default: true
+  }
+});
+
+const isCollapsed = ref(props.collapsed);
+
+watch(() => props.collapsed, (newVal) => {
+  isCollapsed.value = newVal;
+});
+
+const mainMenuItems = [
+  { name: 'My Feed', icon: 'fas fa-home' },
+  { name: 'Custom Feed', icon: 'fas fa-list' },
+  { name: 'My Bookmarks', icon: 'fas fa-bookmark' },
+  { name: 'My Posts', icon: 'fas fa-edit' },
+  { name: 'Explore All', icon: 'fas fa-compass' },
+  { name: 'Contact', icon: 'fas fa-envelope' },
+];
+
+const bottomMenuItems = [
+  { name: 'Terms', icon: 'fas fa-file-contract' },
+  { name: 'Logout', icon: 'fas fa-sign-out-alt' },
+];
+
+const toggleSidebar = () => {
+  isCollapsed.value = !isCollapsed.value;
+  emit('toggle', isCollapsed.value);
+};
+</script>
+
+<style scoped>
+.sidebar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 100vh;
+  width: 250px;  
+  background-color: #0E1217;
+  color: white;
+  transition: width 0.3s ease, transform 0.3s ease;
+  overflow-x: hidden;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  z-index: 1001;
+  box-shadow: 0 -1px 1px rgba(255, 255, 255, 0.3);
+}
+
+.sidebar.collapsed {
+  width: 60px; 
+}
+
+.sidebar-content {  
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: 100%;
+}
+
+.toggle-button {
+  position: absolute;
+  top: 100px;
+  right: -10px;
+  padding: 0;
+  margin-right: 10px;
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transition: transform 0.3s ease;
+  z-index: 1002; 
+  background-color: transparent; 
+  border: none; 
+}
+
+.toggle-button:hover {
+  transform: scale(1.1); 
+}
+
+.triangle {
+  width: 0;
+  height: 0;
+  padding: 0;
+background-color: #0E1217;
+  border-top: 12px solid transparent;
+  border-bottom: 12px solid transparent;
+  border-left: 20px solid violet;
+  transition: transform 0.3s ease;
+}
+
+.triangle.rotated {
+  transform: rotate(180deg);
+}
+
+.menu {
+  display: flex;
+  flex-direction: column;
+  list-style: none;
+  padding: 0;
+  width: 100%;
+  margin: 0;
+}
+
+.main-menu {
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.bottom-menu {
+
+  box-shadow: 0 -1px 5px rgba(255, 255, 255, 0.3);
+  padding-top: 10px;
+}
+
+.menu-item {
+  width: 100%;
+  padding: 15px 20px;
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.menu-item:hover {
+  background-color: rgba(151, 64, 151, 0.822);
+}
+
+.menu-icon {
+  margin-right: 15px;
+  min-width: 20px;
+  text-align: center;
+  font-size: 1.2em;
+  color: violet;
+}
+
+.menu-text {
+  white-space: nowrap;
+}
+
+@media screen and (max-width: 768px) {
   .sidebar {
-    position: fixed;
-    top: 0;
-    left: 0;
-    height: 100vh;
-    width: 250px;
-    background-color: #2c3e50;
-    color: #ecf0f1;
-    transition: width 0.3s ease;
-    overflow: hidden;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
+    width: 200px;
   }
-  
   .sidebar.collapsed {
-    width: 80px;
+    width: 60px;
   }
-  
   .toggle-button {
-    margin: 20px 0;
-    cursor: pointer;
-    font-size: 1.2em;
-    color: #ecf0f1;
-    background: none;
-    border: none;
-    outline: none;
-    transition: transform 0.3s ease;
+    right: -15px;
+    background-color: white;
+    padding: 5px;
+    border-radius: 50%;
+    box-shadow: 2px 0 5px rgba(0,0,0,0.1);
   }
-  
-  /* Optional: Drehung des Buttons basierend auf dem Zustand */
-  .toggle-button:hover {
-    transform: scale(1.1);
-  }
-  
-  .menu {
-    list-style: none;
-    padding: 0;
-    width: 100%;
-  }
-  
-  .menu-item {
-    width: 100%;
-    padding: 15px 20px;
-    display: flex;
-    align-items: center;
-    cursor: pointer;
-    transition: background 0.2s ease;
-  }
-  
-  .menu-item:hover {
-    background-color: #34495e;
-  }
-  
-  .menu-icon {
-    margin-right: 15px;
-    min-width: 20px;
-    text-align: center;
-    font-size: 1.2em;
-  }
-  
-  .sidebar.collapsed .menu-icon {
-    margin-right: 0;
-  }
-  
-  .menu-text {
-    white-space: nowrap;
-  }
-  
-  .sidebar.collapsed .menu-text {
-    display: none;
-  }
-  
-  @media screen and (max-width: 768px) {
-    .sidebar {
-      width: 80px;
-    }
-  
-    .sidebar.collapsed {
-      width: 0;
-    }
-  
-    .toggle-button {
-      margin: 10px 0;
-    }
-  
-    .menu-item {
-      padding: 10px 15px;
-    }
-  
-    .menu-item {
-      justify-content: center;
-    }
-  }
-  </style>
-  
+}
+</style>
