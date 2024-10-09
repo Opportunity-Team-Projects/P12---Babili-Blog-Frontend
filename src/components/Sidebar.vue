@@ -117,7 +117,7 @@ const toggleSidebar = () => {
   width: 0;
   height: 0;
   padding: 0;
-background-color: #0E1217;
+  background-color: #0E1217;
   border-top: 12px solid transparent;
   border-bottom: 12px solid transparent;
   border-left: 20px solid violet;
