@@ -2,7 +2,7 @@
   <HeaderMain />
 
   <!-- Sidebar-Komponente mit Event-Listener für das Toggle-Event -->
-  <Sidebar @toggle="handleToggle" :collapsed="isSidebarCollapsed" />
+  <Sidebar :collapsed="true" @toggle="handleToggle" />
 
   <!-- Überlagerung, die erscheint, wenn die Sidebar geöffnet ist -->
   <div v-if="!isSidebarCollapsed" class="overlay" @click="handleToggle(true)"></div>
@@ -43,6 +43,12 @@ import Sidebar from '@/components/Sidebar.vue';
 // Reaktive Variable für die Beiträge
 const posts = ref([]);
 
+const isSidebarCollapsed = ref(true);
+
+const handleToggle = (collapsed) => {
+  isSidebarCollapsed.value = collapsed;
+};
+
 // Funktion zum Abrufen aller Beiträge
 const fetchAllPosts = async () => {
   try {
@@ -62,13 +68,7 @@ const formatDate = (dateString) => {
 // Beim Mounten der Komponente Beiträge abrufen
 onMounted(fetchAllPosts);
 
-// Reaktive Variable für den Sidebar-Zustand
-const isSidebarCollapsed = ref(false);
 
-// Funktion zum Handhaben des Toggle-Events von der Sidebar
-const handleToggle = (collapsed) => {
-  isSidebarCollapsed.value = collapsed;
-};
 </script>
 
 <style scoped>
