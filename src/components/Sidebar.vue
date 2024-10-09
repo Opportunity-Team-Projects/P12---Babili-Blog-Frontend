@@ -1,9 +1,9 @@
 <template>
   <div :class="['sidebar', { collapsed: isCollapsed }]">
     <button class="toggle-button" @click="toggleSidebar">
-      <span class="triangle" :class="{ 'rotated': !isCollapsed }"></span>
+      <span class="triangle" :class="{ rotated: !isCollapsed }"></span>
     </button>
-    
+
     <div class="sidebar-content">
       <ul class="menu main-menu">
         <li v-for="item in mainMenuItems" :key="item.name" class="menu-item">
@@ -15,7 +15,12 @@
       </ul>
 
       <ul class="menu bottom-menu">
-        <li v-for="item in bottomMenuItems" :key="item.name" class="menu-item">
+        <li
+          v-for="item in bottomMenuItems"
+          :key="item.name"
+          class="menu-item"
+          @click="item.action"
+        >
           <span class="menu-icon">
             <i :class="item.icon"></i>
           </span>
@@ -27,40 +32,53 @@
 </template>
 
 <script setup>
-import { ref, defineEmits, watch } from 'vue';
+import { ref, defineEmits, watch } from "vue";
+import { useAuthStore } from "@/stores/useAuthStore";
+import { useRouter } from "vue-router";
 
-const emit = defineEmits(['toggle']);
+const authStore = useAuthStore();
+const router = useRouter();
+
+const logout = async () => {
+  await authStore.logout();
+  router.push("/login"); // Passe die Route ggf. an deine Login-Seite an
+};
+
+const emit = defineEmits(["toggle"]);
 
 const props = defineProps({
   collapsed: {
     type: Boolean,
-    default: true
-  }
+    default: true,
+  },
 });
 
 const isCollapsed = ref(props.collapsed);
 
-watch(() => props.collapsed, (newVal) => {
-  isCollapsed.value = newVal;
-});
+watch(
+  () => props.collapsed,
+  (newVal) => {
+    isCollapsed.value = newVal;
+  }
+);
 
 const mainMenuItems = [
-  { name: 'My Feed', icon: 'fas fa-home' },
-  { name: 'Custom Feed', icon: 'fas fa-list' },
-  { name: 'My Bookmarks', icon: 'fas fa-bookmark' },
-  { name: 'My Posts', icon: 'fas fa-edit' },
-  { name: 'Explore All', icon: 'fas fa-compass' },
-  { name: 'Contact', icon: 'fas fa-envelope' },
+  { name: "My Feed", icon: "fas fa-home" },
+  { name: "Custom Feed", icon: "fas fa-list" },
+  { name: "My Bookmarks", icon: "fas fa-bookmark" },
+  { name: "My Posts", icon: "fas fa-edit" },
+  { name: "Explore All", icon: "fas fa-compass" },
+  { name: "Contact", icon: "fas fa-envelope" },
 ];
 
 const bottomMenuItems = [
-  { name: 'Terms', icon: 'fas fa-file-contract' },
-  { name: 'Logout', icon: 'fas fa-sign-out-alt' },
+  { name: "Terms", icon: "fas fa-file-contract" },
+  { name: "Logout", icon: "fas fa-sign-out-alt", action: logout },
 ];
 
 const toggleSidebar = () => {
   isCollapsed.value = !isCollapsed.value;
-  emit('toggle', isCollapsed.value);
+  emit("toggle", isCollapsed.value);
 };
 </script>
 
@@ -70,8 +88,8 @@ const toggleSidebar = () => {
   top: 0;
   left: 0;
   height: 100vh;
-  width: 250px;  
-  background-color: #0E1217;
+  width: 250px;
+  background-color: #0e1217;
   color: white;
   transition: width 0.3s ease, transform 0.3s ease;
   overflow-x: hidden;
@@ -83,10 +101,10 @@ const toggleSidebar = () => {
 }
 
 .sidebar.collapsed {
-  width: 60px; 
+  width: 60px;
 }
 
-.sidebar-content {  
+.sidebar-content {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
@@ -104,20 +122,20 @@ const toggleSidebar = () => {
   justify-content: center;
   align-items: center;
   transition: transform 0.3s ease;
-  z-index: 1002; 
-  background-color: transparent; 
-  border: none; 
+  z-index: 1002;
+  background-color: transparent;
+  border: none;
 }
 
 .toggle-button:hover {
-  transform: scale(1.1); 
+  transform: scale(1.1);
 }
 
 .triangle {
   width: 0;
   height: 0;
   padding: 0;
-  background-color: #0E1217;
+  background-color: #0e1217;
   border-top: 12px solid transparent;
   border-bottom: 12px solid transparent;
   border-left: 20px solid violet;
@@ -145,7 +163,6 @@ const toggleSidebar = () => {
 }
 
 .bottom-menu {
-
   box-shadow: 0 -1px 5px rgba(255, 255, 255, 0.3);
   padding-top: 10px;
 }
@@ -187,7 +204,7 @@ const toggleSidebar = () => {
     background-color: white;
     padding: 5px;
     border-radius: 50%;
-    box-shadow: 2px 0 5px rgba(0,0,0,0.1);
+    box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
   }
 }
 </style>
