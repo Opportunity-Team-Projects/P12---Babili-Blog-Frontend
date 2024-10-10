@@ -1,27 +1,21 @@
-<script>
+<script setup>
+import { ref } from "vue";
 import authService from "@/services/AuthService";
 
-export default {
-  data() {
-    return {
-      email: "",
-    };
-  },
-  methods: {
-    async submitForgotPassword() {
-      try {
-        const payload = { email: this.email };
-        await authService.forgotPassword(payload);
-        alert("Password reset link sent to your email.");
-      } catch (error) {
-        console.error("Error sending reset password email:", error);
-        alert("An error occurred. Please try again.");
-      }
-    },
-  },
-};
-</script>
+const email = ref("");
+const message = ref("");
 
+async function submitForgotPassword() {
+  try {
+    const payload = { email: email.value };
+    await authService.forgotPassword(payload);
+    message.value = "Dein Passwort wurde zurückgesetzt.";
+  } catch (error) {
+    console.error("Error sending reset password email:", error);
+    message.value = "An error occurred. Please try again.";
+  }
+}
+</script>
 <template>
   <div class="background-container">
     <div class="background-fader">
@@ -33,11 +27,12 @@ export default {
             eiusmod tempor incididunt ut labore et dolore magna aliqua.
           </p>
           <h2 class="subtitle">Reset Password</h2>
-          <form>
+          <form @submit.prevent="submitForgotPassword">
             <label for="email">E-Mail</label>
-            <input type="email" id="email" />
-            <button>Send</button>
+            <input type="email" id="email" v-model="email" required />
+            <button type="submit">Send</button>
           </form>
+          <p v-if="message" class="success-message">{{ message }}</p>
         </main>
       </div>
     </div>
@@ -146,6 +141,11 @@ button {
   cursor: pointer;
   width: 105px;
   height: 39px;
+}
+.success-message {
+  margin-top: 20px;
+  color: #4caf50; /* Grün für erfolgreiche Nachrichten */
+  font-size: 16px;
 }
 
 /* Mobile Styles */
