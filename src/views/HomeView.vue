@@ -139,7 +139,7 @@ watch(
   min-height: 100vh;
   transition: all 0.3s ease;
   padding: 20px; 
-  /* background-color: #0E1217; */
+
   background: radial-gradient(#813d9c 0%, #613583 43%, #3d3846 73%, #241f31 91%);
 
   color: white;
@@ -147,22 +147,22 @@ watch(
 
 .overlay {
   position: fixed;
-  top: 0; /* Hinzugefügt für vollständige Abdeckung */
+  top: 0; 
   left: 0;
   width: 100%;
   height: 100%;
-  z-index: 1000; /* Unterhalb der Sidebar */
+  z-index: 1000; 
   transition: opacity 0.3s ease;
 }
 
 .post-container {
-  margin-left: 101px;
-  margin-right: 101px;
+  margin-left: 170px;
+  margin-right: 170px;
   margin-top: 20px;
   display: flex;
   justify-content: space-between;
   flex-wrap: wrap;
-  gap: 20px;
+
   padding: 20px;
   color: white;
   background-color: rgba(0, 0, 0, 0); 
@@ -172,21 +172,24 @@ watch(
   margin-top: 32px;
   background-color: #1c1f26;
   border: 1px solid transparent;
-
   border-radius: 8px;
   padding: 20px;
-  width: 360px;
+  width: 340px;
   min-height: 400px;
   display: flex;
   flex-direction: column;
-  transition: border-color 1.2s cubic-bezier(0.25, 0.8, 0.25, 1), 
-              box-shadow 1.2s cubic-bezier(0.25, 0.8, 0.25, 1);
+  transition: border-color 0.3s ease, 
+              box-shadow 0.3s ease;
   cursor: pointer;
+  box-shadow: 
+    0 4px 8px rgba(0, 0, 0, 0.5),
+    0 0 0 1px rgba(255, 255, 255, 0.1);
 }
-
 .post-card:hover {
-  border-color: #9747ff; 
-  box-shadow: 0 4px 12px rgba(151, 71, 255, 0.3); 
+  border-color: rgba(206, 61, 243, 0.4);
+  box-shadow: 
+    0 4px 8px rgba(0, 0, 0, 0.7),
+    0 0 0 1px rgba(206, 61, 243, 0.3);
 }
 
 
@@ -276,7 +279,8 @@ watch(
   margin-top: auto; 
   gap: 10px;
   padding-top: 10px;
-  border-top: 1px solid #CE3DF3;
+  border-top: 1px solid;
+  border-image: linear-gradient(to left, rgba(206, 61, 243, 1), #CE3DF3) 1;
 }
 
 .post-actions .action-icon:not(:last-child) {
@@ -310,7 +314,7 @@ watch(
   }
 
   .post-card {
-    width: 100%; /* Vollständige Breite auf kleinen Bildschirmen */
+    width: 100%; 
   }
 }
 </style>

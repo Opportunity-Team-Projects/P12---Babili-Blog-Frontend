@@ -73,7 +73,7 @@ const onSearchInput = debounce(() => {
   justify-content: space-between;
   padding: 0 20px;
   background-color: #0E1217;
-  box-shadow: 0 -1px 5px rgba(255, 255, 255, 0.3);
+  box-shadow: 0 -1px 5px rgba(206, 61, 243, 0.8);
 }
 
 .header-left, .header-center, .header-right {

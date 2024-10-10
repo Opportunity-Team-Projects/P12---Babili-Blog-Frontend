@@ -63,8 +63,11 @@ const bottomMenuItems = [
   top: 0;
   left: 0;
   height: 100vh;
-  width: 80px;
-  background-color: #0e1217;
+  width: 66px;
+  background-color: rgba(14, 18, 23, 0.90);
+    border-top-right-radius: 10px;
+    border-bottom-right-radius: 14px;
+
   color: white;
   transition: width 0.5s cubic-bezier(0.25, 0.1, 0.25, 1);
   overflow-x: hidden;
@@ -75,7 +78,7 @@ const bottomMenuItems = [
 }
 
 .sidebar:hover {
-  width: 220px;
+  width: 200px;
 }
 
 .sidebar-content {
@@ -116,6 +119,7 @@ const bottomMenuItems = [
 
 .menu-item:hover {
   background-color: rgba(151, 64, 151, 0.822);
+  border-radius: 4px;
 }
 
 .menu-link {
