@@ -1,10 +1,8 @@
 <template>
   <HeaderMain />
 
-  <!-- Sidebar-Komponente mit Event-Listener für das Toggle-Event -->
   <Sidebar :collapsed="true" @toggle="handleToggle" />
 
-  <!-- Überlagerung, die erscheint, wenn die Sidebar geöffnet ist -->
   <div
     v-if="!isSidebarCollapsed"
     class="overlay"
@@ -14,20 +12,42 @@
   <!-- Hauptinhalt -->
   <div class="main-content">
     <div class="post-container">
-      <div v-for="post in posts" :key="post.id" class="post-card">
+      <div
+        v-for="post in posts"
+        :key="post.id"
+        class="post-card"
+      >
+        <!-- Post Header -->
         <div class="post-header">
           <div class="profile-placeholder">
-            <i class="fas fa-user"></i>
+      
+            <img
+              v-if="post.user && post.user.avatarUrl"
+              :src="post.user.avatarUrl"
+              alt="Profilbild"
+              class="profile-image"
+            />
+            <i v-else class="fas fa-user"></i>
           </div>
+          <i class="fas fa-ellipsis-h more-options-icon"></i>
+        </div>
+
+        <!-- Post Details -->
+        <div class="post-details">
           <h2 class="post-title">{{ post.contentTitle }}</h2>
+
+              <!-- Post Image -->
+          <div class="post-image-placeholder">
+            <i class="fas fa-image"></i>
+          </div>
+          <p class="post-author">
+            by {{ post.user ? post.user.name : "Unknown" }}
+          </p>
+          <p class="post-date">{{ formatDate(post.created_at) }}</p>
         </div>
-        <div class="post-image-placeholder">
-          <i class="fas fa-image"></i>
-        </div>
-        <p class="post-author">
-          by {{ post.user ? post.user.name : "Unknown" }}
-        </p>
-        <p class="post-date">{{ formatDate(post.created_at) }}</p>
+
+  
+        <!-- Post Actions -->
         <div class="post-actions">
           <div class="icon-left">
             <i class="fas fa-heart action-icon"></i>
@@ -39,6 +59,8 @@
     </div>
   </div>
 </template>
+
+
 
 <script setup>
 import { ref, onMounted, watch } from "vue";
@@ -61,7 +83,7 @@ const handleToggle = (collapsed) => {
 const fetchAllPosts = async () => {
   try {
     const res = await authClient.get("/api/index");
-    posts.value = res.data;
+    posts.value = res.data.sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
     console.log("Fetched all posts:", res.data);
   } catch (error) {
     console.error("Error fetching all posts:", error);
@@ -104,8 +126,8 @@ watch(
   },
   { immediate: true }
 );
-</script>
 
+</script>
 <style scoped>
 .app-container {
   position: relative;
@@ -114,7 +136,7 @@ watch(
 .main-content {
   z-index: 1;
   width: 100%;
-  min-height: 100vw;
+  min-height: 100vh;
   transition: all 0.3s ease;
   padding: 20px;
   background-color: #0e1217;
@@ -123,7 +145,7 @@ watch(
 
 .overlay {
   position: fixed;
-
+  top: 0; /* Hinzugefügt für vollständige Abdeckung */
   left: 0;
   width: 100%;
   height: 100%;
@@ -146,15 +168,28 @@ watch(
 .post-card {
   margin-top: 32px;
   background-color: #1c1f26;
+  border: 1px solid transparent;
+
   border-radius: 8px;
-  padding: 15px;
-  width: 300px;
+  padding: 20px;
+  width: 360px;
+  min-height: 400px;
   display: flex;
   flex-direction: column;
+  transition: border-color 1.2s cubic-bezier(0.25, 0.8, 0.25, 1), 
+              box-shadow 1.2s cubic-bezier(0.25, 0.8, 0.25, 1);
+  cursor: pointer;
 }
+
+.post-card:hover {
+  border-color: #9747ff; 
+  box-shadow: 0 4px 12px rgba(151, 71, 255, 0.3); 
+}
+
 
 .post-header {
   display: flex;
+  justify-content: space-between;
   align-items: center;
   margin-bottom: 10px;
 }
@@ -164,18 +199,37 @@ watch(
   height: 40px;
   border-radius: 50%;
   background-color: white;
-  border-color: black;
-  margin-right: 10px;
+  border: 1px solid black;
   display: flex;
   justify-content: center;
   align-items: center;
-  color: black;
-  margin-bottom: 12px;
+  overflow: hidden; 
+}
+
+.profile-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover; 
+}
+
+.more-options-icon {
+  font-size: 1.2em;
+  cursor: pointer;
+  color: white;
+  transition: color 0.3s ease;
+}
+
+.more-options-icon:hover {
+  color: #9747ff;
+}
+
+.post-details {
+  margin-bottom: 10px;
 }
 
 .post-title {
   font-size: 1.2em;
-  margin: 0;
+  margin: 0 0 8px 0;
   overflow: hidden;
   text-overflow: ellipsis;
   display: -webkit-box;
@@ -183,8 +237,22 @@ watch(
   -webkit-box-orient: vertical;
   line-height: 1.3em;
   height: 3.9em;
-  margin-bottom: 8px;
   color: white;
+}
+
+.post-author,
+.post-date {
+  margin: 0;
+  font-size: 0.9em;
+  color: white;
+}
+
+.post-author {
+  margin-top: 5px;
+}
+
+.post-date {
+  margin-top: 2px;
 }
 
 .post-image-placeholder {
@@ -199,37 +267,25 @@ watch(
   color: rgba(0, 0, 0, 0.699);
 }
 
-.post-author {
-  margin-top: 5px;
-  font-size: 0.9em;
-  color: white;
-}
-.post-date {
-  font-size: 0.9em;
-  color: white;
-}
-
 .post-actions {
   display: flex;
   justify-content: space-between;
-  margin-top: auto;
+  margin-top: auto; 
   gap: 10px;
   padding-top: 10px;
-  border-top: 1px solid #eee;
-  color: white;
+  border-top: 1px solid #CE3DF3;
 }
+
 .post-actions .action-icon:not(:last-child) {
-  margin-right: 10px; /* Abstand nach rechts, außer beim letzten Icon */
+  margin-right: 10px;
 }
 
 .action-icon {
-  font-size: 1.2em;
+  font-size: 1.6em;
   cursor: pointer;
   color: white;
-  transition: color 0.3s ease;
-  padding-right: 2px;
-  padding-left: 2px;
-  transition: transform 0.3s ease;
+  transition: color 0.3s ease, transform 0.3s ease;
+  padding: 2px;
 }
 
 .action-icon:hover {
@@ -246,6 +302,10 @@ watch(
     flex-wrap: wrap;
     justify-content: space-around;
     padding: 20px;
+  }
+
+  .post-card {
+    width: 100%; /* Vollständige Breite auf kleinen Bildschirmen */
   }
 }
 </style>
