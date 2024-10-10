@@ -144,7 +144,7 @@
     width: 100%;
     transition: all 0.3s ease;
     padding: 20px; 
-    background-color: #0E1217;
+    background: linear-gradient(135deg, #1C1F26 0%, #2C3E50 100%);
     color: white;
     display: flex;
     justify-content: center;
@@ -158,8 +158,12 @@
     background-color: #1C1F26;
     border-radius: 8px;
     padding: 20px;
+    padding-left: 40px;
+    padding-right: 40px;
     display: flex;
     flex-direction: column;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1), 0 1px 3px rgba(0, 0, 0, 0.08);
+
   }
   
   h1 {
@@ -266,7 +270,7 @@
   textarea {
     height: 100%;
     resize: none;
-    width: 626px;
+    width: 615px;
     height: 250px;
     border-radius: 14px;
   }
