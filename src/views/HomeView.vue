@@ -1,7 +1,6 @@
 <template>
 
-  <!-- Gradient-Hintergrund -->
-  <div class="custom-background"></div>
+  <!-- <div class="custom-background"></div> -->
 
   <HeaderMain />
 
