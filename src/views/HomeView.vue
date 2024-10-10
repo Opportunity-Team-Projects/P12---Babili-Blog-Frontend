@@ -93,12 +93,6 @@ const formatDate = (dateString) => {
   }
 }); */
 
-
-// Funktion zum Handhaben des Toggle-Events von der Sidebar
-const handleToggle = (collapsed) => {
-  isSidebarCollapsed.value = collapsed;
-};
-
 watch(
   () => route.query.q,
   (newQuery) => {
