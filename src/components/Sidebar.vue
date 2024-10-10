@@ -7,10 +7,12 @@
     <div class="sidebar-content">
       <ul class="menu main-menu">
         <li v-for="item in mainMenuItems" :key="item.name" class="menu-item">
-          <span class="menu-icon">
-            <i :class="item.icon"></i>
-          </span>
-          <span v-if="!isCollapsed" class="menu-text">{{ item.name }}</span>
+          <router-link :to="item.path" class="menu-link">
+            <span class="menu-icon">
+              <i :class="item.icon"></i>
+            </span>
+            <span v-if="!isCollapsed" class="menu-text">{{ item.name }}</span>
+          </router-link>
         </li>
       </ul>
 
@@ -49,7 +51,7 @@ const emit = defineEmits(["toggle"]);
 const props = defineProps({
   collapsed: {
     type: Boolean,
-    default: true  // Ändern Sie dies auf true
+    default: true
   },
 });
 
@@ -63,16 +65,16 @@ watch(
 );
 
 const mainMenuItems = [
-  { name: "My Feed", icon: "fas fa-home" },
-  { name: "Custom Feed", icon: "fas fa-list" },
-  { name: "My Bookmarks", icon: "fas fa-bookmark" },
-  { name: "My Posts", icon: "fas fa-edit" },
-  { name: "Explore All", icon: "fas fa-compass" },
-  { name: "Contact", icon: "fas fa-envelope" },
+  { name: "Home", icon: "fas fa-home", path: "/" },
+  { name: "My Feed", icon: "fas fa-list", path: "/my-feed" },
+  { name: "My Bookmarks", icon: "fas fa-bookmark", path: "/my-bookmarks" },
+  { name: "My Posts", icon: "fas fa-edit", path: "/my-posts" },
+  { name: "Explore All", icon: "fas fa-compass", path: "/explore" },
+  { name: "Contact", icon: "fas fa-envelope", path: "/contact" },
 ];
 
 const bottomMenuItems = [
-  { name: "Terms", icon: "fas fa-file-contract" },
+  { name: "Terms", icon: "fas fa-file-contract", path: "/terms" },
   { name: "Logout", icon: "fas fa-sign-out-alt", action: logout },
 ];
 
@@ -177,6 +179,19 @@ const toggleSidebar = () => {
 }
 
 .menu-item:hover {
+  background-color: rgba(151, 64, 151, 0.822);
+}
+
+.menu-link {
+  display: flex;
+  align-items: center;
+  color: inherit;
+  text-decoration: none;
+  width: 100%;
+  height: 100%;
+}
+
+.menu-link:hover {
   background-color: rgba(151, 64, 151, 0.822);
 }
 
