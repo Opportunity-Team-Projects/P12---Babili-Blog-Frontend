@@ -1,4 +1,8 @@
 <template>
+
+  <!-- Gradient-Hintergrund -->
+  <div class="custom-background"></div>
+
   <HeaderMain />
 
   <!-- Sidebar-Komponente mit Event-Listener für das Toggle-Event -->
@@ -77,12 +81,23 @@ const handleToggle = (collapsed) => {
   position: relative;
 }
 
+.custom-background {
+  position: absolute;
+  inset: 0;
+  z-index: -10;
+  height: 100%;
+  width: 100%;
+  padding: 24px 5px;
+  background: radial-gradient(125% 125% at 50% 10%, #000 40%, #63e 100%);
+}
+
 .main-content {
   z-index: 1; 
   width: 100%;
   transition: all 0.3s ease;
   padding: 20px; 
-  background-color: #0E1217;
+  /* background-color: #0E1217; */
+  background: radial-gradient(#813d9c 0%, #613583 43%, #3d3846 73%, #241f31 91%);
   color: white;
 }
 
@@ -108,6 +123,7 @@ const handleToggle = (collapsed) => {
   gap: 20px;
   padding: 20px;
   color: white;
+  background-color: rgba(0, 0, 0, 0); 
 }
 
 .post-card {
