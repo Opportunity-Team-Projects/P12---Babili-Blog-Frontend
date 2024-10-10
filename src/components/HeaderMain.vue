@@ -1,30 +1,32 @@
 <template>
   <header class="app-header">
     <div class="header-left">
-      <router-link to="/" class="logo-placeholder">Logo
-      </router-link>
+      <router-link to="/" class="logo-placeholder">Logo</router-link>
     </div>
     <div class="header-center">
-            <input
-        type="text"
-        class="search-bar"
-        placeholder="Search..."
-        v-model="searchQuery"
-        @input="onSearchInput"
-      />
+      <div class="search-container">
+        <i class="fas fa-search search-icon"></i>
+        <input
+          type="text"
+          class="search-bar"
+          placeholder="Search..."
+          v-model="searchQuery"
+          @input="onSearchInput"
+        />
+      </div>
     </div>
     <div class="header-right">
-      <router-link to="/create" class="new-post-btn">New Post
-      </router-link>
-      <button class="dark-mode-toggle">
+      <router-link to="/create" class="new-post-btn">New Post</router-link>
+<!--       <button class="dark-mode-toggle">
         <i class="fas fa-moon"></i>
-      </button>
+      </button> -->
       <div class="profile-icon">
         <i class="fas fa-user"></i>
       </div>
     </div>
   </header>
 </template>
+
 
 <script setup>
 import { ref, watch } from "vue";
@@ -66,6 +68,7 @@ const onSearchInput = debounce(() => {
   top: 0;
   height: 84px;
   display: flex;
+
   align-items: center;
   justify-content: space-between;
   padding: 0 20px;
@@ -75,6 +78,7 @@ const onSearchInput = debounce(() => {
 
 .header-left, .header-center, .header-right {
   display: flex;
+  gap: 20px;
   align-items: center;
 }
 
@@ -86,22 +90,46 @@ const onSearchInput = debounce(() => {
   cursor: pointer;
 }
 
+.search-container {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.search-icon {
+  position: absolute;
+  left: 10px;
+
+  color: white;
+}
+
 .search-bar {
-  width: 300px;
-  padding: 10px;
-  border: 1px solid #ddd;
-  border-radius: 5px;
+  background-color: #20252D;
+  border: solid 1px;
+  color: white;
+  width: 500px;
+  padding: 10px 10px 10px 35px;
+  border: 1px solid white;
+  border-radius: 14px;
 }
 
 .new-post-btn {
-  padding: 14px 20px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 12px 24px;
   background-color: black;
   color: white;
-  border: none;
-  border-radius: 10px;
+  border: solid 1px;
+  border-radius: 15px;
+  border-color: white;
   cursor: pointer;
-  margin-right: 10px;
+  font-size: 16px;
+  font-weight: 600;
+
 }
+
+
 
 .dark-mode-toggle {
   background: none;
@@ -113,15 +141,18 @@ const onSearchInput = debounce(() => {
 }
 
 .profile-icon {
-  width: 40px;
-  height: 40px;
+  width: 60px;
+  height: 60px;
   background-color: white;
+  border: solid 3px #CE3DF3;
   border-radius: 50%;
   display: flex;
   justify-content: center;
   align-items: center;
   cursor: pointer;
+  font-size: 30px;
 }
+
 
 @media screen and (max-width: 768px) {
   .app-header {
