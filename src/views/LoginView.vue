@@ -48,88 +48,87 @@ const login = async () => {
 </script>
 
 <template>
-  <div class="container">
-    <div class="a">
-      <div class="header">
-        <div class="logo">
-          <img src="../assets/Nexus0.jpg" alt="Das Logo" class="logo" />
-        </div>
-
-        <div>
-          <p class="without-logging-in">Continue without logging in?</p>
-        </div>
-      </div>
-    </div>
-    <div class="text-container">
-      <H1>Tech & Game Nexus</H1>
-
-      <div class="text">
-        <p>
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-          eiusmod tempor incididunt ut labore et dolore magna aliqua. 
-        </p>
-      </div>
-    </div>
-    <form action="" method="post" @submit.prevent="login">
-      <div class="login-container">
-        <h2>Login</h2>
-
-        <div>
-          <div class="formgroup">
-            <label class="email" for="email">E-Mail</label>
-            <input
-              id="email"
-              class="placeholder"
-              type="email"
-              name="email"
-              v-model="email"
-            />
+  <div class="bodycontainer">
+    <div class="container">
+      <div class="a">
+        <div class="header">
+          <div class="logo">
+            <img src="../assets/Nexus0.jpg" alt="Das Logo" class="logo" />
           </div>
-
-          <div class="formgroup">
-            <label class="email" for="password">Passwort</label>
-            <input
-              id="password"
-              class="placeholder"
-              type="password"
-              name="password"
-              v-model="password"
-            />
-          </div>
-        </div>
-      </div>
-
-      <div>
-        <div class="sign-up-container">
-          <div class="sign-up">
-            Don't have an account?
-            <RouterLink to="/register" v-if="!authUser"
-              ><button class="sign-button">Sign Up</button></RouterLink
+          <div>
+            <RouterLink to="/" class="without-logging-in"
+              >Continue without logging in?</RouterLink
             >
           </div>
-          <div class="login-one-container">
-            <RouterLink to="/register" v-if="!authUser"
-              ><p class="forgot-password">Forgot password?</p></RouterLink
-            >
-            <button class="login-button" type="submit">Login</button>
-          </div>
         </div>
       </div>
-    </form>
-    <p v-if="error" class="error-message">{{ error }}</p>
-  </div>
-
-  <div class="footer">
-    <p>© 2024 Tech & Game Nexus Terms</p>
+      <div class="text-container">
+        <H1>Tech & Game Nexus</H1>
+        <div class="text">
+          <p>
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
+            eiusmod tempor incididunt ut labore et dolore magna aliqua.
+          </p>
+        </div>
+      </div>
+      <form action="" method="post" @submit.prevent="login">
+        <div class="login-container">
+          <h2>Login</h2>
+          <div>
+            <div class="formgroup">
+              <label class="email" for="email">E-Mail</label>
+              <input
+                id="email"
+                class="placeholder"
+                type="email"
+                name="email"
+                v-model="email"
+              />
+            </div>
+            <div class="formgroup">
+              <label class="email" for="password">Passwort</label>
+              <input
+                id="password"
+                class="placeholder"
+                type="password"
+                name="password"
+                v-model="password"
+              />
+            </div>
+          </div>
+        </div>
+        <div>
+          <div class="sign-up-container">
+            <div class="sign-up">
+              Don't have an account?
+              <RouterLink to="/register" v-if="!authUser"
+                ><button class="sign-button">Sign Up</button></RouterLink
+              >
+            </div>
+            <div class="login-one-container">
+              <RouterLink to="/register" v-if="!authUser"
+                ><p class="forgot-password">Forgot password?</p></RouterLink
+              >
+              <button class="login-button" type="submit">Login</button>
+            </div>
+          </div>
+        </div>
+      </form>
+      <p v-if="error" class="error-message">{{ error }}</p>
+    </div>
+    <div class="footer">
+      <p>© 2024 Tech & Game Nexus Terms</p>
+    </div>
   </div>
 </template>
 
-<style>
-body {
+<style scoped>
+.bodycontainer {
   background-image: url("../assets/bg.svg");
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
+  height: 100vh;
 }
 
 @media (max-width: 767px) {

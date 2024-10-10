@@ -2,10 +2,14 @@
   <HeaderMain />
 
   <!-- Sidebar-Komponente mit Event-Listener für das Toggle-Event -->
-  <Sidebar @toggle="handleToggle" :collapsed="isSidebarCollapsed" />
+  <Sidebar :collapsed="true" @toggle="handleToggle" />
 
   <!-- Überlagerung, die erscheint, wenn die Sidebar geöffnet ist -->
-  <div v-if="!isSidebarCollapsed" class="overlay" @click="handleToggle(true)"></div>
+  <div
+    v-if="!isSidebarCollapsed"
+    class="overlay"
+    @click="handleToggle(true)"
+  ></div>
 
   <!-- Hauptinhalt -->
   <div class="main-content">
@@ -20,12 +24,14 @@
         <div class="post-image-placeholder">
           <i class="fas fa-image"></i>
         </div>
-        <p class="post-author">by {{ post.user ? post.user.name : 'Unknown' }}</p>
+        <p class="post-author">
+          by {{ post.user ? post.user.name : "Unknown" }}
+        </p>
         <p class="post-date">{{ formatDate(post.created_at) }}</p>
         <div class="post-actions">
           <div class="icon-left">
-          <i class="fas fa-heart action-icon"></i>
-          <i class="fas fa-comment action-icon"></i>
+            <i class="fas fa-heart action-icon"></i>
+            <i class="fas fa-comment action-icon"></i>
           </div>
           <i class="fas fa-bookmark action-icon"></i>
         </div>
@@ -35,22 +41,41 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue';
-import { authClient } from '../services/AuthService';
-import HeaderMain from '@/components/HeaderMain.vue';
-import Sidebar from '@/components/Sidebar.vue';
+import { ref, onMounted, watch } from "vue";
+import { authClient } from "../services/AuthService";
+import HeaderMain from "@/components/HeaderMain.vue";
+import Sidebar from "@/components/Sidebar.vue";
+import { useRoute } from "vue-router";
 
 // Reaktive Variable für die Beiträge
 const posts = ref([]);
+const route = useRoute();
+
+const isSidebarCollapsed = ref(true);
+
+const handleToggle = (collapsed) => {
+  isSidebarCollapsed.value = collapsed;
+};
 
 // Funktion zum Abrufen aller Beiträge
 const fetchAllPosts = async () => {
   try {
-    const res = await authClient.get('/api/index');
+    const res = await authClient.get("/api/index");
     posts.value = res.data;
-    console.log('Fetched all posts:', res.data);
+    console.log("Fetched all posts:", res.data);
   } catch (error) {
-    console.error('Error fetching all posts:', error);
+    console.error("Error fetching all posts:", error);
+  }
+};
+
+// Funktion zur Suche von Beiträgen
+const searchPosts = async (query) => {
+  try {
+    const res = await authClient.get("/api/search", { params: { query } });
+    posts.value = res.data;
+    console.log("Search results:", res.data);
+  } catch (error) {
+    console.error("Error searching posts:", error);
   }
 };
 
@@ -59,34 +84,43 @@ const formatDate = (dateString) => {
   return new Date(dateString).toLocaleDateString();
 };
 
-// Beim Mounten der Komponente Beiträge abrufen
-onMounted(fetchAllPosts);
+//TODO Prüfe ob nichtmehr benötigt
+/* onMounted(() => {
+  if (route.query.q) {
+    searchPosts(route.query.q);
+  } else {
+    fetchAllPosts();
+  }
+}); */
 
-// Reaktive Variable für den Sidebar-Zustand
-const isSidebarCollapsed = ref(false);
-
-// Funktion zum Handhaben des Toggle-Events von der Sidebar
-const handleToggle = (collapsed) => {
-  isSidebarCollapsed.value = collapsed;
-};
+watch(
+  () => route.query.q,
+  (newQuery) => {
+    if (newQuery) {
+      searchPosts(newQuery);
+    } else {
+      fetchAllPosts();
+    }
+  },
+  { immediate: true }
+);
 </script>
 
 <style scoped>
-
 .app-container {
   position: relative;
 }
 
 .main-content {
-  z-index: 1; 
+  z-index: 1;
   width: 100%;
   transition: all 0.3s ease;
   padding: 20px; 
   /* background-color: #0E1217; */
   background: radial-gradient(#813d9c 0%, #613583 43%, #3d3846 73%, #241f31 91%);
+
   color: white;
 }
-
 
 .overlay {
   position: fixed;
@@ -97,7 +131,6 @@ const handleToggle = (collapsed) => {
   z-index: 1000; /* Unterhalb der Sidebar */
   transition: opacity 0.3s ease;
 }
-
 
 .post-container {
   margin-left: 101px;
@@ -114,7 +147,7 @@ const handleToggle = (collapsed) => {
 
 .post-card {
   margin-top: 32px;
-  background-color: #1C1F26;
+  background-color: #1c1f26;
   border-radius: 8px;
   padding: 15px;
   width: 300px;
@@ -151,7 +184,7 @@ const handleToggle = (collapsed) => {
   -webkit-line-clamp: 3;
   -webkit-box-orient: vertical;
   line-height: 1.3em;
-  height: 3.9em; 
+  height: 3.9em;
   margin-bottom: 8px;
   color: white;
 }
@@ -168,7 +201,7 @@ const handleToggle = (collapsed) => {
   color: rgba(0, 0, 0, 0.699);
 }
 
-.post-author{ 
+.post-author {
   margin-top: 5px;
   font-size: 0.9em;
   color: white;
@@ -191,8 +224,6 @@ const handleToggle = (collapsed) => {
   margin-right: 10px; /* Abstand nach rechts, außer beim letzten Icon */
 }
 
-
-
 .action-icon {
   font-size: 1.2em;
   cursor: pointer;
@@ -200,12 +231,12 @@ const handleToggle = (collapsed) => {
   transition: color 0.3s ease;
   padding-right: 2px;
   padding-left: 2px;
-  transition: transform 0.3s ease;}
+  transition: transform 0.3s ease;
+}
 
 .action-icon:hover {
   color: rgba(255, 255, 255, 0.918);
   transform: scale(1.1);
-  
 }
 
 /* TODO media screen */
