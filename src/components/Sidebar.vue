@@ -114,8 +114,10 @@ const bottomMenuItems = [
   display: flex;
   align-items: center;
   cursor: pointer;
-  transition: background 0.2s ease;
+
 }
+
+
 
 .menu-item:hover {
   background-color: rgba(151, 64, 151, 0.822);
