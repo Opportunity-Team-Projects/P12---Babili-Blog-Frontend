@@ -7,7 +7,8 @@ const router = createRouter({
     {
       path: '/',
       name: 'home',
-      component: HomeView
+      component: HomeView,
+      props: (route) => ({ query: route.query.q }),
     },
     {
       path: '/login',
@@ -24,10 +25,20 @@ const router = createRouter({
       name: 'reset',
       component: () => import('../views/ResetView.vue')
     },
+
     {  
       path: '/create',
       name: 'create',
       component: () => import('../views/CreateView.vue')
+
+
+    {
+      path: '/about',
+      name: 'about',
+      // route level code-splitting
+      // this generates a separate chunk (About.[hash].js) for this route
+      // which is lazy-loaded when the route is visited.
+      component: () => import('../views/AboutView.vue')
     }
   ]
 })

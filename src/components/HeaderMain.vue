@@ -5,7 +5,13 @@
       </router-link>
     </div>
     <div class="header-center">
-      <input type="text" class="search-bar" placeholder="Search...">
+            <input
+        type="text"
+        class="search-bar"
+        placeholder="Search..."
+        v-model="searchQuery"
+        @input="onSearchInput"
+      />
     </div>
     <div class="header-right">
       <router-link to="/create" class="new-post-btn">New Post
@@ -21,6 +27,36 @@
 </template>
 
 <script setup>
+import { ref, watch } from "vue";
+import { useRouter, useRoute } from "vue-router";
+import debounce from "lodash.debounce";
+
+const searchQuery = ref("");
+const router = useRouter();
+const route = useRoute();
+
+//TODO Prüfe ob noch benötigit
+//const emit = defineEmits(["search"]);
+
+// Damit das Suchfeld den aktuellen Wert aus der URL anzeigt
+searchQuery.value = route.query.q || "";
+
+// Beobachtet Änderungen in der Route und aktualisiert das Suchfeld
+watch(
+  () => route.query.q,
+  (newQuery) => {
+    searchQuery.value = newQuery || "";
+  }
+);
+
+// Funktion, die aufgerufen wird, wenn der Benutzer etwas in das Suchfeld eingibt
+const onSearchInput = debounce(() => {
+  if (searchQuery.value) {
+    router.push({ name: "home", query: { q: searchQuery.value } });
+  } else {
+    router.push({ name: "home" });
+  }
+}, 300);
 </script>
 
 <style scoped>
