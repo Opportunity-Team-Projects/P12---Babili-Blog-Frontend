@@ -56,7 +56,9 @@ const login = async () => {
             <img src="../assets/Nexus0.jpg" alt="Das Logo" class="logo" />
           </div>
           <div>
-            <p class="without-logging-in">Continue without logging in?</p>
+            <RouterLink to="/" class="without-logging-in"
+              >Continue without logging in?</RouterLink
+            >
           </div>
         </div>
       </div>
