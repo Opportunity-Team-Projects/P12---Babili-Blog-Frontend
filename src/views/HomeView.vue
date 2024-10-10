@@ -114,6 +114,7 @@ watch(
 .main-content {
   z-index: 1;
   width: 100%;
+  min-height: 100vw;
   transition: all 0.3s ease;
   padding: 20px;
   background-color: #0e1217;
