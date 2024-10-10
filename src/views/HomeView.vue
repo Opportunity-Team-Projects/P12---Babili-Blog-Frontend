@@ -115,8 +115,10 @@ watch(
   z-index: 1;
   width: 100%;
   transition: all 0.3s ease;
-  padding: 20px;
-  background-color: #0e1217;
+  padding: 20px; 
+  /* background-color: #0E1217; */
+  background: radial-gradient(#813d9c 0%, #613583 43%, #3d3846 73%, #241f31 91%);
+
   color: white;
 }
 
@@ -140,6 +142,7 @@ watch(
   gap: 20px;
   padding: 20px;
   color: white;
+  background-color: rgba(0, 0, 0, 0); 
 }
 
 .post-card {
@@ -235,6 +238,8 @@ watch(
   color: rgba(255, 255, 255, 0.918);
   transform: scale(1.1);
 }
+
+/* TODO media screen */
 
 @media screen and (max-width: 768px) {
   .post-container {
