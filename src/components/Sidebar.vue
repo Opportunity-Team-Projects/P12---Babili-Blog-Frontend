@@ -49,7 +49,7 @@ const emit = defineEmits(["toggle"]);
 const props = defineProps({
   collapsed: {
     type: Boolean,
-    default: true,
+    default: true  // Ändern Sie dies auf true
   },
 });
 
