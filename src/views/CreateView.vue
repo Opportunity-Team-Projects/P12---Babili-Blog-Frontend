@@ -111,23 +111,30 @@
   };
   
   const createPost = async () => {
-    try {
+  try {
+    if (selectedTags.value.length > 0) {
       post.value.category_ids = selectedTags.value;
-      await authClient.post('/api/posts', post.value);
-      alert('Post created successfully!');
-      router.push('/my-posts');
-    } catch (error) {
-      console.error('Error creating post:', error);
-      alert('Failed to create post. Please try again.');
+    } 
+
+    const response = await authClient.post('/api/posts', post.value);
+    console.log('Post creation response:', response.data);
+
+    router.push('/'); // Nach dem Erstellen zur Home-Seite navigieren
+  } catch (error) {
+    if (error.response) {
+
+      alert(`Failed to create post: ${error.response.data.message}`);
+  
     }
-  };
+  }
+};
   
   const cancelPost = () => {
-    router.push('/'); // Or wherever you want to redirect on cancel
+    router.push('/'); 
   };
   
   onMounted(() => {
-    // Any mounting logic if needed
+
   });
   </script>
   
