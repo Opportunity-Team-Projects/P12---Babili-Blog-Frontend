@@ -1,7 +1,4 @@
 <template>
-
-  <!-- <div class="custom-background"></div> -->
-
   <HeaderMain />
 
   <!-- Sidebar-Komponente mit Event-Listener für das Toggle-Event -->
@@ -79,16 +76,6 @@ const handleToggle = (collapsed) => {
 .app-container {
   position: relative;
 }
-
-/* .custom-background {
-  position: absolute;
-  inset: 0;
-  z-index: -10;
-  height: 100%;
-  width: 100%;
-  padding: 24px 5px;
-  background: radial-gradient(125% 125% at 50% 10%, #000 40%, #63e 100%);
-} */
 
 .main-content {
   z-index: 1; 
