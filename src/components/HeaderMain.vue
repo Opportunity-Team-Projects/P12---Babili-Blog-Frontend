@@ -1,13 +1,15 @@
 <template>
   <header class="app-header">
     <div class="header-left">
-      <button class="logo-placeholder">Logo</button>
+      <router-link to="/" class="logo-placeholder">Logo
+      </router-link>
     </div>
     <div class="header-center">
       <input type="text" class="search-bar" placeholder="Search...">
     </div>
     <div class="header-right">
-      <button class="new-post-btn">New Post</button>
+      <router-link to="/create" class="new-post-btn">New Post
+      </router-link>
       <button class="dark-mode-toggle">
         <i class="fas fa-moon"></i>
       </button>
