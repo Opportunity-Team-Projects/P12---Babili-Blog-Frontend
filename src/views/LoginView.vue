@@ -124,7 +124,7 @@ const login = async () => {
   </div>
 </template>
 
-<style>
+<style scoped>
 body {
   background-image: url("../assets/bg.svg");
   background-size: cover;
