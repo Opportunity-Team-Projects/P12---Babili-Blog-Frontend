@@ -81,7 +81,7 @@ const handleToggle = (collapsed) => {
   position: relative;
 }
 
-.custom-background {
+/* .custom-background {
   position: absolute;
   inset: 0;
   z-index: -10;
@@ -89,7 +89,7 @@ const handleToggle = (collapsed) => {
   width: 100%;
   padding: 24px 5px;
   background: radial-gradient(125% 125% at 50% 10%, #000 40%, #63e 100%);
-}
+} */
 
 .main-content {
   z-index: 1; 
@@ -221,6 +221,8 @@ const handleToggle = (collapsed) => {
   transform: scale(1.1);
   
 }
+
+/* TODO media screen */
 
 @media screen and (max-width: 768px) {
   .post-container {
