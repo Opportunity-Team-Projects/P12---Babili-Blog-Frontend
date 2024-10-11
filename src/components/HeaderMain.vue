@@ -17,7 +17,7 @@
     </div>
     <div class="header-right">
       <router-link to="/create" class="new-post-btn">New Post</router-link>
-<!--       <button class="dark-mode-toggle">
+      <!--       <button class="dark-mode-toggle">
         <i class="fas fa-moon"></i>
       </button> -->
       <div class="profile-icon">
@@ -26,7 +26,6 @@
     </div>
   </header>
 </template>
-
 
 <script setup>
 import { ref, watch } from "vue";
@@ -72,11 +71,13 @@ const onSearchInput = debounce(() => {
   align-items: center;
   justify-content: space-between;
   padding: 0 20px;
-  background-color: #0E1217;
+  background-color: #0e1217;
   box-shadow: 0 -1px 5px rgba(206, 61, 243, 0.8);
 }
 
-.header-left, .header-center, .header-right {
+.header-left,
+.header-center,
+.header-right {
   display: flex;
   gap: 20px;
   align-items: center;
@@ -104,7 +105,7 @@ const onSearchInput = debounce(() => {
 }
 
 .search-bar {
-  background-color: #20252D;
+  background-color: #20252d;
   border: solid 1px;
   color: white;
   width: 500px;
@@ -126,10 +127,7 @@ const onSearchInput = debounce(() => {
   cursor: pointer;
   font-size: 16px;
   font-weight: 600;
-
 }
-
-
 
 .dark-mode-toggle {
   background: none;
@@ -144,7 +142,7 @@ const onSearchInput = debounce(() => {
   width: 60px;
   height: 60px;
   background-color: white;
-  border: solid 3px #CE3DF3;
+  border: solid 3px #ce3df3;
   border-radius: 50%;
   display: flex;
   justify-content: center;
@@ -153,7 +151,6 @@ const onSearchInput = debounce(() => {
   font-size: 30px;
 }
 
-
 @media screen and (max-width: 768px) {
   .app-header {
     flex-wrap: wrap;
@@ -161,7 +158,8 @@ const onSearchInput = debounce(() => {
     padding: 10px;
   }
 
-  .header-left, .header-right {
+  .header-left,
+  .header-right {
     width: 100%;
     justify-content: space-between;
   }
@@ -181,7 +179,8 @@ const onSearchInput = debounce(() => {
     font-size: 0.9em;
   }
 
-  .dark-mode-toggle, .profile-icon {
+  .dark-mode-toggle,
+  .profile-icon {
     font-size: 1em;
   }
 }
@@ -192,7 +191,8 @@ const onSearchInput = debounce(() => {
     font-size: 0.8em;
   }
 
-  .dark-mode-toggle, .profile-icon {
+  .dark-mode-toggle,
+  .profile-icon {
     font-size: 0.9em;
   }
 }

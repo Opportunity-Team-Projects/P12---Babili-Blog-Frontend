@@ -12,15 +12,10 @@
   <!-- Hauptinhalt -->
   <div class="main-content">
     <div class="post-container">
-      <div
-        v-for="post in posts"
-        :key="post.id"
-        class="post-card"
-      >
+      <div v-for="post in posts" :key="post.id" class="post-card">
         <!-- Post Header -->
         <div class="post-header">
           <div class="profile-placeholder">
-      
             <img
               v-if="post.user && post.user.avatarUrl"
               :src="post.user.avatarUrl"
@@ -36,7 +31,7 @@
         <div class="post-details">
           <h2 class="post-title">{{ post.contentTitle }}</h2>
 
-              <!-- Post Image -->
+          <!-- Post Image -->
           <div class="post-image-placeholder">
             <i class="fas fa-image"></i>
           </div>
@@ -46,7 +41,6 @@
           <p class="post-date">{{ formatDate(post.created_at) }}</p>
         </div>
 
-  
         <!-- Post Actions -->
         <div class="post-actions">
           <div class="icon-left">
@@ -59,8 +53,6 @@
     </div>
   </div>
 </template>
-
-
 
 <script setup>
 import { ref, onMounted, watch } from "vue";
@@ -83,7 +75,9 @@ const handleToggle = (collapsed) => {
 const fetchAllPosts = async () => {
   try {
     const res = await authClient.get("/api/index");
-    posts.value = res.data.sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
+    posts.value = res.data.sort(
+      (a, b) => new Date(b.created_at) - new Date(a.created_at)
+    );
     console.log("Fetched all posts:", res.data);
   } catch (error) {
     console.error("Error fetching all posts:", error);
@@ -126,7 +120,6 @@ watch(
   },
   { immediate: true }
 );
-
 </script>
 <style scoped>
 .app-container {
@@ -138,20 +131,25 @@ watch(
   width: 100%;
   min-height: 100vh;
   transition: all 0.3s ease;
-  padding: 20px; 
+  padding: 20px;
 
-  background: radial-gradient(#813d9c 0%, #613583 43%, #3d3846 73%, #241f31 91%);
+  background: radial-gradient(
+    #813d9c 0%,
+    #613583 43%,
+    #3d3846 73%,
+    #241f31 91%
+  );
 
   color: white;
 }
 
 .overlay {
   position: fixed;
-  top: 0; 
+  top: 0;
   left: 0;
   width: 100%;
   height: 100%;
-  z-index: 1000; 
+  z-index: 1000;
   transition: opacity 0.3s ease;
 }
 
@@ -165,7 +163,7 @@ watch(
 
   padding: 20px;
   color: white;
-  background-color: rgba(0, 0, 0, 0); 
+  background-color: rgba(0, 0, 0, 0);
 }
 
 .post-card {
@@ -178,20 +176,14 @@ watch(
   min-height: 400px;
   display: flex;
   flex-direction: column;
-  transition: border-color 0.3s ease, 
-              box-shadow 0.3s ease;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
   cursor: pointer;
-  box-shadow: 
-    0 4px 8px rgba(0, 0, 0, 0.5),
-    0 0 0 1px rgba(255, 255, 255, 0.1);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(255, 255, 255, 0.1);
 }
 .post-card:hover {
   border-color: rgba(206, 61, 243, 0.4);
-  box-shadow: 
-    0 4px 8px rgba(0, 0, 0, 0.7),
-    0 0 0 1px rgba(206, 61, 243, 0.3);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.7), 0 0 0 1px rgba(206, 61, 243, 0.3);
 }
-
 
 .post-header {
   display: flex;
@@ -209,13 +201,13 @@ watch(
   display: flex;
   justify-content: center;
   align-items: center;
-  overflow: hidden; 
+  overflow: hidden;
 }
 
 .profile-image {
   width: 100%;
   height: 100%;
-  object-fit: cover; 
+  object-fit: cover;
 }
 
 .more-options-icon {
@@ -276,11 +268,11 @@ watch(
 .post-actions {
   display: flex;
   justify-content: space-between;
-  margin-top: auto; 
+  margin-top: auto;
   gap: 10px;
   padding-top: 10px;
   border-top: 1px solid;
-  border-image: linear-gradient(to left, rgba(206, 61, 243, 1), #CE3DF3) 1;
+  border-image: linear-gradient(to left, rgba(206, 61, 243, 1), #ce3df3) 1;
 }
 
 .post-actions .action-icon:not(:last-child) {
@@ -314,7 +306,7 @@ watch(
   }
 
   .post-card {
-    width: 100%; 
+    width: 100%;
   }
 }
 </style>
