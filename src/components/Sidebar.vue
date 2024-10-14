@@ -56,15 +56,17 @@ const bottomMenuItems = [
 ];
 </script>
 
-
 <style scoped>
 .sidebar {
   position: fixed;
   top: 0;
   left: 0;
   height: 100vh;
-  width: 80px;
-  background-color: #0e1217;
+  width: 66px;
+  background-color: rgba(14, 18, 23, 0.9);
+  border-top-right-radius: 10px;
+  border-bottom-right-radius: 14px;
+
   color: white;
   transition: width 0.5s cubic-bezier(0.25, 0.1, 0.25, 1);
   overflow-x: hidden;
@@ -75,7 +77,7 @@ const bottomMenuItems = [
 }
 
 .sidebar:hover {
-  width: 220px;
+  width: 200px;
 }
 
 .sidebar-content {
@@ -111,11 +113,14 @@ const bottomMenuItems = [
   display: flex;
   align-items: center;
   cursor: pointer;
-  transition: background 0.2s ease;
+  transition: background-color 0.3s ease;
 }
 
 .menu-item:hover {
   background-color: rgba(151, 64, 151, 0.822);
+
+  border-top-right-radius: 4px;
+  border-bottom-right-radius: 4px;
 }
 
 .menu-link {
@@ -131,14 +136,16 @@ const bottomMenuItems = [
   min-width: 20px;
   text-align: center;
   font-size: 1.2em;
-  color: #CE3DF3;
+  color: #ce3df3;
   margin-right: 15px;
+  transition: color 0.3s ease;
 }
 
 .menu-text {
   white-space: nowrap;
   display: none;
   transition: none;
+  transition: color 0.3s ease;
 }
 
 .sidebar:hover .menu-text {

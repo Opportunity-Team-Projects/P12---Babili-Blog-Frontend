@@ -16,11 +16,11 @@
         v-for="post in posts"
         :key="post.id"
         class="post-card"
+        @click="navigateToPost(post.id)"
       >
         <!-- Post Header -->
         <div class="post-header">
           <div class="profile-placeholder">
-      
             <img
               v-if="post.user && post.user.avatarUrl"
               :src="post.user.avatarUrl"
@@ -36,7 +36,7 @@
         <div class="post-details">
           <h2 class="post-title">{{ post.contentTitle }}</h2>
 
-              <!-- Post Image -->
+          <!-- Post Image -->
           <div class="post-image-placeholder">
             <i class="fas fa-image"></i>
           </div>
@@ -46,7 +46,6 @@
           <p class="post-date">{{ formatDate(post.created_at) }}</p>
         </div>
 
-  
         <!-- Post Actions -->
         <div class="post-actions">
           <div class="icon-left">
@@ -60,37 +59,35 @@
   </div>
 </template>
 
-
-
 <script setup>
 import { ref, onMounted, watch } from "vue";
+import { useRouter, useRoute } from "vue-router";
 import { authClient } from "../services/AuthService";
 import HeaderMain from "@/components/HeaderMain.vue";
 import Sidebar from "@/components/Sidebar.vue";
-import { useRoute } from "vue-router";
 
-// Reaktive Variable für die Beiträge
-const posts = ref([]);
+const router = useRouter();
 const route = useRoute();
 
+const posts = ref([]);
 const isSidebarCollapsed = ref(true);
 
 const handleToggle = (collapsed) => {
   isSidebarCollapsed.value = collapsed;
 };
 
-// Funktion zum Abrufen aller Beiträge
 const fetchAllPosts = async () => {
   try {
     const res = await authClient.get("/api/index");
-    posts.value = res.data.sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
+    posts.value = res.data.sort(
+      (a, b) => new Date(b.created_at) - new Date(a.created_at)
+    );
     console.log("Fetched all posts:", res.data);
   } catch (error) {
     console.error("Error fetching all posts:", error);
   }
 };
 
-// Funktion zur Suche von Beiträgen
 const searchPosts = async (query) => {
   try {
     const res = await authClient.get("/api/search", { params: { query } });
@@ -101,19 +98,13 @@ const searchPosts = async (query) => {
   }
 };
 
-// Funktion zur Formatierung des Datums
 const formatDate = (dateString) => {
   return new Date(dateString).toLocaleDateString();
 };
 
-//TODO Prüfe ob nichtmehr benötigt
-/* onMounted(() => {
-  if (route.query.q) {
-    searchPosts(route.query.q);
-  } else {
-    fetchAllPosts();
-  }
-}); */
+const navigateToPost = (postId) => {
+  router.push(`/posts/${postId}`);
+};
 
 watch(
   () => route.query.q,
@@ -126,8 +117,8 @@ watch(
   },
   { immediate: true }
 );
-
 </script>
+
 <style scoped>
 .app-container {
   position: relative;
@@ -138,57 +129,62 @@ watch(
   width: 100%;
   min-height: 100vh;
   transition: all 0.3s ease;
-  padding: 20px; 
-  /* background-color: #0E1217; */
-  background: radial-gradient(#813d9c 0%, #613583 43%, #3d3846 73%, #241f31 91%);
+  padding: 20px;
+
+  background: radial-gradient(
+    #813d9c 0%,
+    #613583 43%,
+    #3d3846 73%,
+    #241f31 91%
+  );
 
   color: white;
 }
 
 .overlay {
   position: fixed;
-  top: 0; /* Hinzugefügt für vollständige Abdeckung */
+  top: 0;
   left: 0;
   width: 100%;
   height: 100%;
-  z-index: 1000; /* Unterhalb der Sidebar */
+  z-index: 1000;
   transition: opacity 0.3s ease;
 }
 
 .post-container {
-  margin-left: 101px;
-  margin-right: 101px;
+  margin-left: 170px;
+  margin-right: 170px;
   margin-top: 20px;
   display: flex;
   justify-content: space-between;
   flex-wrap: wrap;
-  gap: 20px;
+
   padding: 20px;
   color: white;
-  background-color: rgba(0, 0, 0, 0); 
+  background-color: rgba(0, 0, 0, 0);
 }
 
 .post-card {
   margin-top: 32px;
   background-color: #1c1f26;
   border: 1px solid transparent;
-
   border-radius: 8px;
   padding: 20px;
-  width: 360px;
+  width: 340px;
   min-height: 400px;
   display: flex;
   flex-direction: column;
-  transition: border-color 1.2s cubic-bezier(0.25, 0.8, 0.25, 1), 
-              box-shadow 1.2s cubic-bezier(0.25, 0.8, 0.25, 1);
+  transition: border-color 0.3s ease, box-shadow 0.3s ease,
+    transform 0.2s ease-in-out;
   cursor: pointer;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(255, 255, 255, 0.1);
 }
 
 .post-card:hover {
-  border-color: #9747ff; 
-  box-shadow: 0 4px 12px rgba(151, 71, 255, 0.3); 
+  border-color: rgba(206, 61, 243, 0.4);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.7), 0 0 0 1px rgba(206, 61, 243, 0.3);
+  transform: scale(1.02);
 }
-
 
 .post-header {
   display: flex;
@@ -206,13 +202,13 @@ watch(
   display: flex;
   justify-content: center;
   align-items: center;
-  overflow: hidden; 
+  overflow: hidden;
 }
 
 .profile-image {
   width: 100%;
   height: 100%;
-  object-fit: cover; 
+  object-fit: cover;
 }
 
 .more-options-icon {
@@ -273,10 +269,11 @@ watch(
 .post-actions {
   display: flex;
   justify-content: space-between;
-  margin-top: auto; 
+  margin-top: auto;
   gap: 10px;
   padding-top: 10px;
-  border-top: 1px solid #CE3DF3;
+  border-top: 1px solid;
+  border-image: linear-gradient(to left, rgba(206, 61, 243, 1), #ce3df3) 1;
 }
 
 .post-actions .action-icon:not(:last-child) {
@@ -296,8 +293,6 @@ watch(
   transform: scale(1.1);
 }
 
-/* TODO media screen */
-
 @media screen and (max-width: 768px) {
   .post-container {
     margin-top: 25px;
@@ -310,7 +305,7 @@ watch(
   }
 
   .post-card {
-    width: 100%; /* Vollständige Breite auf kleinen Bildschirmen */
+    width: 100%;
   }
 }
 </style>
