@@ -256,8 +256,8 @@ onBeforeUnmount(() => {
     margin-bottom: 5px;
   }
   
-  input[type="text"], textarea {
-    width: 615px;
+  input[type="text"] {
+    width: 100%;
     height: 36px;
     padding: 10px;
     border: 1px solid #909090;
@@ -270,15 +270,7 @@ onBeforeUnmount(() => {
     flex-grow: 1;
     margin-bottom: 20px;
   }
-  
-  textarea {
-    height: 100%;
-    resize: none;
-    width: 626px;
-    height: 250px;
-    border-radius: 14px;
-  }
-  
+    
   .action-buttons {
     display: flex;
     justify-content: space-between;
@@ -326,19 +318,19 @@ onBeforeUnmount(() => {
 
   /* Fügen Sie diese Stile hinzu, um EasyMDE an Ihr Design anzupassen */
 .EasyMDEContainer {
-  background-color: #20262D;
+  /* background-color: #20262d; */
 }
 
 .EasyMDEContainer .CodeMirror {
   color: white;
-  background-color: #20262D;
+  background-color: #d96710;
   border-radius: 14px;
   border: 1px solid #909090;
 }
 
 .editor-toolbar {
-  background-color: #1C1F26;
-  border: none;
+  /* background-color: #20262d; */
+  border-bottom: 2px solid #CE3DF3;
 }
 
 .editor-toolbar button {
@@ -347,11 +339,15 @@ onBeforeUnmount(() => {
 
 .editor-toolbar button:hover,
 .editor-toolbar button.active {
-  background-color: #2C3E50;
+  /* background-color: #2C3E50; */
 }
 
 .editor-preview {
-  background-color: #20262D;
+  /* background-color: #20262D; */
   color: white;
 }
   </style>
+<!--       border: 1px solid #909090;
+      border-radius: 14px;
+      background-color: #20262D;
+      color: white; -->
