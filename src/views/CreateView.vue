@@ -33,11 +33,6 @@
           <input v-model="post.contentTitle" type="text" id="postTitle" required placeholder="Post Title">
         </div>
   
-        <div class="content-tabs">
-          <button :class="{ active: activeTab === 'write' }" @click="activeTab = 'write'">Write</button>
-          <button :class="{ active: activeTab === 'preview' }" @click="activeTab = 'preview'">Preview</button>
-        </div>
-  
         <div class="content-area">
            <textarea ref="editor"></textarea>
         </div>
@@ -268,26 +263,7 @@ onBeforeUnmount(() => {
     background-color: #20262D;
     color: white;
   }
-  
-  .content-tabs {
-    display: flex;
-    gap: 16px;
-    margin-bottom: 10px;
-  }
-  
-  .content-tabs button {
-    padding: 10px;
-    background: none;
-    border: none;
-    color: white;
-    cursor: pointer;
-  }
-  
-  .content-tabs button.active {
-    background-color: #2C3E50;
-    border-radius: 8px;
-  }
-  
+    
   .content-area {
     flex-grow: 1;
     margin-bottom: 20px;
