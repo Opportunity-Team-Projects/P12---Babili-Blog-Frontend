@@ -165,7 +165,8 @@ onBeforeUnmount(() => {
 
 </script>
   
-  <style scoped>
+<style scoped>
+
   .main-content {
     z-index: 1; 
     width: 100%;
@@ -184,6 +185,7 @@ onBeforeUnmount(() => {
     height: 760px;
     background-color: #1C1F26;
     border-radius: 8px;
+    /* border: 1px solid #909090; */
     padding: 10px;
     display: flex;
     flex-direction: column;
@@ -316,21 +318,38 @@ onBeforeUnmount(() => {
     }
   }
 
-  /* Fügen Sie diese Stile hinzu, um EasyMDE an Ihr Design anzupassen */
+</style>
+
+<!-- zusätzliches style-Tag ohne scoped für die EasyMDE-Styles -->
+
+<style>
 .EasyMDEContainer {
-  /* background-color: #20262d; */
+  background-color: #20262d;
 }
 
 .EasyMDEContainer .CodeMirror {
   color: white;
-  background-color: #d96710;
+  background-color: #20262d;
   border-radius: 14px;
   border: 1px solid #909090;
+  /* Nur die unteren Ecken abrunden */
+  border-bottom-left-radius: 14px;
+  border-bottom-right-radius: 14px;
+  /* Die oberen Ecken ohne Radius belassen */
+  border-top-right-radius: 0;
+  border-top-left-radius: 0;
 }
 
 .editor-toolbar {
-  /* background-color: #20262d; */
+  background-color: #20262d;
+  border: 1px solid #909090;
   border-bottom: 2px solid #CE3DF3;
+  /* Nur die oberen Ecken abrunden */
+  border-top-left-radius: 14px;
+  border-top-right-radius: 14px;
+  /* Die unteren Ecken ohne Radius belassen */
+  border-bottom-right-radius: 0;
+  border-bottom-left-radius: 0;
 }
 
 .editor-toolbar button {
@@ -339,15 +358,11 @@ onBeforeUnmount(() => {
 
 .editor-toolbar button:hover,
 .editor-toolbar button.active {
-  /* background-color: #2C3E50; */
+  background-color: #2C3E50;
 }
 
 .editor-preview {
-  /* background-color: #20262D; */
+  background-color: #20262D;
   color: white;
 }
-  </style>
-<!--       border: 1px solid #909090;
-      border-radius: 14px;
-      background-color: #20262D;
-      color: white; -->
+</style>
