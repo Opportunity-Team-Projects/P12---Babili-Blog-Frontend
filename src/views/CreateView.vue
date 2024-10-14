@@ -137,11 +137,13 @@ onMounted(() => {
     status: false,
     placeholder: "Write your blog content here...",
     toolbar: [
-      "bold", "italic", "heading", "|", 
+      "link", "guide", "preview"
+/*       "bold", "italic", "heading", "|", 
       "quote", "unordered-list", "ordered-list", "|", 
       "link", "image", "|", 
       "preview", "side-by-side", "fullscreen", "|", 
       "guide"
+       */
     ]
 });
 
