@@ -137,13 +137,22 @@ onMounted(() => {
     status: false,
     placeholder: "Write your blog content here...",
     toolbar: [
-      "link", "guide", "preview"
-/*       "bold", "italic", "heading", "|", 
+      "link", 
+      {
+        name: "preview",
+        action: EasyMDE.togglePreview,
+        className: "fa fa-eye no-disable",
+        title: "Vorschau",
+      },
+      
+      "guide",
+      
+/*    "bold", "italic", "heading", "|", 
       "quote", "unordered-list", "ordered-list", "|", 
       "link", "image", "|", 
       "preview", "side-by-side", "fullscreen", "|", 
       "guide"
-       */
+      */
     ]
 });
 
@@ -173,6 +182,7 @@ onBeforeUnmount(() => {
     transition: all 0.3s ease;
     padding: 20px; 
     background-color: #0E1217;
+    /* background: radial-gradient(#813d9c 10%, #613583 33%, #3d3846 53%, #241f31 71%); */
     color: white;
     display: flex;
     justify-content: center;
@@ -182,10 +192,10 @@ onBeforeUnmount(() => {
   
   .create-post-container {
     width: 680px;
-    height: 760px;
+    height: min-content;
     background-color: #1C1F26;
     border-radius: 8px;
-    /* border: 1px solid #909090; */
+    border: 1px solid #909090;
     padding: 10px;
     display: flex;
     flex-direction: column;
@@ -331,10 +341,10 @@ onBeforeUnmount(() => {
   color: white;
   background-color: #20262d;
   border-radius: 14px;
-  border: 1px solid #909090;
+  border: 1px solid #909090 !important;
   /* Nur die unteren Ecken abrunden */
-  border-bottom-left-radius: 14px;
-  border-bottom-right-radius: 14px;
+  border-bottom-left-radius: 14px !important;
+  border-bottom-right-radius: 14px !important;
   /* Die oberen Ecken ohne Radius belassen */
   border-top-right-radius: 0;
   border-top-left-radius: 0;
@@ -342,18 +352,23 @@ onBeforeUnmount(() => {
 
 .editor-toolbar {
   background-color: #20262d;
-  border: 1px solid #909090;
-  border-bottom: 2px solid #CE3DF3;
+  border: 1px solid #909090 !important;
+  border-bottom: 2px solid #CE3DF3 !important;
   /* Nur die oberen Ecken abrunden */
-  border-top-left-radius: 14px;
-  border-top-right-radius: 14px;
+  border-top-left-radius: 14px !important;
+  border-top-right-radius: 14px !important;
   /* Die unteren Ecken ohne Radius belassen */
   border-bottom-right-radius: 0;
   border-bottom-left-radius: 0;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
 }
 
 .editor-toolbar button {
   color: white !important;
+  font-weight: bold;
+  margin-right: 5px;
 }
 
 .editor-toolbar button:hover,
@@ -365,4 +380,47 @@ onBeforeUnmount(() => {
   background-color: #20262D;
   color: white;
 }
+
+/* Sichtbarer blinkender Cursor */
+.CodeMirror-cursor {
+  border-left: 1px solid white;
+  animation: blink 1s step-end infinite;
+}
+
+@keyframes blink {
+  50% {
+    border-color: transparent;
+  }
+}
+
+.editor-toolbar button::before {
+  font-family: "Roboto Slab", serif;
+}
+
+/* Anpassung der Toolbar-Symbole */
+.editor-toolbar button[title="Vorschau"]::before { content: "Preview"; }
+
+/* Guide-Button ganz rechts */
+.editor-toolbar button[title="Guide"] {
+  margin-left: auto;
+}
+
+/* Trennlinien in der Toolbar */
+.editor-toolbar .separator {
+  margin: 0 10px;
+}
+
+/* Zusätzliche Stile für bessere Sichtbarkeit */
+.CodeMirror-selected {
+  background-color: rgba(206, 61, 243, 0.3);
+}
+
+.cm-header {
+  color: #CE3DF3;
+}
+
+.cm-link {
+  color: #4A90E2;
+}
+
 </style>
