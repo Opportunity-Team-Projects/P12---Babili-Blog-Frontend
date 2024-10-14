@@ -43,9 +43,18 @@ const router = createRouter({
       // route level code-splitting
       // this generates a separate chunk (About.[hash].js) for this route
       // which is lazy-loaded when the route is visited.
-      component: () => import("../views/AboutView.vue"),
+      component: () => import('../views/AboutView.vue')
     },
-  ],
-});
+
+    {
+      path: '/customfeed',
+      name: 'customfeed',
+      // route level code-splitting
+      // this generates a separate chunk (About.[hash].js) for this route
+      // which is lazy-loaded when the route is visited.
+      component: () => import('../views/CustomFeedView.vue')
+    },
+  ]
+})
 
 export default router;
