@@ -12,7 +12,12 @@
   <!-- Hauptinhalt -->
   <div class="main-content">
     <div class="post-container">
-      <div v-for="post in posts" :key="post.id" class="post-card">
+      <div
+        v-for="post in posts"
+        :key="post.id"
+        class="post-card"
+        @click="navigateToPost(post.id)"
+      >
         <!-- Post Header -->
         <div class="post-header">
           <div class="profile-placeholder">
@@ -56,22 +61,21 @@
 
 <script setup>
 import { ref, onMounted, watch } from "vue";
+import { useRouter, useRoute } from "vue-router";
 import { authClient } from "../services/AuthService";
 import HeaderMain from "@/components/HeaderMain.vue";
 import Sidebar from "@/components/Sidebar.vue";
-import { useRoute } from "vue-router";
 
-// Reaktive Variable für die Beiträge
-const posts = ref([]);
+const router = useRouter();
 const route = useRoute();
 
+const posts = ref([]);
 const isSidebarCollapsed = ref(true);
 
 const handleToggle = (collapsed) => {
   isSidebarCollapsed.value = collapsed;
 };
 
-// Funktion zum Abrufen aller Beiträge
 const fetchAllPosts = async () => {
   try {
     const res = await authClient.get("/api/index");
@@ -84,7 +88,6 @@ const fetchAllPosts = async () => {
   }
 };
 
-// Funktion zur Suche von Beiträgen
 const searchPosts = async (query) => {
   try {
     const res = await authClient.get("/api/search", { params: { query } });
@@ -95,19 +98,13 @@ const searchPosts = async (query) => {
   }
 };
 
-// Funktion zur Formatierung des Datums
 const formatDate = (dateString) => {
   return new Date(dateString).toLocaleDateString();
 };
 
-//TODO Prüfe ob nichtmehr benötigt
-/* onMounted(() => {
-  if (route.query.q) {
-    searchPosts(route.query.q);
-  } else {
-    fetchAllPosts();
-  }
-}); */
+const navigateToPost = (postId) => {
+  router.push(`/posts/${postId}`);
+};
 
 watch(
   () => route.query.q,
@@ -121,6 +118,7 @@ watch(
   { immediate: true }
 );
 </script>
+
 <style scoped>
 .app-container {
   position: relative;
@@ -176,13 +174,16 @@ watch(
   min-height: 400px;
   display: flex;
   flex-direction: column;
-  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease,
+    transform 0.2s ease-in-out;
   cursor: pointer;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(255, 255, 255, 0.1);
 }
+
 .post-card:hover {
   border-color: rgba(206, 61, 243, 0.4);
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.7), 0 0 0 1px rgba(206, 61, 243, 0.3);
+  transform: scale(1.02);
 }
 
 .post-header {
@@ -291,8 +292,6 @@ watch(
   color: rgba(255, 255, 255, 0.918);
   transform: scale(1.1);
 }
-
-/* TODO media screen */
 
 @media screen and (max-width: 768px) {
   .post-container {

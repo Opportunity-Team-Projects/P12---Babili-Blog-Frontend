@@ -95,6 +95,7 @@ const onSearchInput = debounce(() => {
   position: relative;
   display: flex;
   align-items: center;
+  right: -10%;
 }
 
 .search-icon {
