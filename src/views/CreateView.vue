@@ -182,8 +182,7 @@ onBeforeUnmount(() => {
     transition: all 0.3s ease;
     padding: 20px; 
     background-color: #0E1217;
-    /* background: radial-gradient(#813d9c 10%, #613583 33%, #3d3846 53%, #241f31 71%); */
-    color: white;
+    background: radial-gradient(#62a0ea 0%, #1c71d8 28%, #1a5fb4 46%, #241f31 75%);    color: white;
     display: flex;
     justify-content: center;
     padding-top: 43px;
