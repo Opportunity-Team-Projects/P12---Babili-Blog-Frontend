@@ -1,10 +1,8 @@
 <template>
   <HeaderMain />
 
-  <!-- Sidebar-Komponente mit Event-Listener für das Toggle-Event -->
   <Sidebar :collapsed="true" @toggle="handleToggle" />
 
-  <!-- Überlagerung, die erscheint, wenn die Sidebar geöffnet ist -->
   <div
     v-if="!isSidebarCollapsed"
     class="overlay"
@@ -14,20 +12,41 @@
   <!-- Hauptinhalt -->
   <div class="main-content">
     <div class="post-container">
-      <div v-for="post in posts" :key="post.id" class="post-card">
+      <div
+        v-for="post in posts"
+        :key="post.id"
+        class="post-card"
+        @click="navigateToPost(post.id)"
+      >
+        <!-- Post Header -->
         <div class="post-header">
           <div class="profile-placeholder">
-            <i class="fas fa-user"></i>
+            <img
+              v-if="post.user && post.user.avatarUrl"
+              :src="post.user.avatarUrl"
+              alt="Profilbild"
+              class="profile-image"
+            />
+            <i v-else class="fas fa-user"></i>
           </div>
+          <i class="fas fa-ellipsis-h more-options-icon"></i>
+        </div>
+
+        <!-- Post Details -->
+        <div class="post-details">
           <h2 class="post-title">{{ post.contentTitle }}</h2>
+
+          <!-- Post Image -->
+          <div class="post-image-placeholder">
+            <i class="fas fa-image"></i>
+          </div>
+          <p class="post-author">
+            by {{ post.user ? post.user.name : "Unknown" }}
+          </p>
+          <p class="post-date">{{ formatDate(post.created_at) }}</p>
         </div>
-        <div class="post-image-placeholder">
-          <i class="fas fa-image"></i>
-        </div>
-        <p class="post-author">
-          by {{ post.user ? post.user.name : "Unknown" }}
-        </p>
-        <p class="post-date">{{ formatDate(post.created_at) }}</p>
+
+        <!-- Post Actions -->
         <div class="post-actions">
           <div class="icon-left">
             <i class="fas fa-heart action-icon"></i>
@@ -42,33 +61,33 @@
 
 <script setup>
 import { ref, onMounted, watch } from "vue";
+import { useRouter, useRoute } from "vue-router";
 import { authClient } from "../services/AuthService";
 import HeaderMain from "@/components/HeaderMain.vue";
 import Sidebar from "@/components/Sidebar.vue";
-import { useRoute } from "vue-router";
 
-// Reaktive Variable für die Beiträge
-const posts = ref([]);
+const router = useRouter();
 const route = useRoute();
 
+const posts = ref([]);
 const isSidebarCollapsed = ref(true);
 
 const handleToggle = (collapsed) => {
   isSidebarCollapsed.value = collapsed;
 };
 
-// Funktion zum Abrufen aller Beiträge
 const fetchAllPosts = async () => {
   try {
     const res = await authClient.get("/api/index");
-    posts.value = res.data;
+    posts.value = res.data.sort(
+      (a, b) => new Date(b.created_at) - new Date(a.created_at)
+    );
     console.log("Fetched all posts:", res.data);
   } catch (error) {
     console.error("Error fetching all posts:", error);
   }
 };
 
-// Funktion zur Suche von Beiträgen
 const searchPosts = async (query) => {
   try {
     const res = await authClient.get("/api/search", { params: { query } });
@@ -79,19 +98,13 @@ const searchPosts = async (query) => {
   }
 };
 
-// Funktion zur Formatierung des Datums
 const formatDate = (dateString) => {
   return new Date(dateString).toLocaleDateString();
 };
 
-//TODO Prüfe ob nichtmehr benötigt
-/* onMounted(() => {
-  if (route.query.q) {
-    searchPosts(route.query.q);
-  } else {
-    fetchAllPosts();
-  }
-}); */
+const navigateToPost = (postId) => {
+  router.push(`/posts/${postId}`);
+};
 
 watch(
   () => route.query.q,
@@ -114,46 +127,68 @@ watch(
 .main-content {
   z-index: 1;
   width: 100%;
+  min-height: 100vh;
   transition: all 0.3s ease;
   padding: 20px;
-  background-color: #0e1217;
+
+  background: radial-gradient(
+    #813d9c 0%,
+    #613583 43%,
+    #3d3846 73%,
+    #241f31 91%
+  );
+
   color: white;
 }
 
 .overlay {
   position: fixed;
-
+  top: 0;
   left: 0;
   width: 100%;
   height: 100%;
-  z-index: 1000; /* Unterhalb der Sidebar */
+  z-index: 1000;
   transition: opacity 0.3s ease;
 }
 
 .post-container {
-  margin-left: 101px;
-  margin-right: 101px;
+  margin-left: 170px;
+  margin-right: 170px;
   margin-top: 20px;
   display: flex;
   justify-content: space-between;
   flex-wrap: wrap;
-  gap: 20px;
+
   padding: 20px;
   color: white;
+  background-color: rgba(0, 0, 0, 0);
 }
 
 .post-card {
   margin-top: 32px;
   background-color: #1c1f26;
+  border: 1px solid transparent;
   border-radius: 8px;
-  padding: 15px;
-  width: 300px;
+  padding: 20px;
+  width: 340px;
+  min-height: 400px;
   display: flex;
   flex-direction: column;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease,
+    transform 0.2s ease-in-out;
+  cursor: pointer;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(255, 255, 255, 0.1);
+}
+
+.post-card:hover {
+  border-color: rgba(206, 61, 243, 0.4);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.7), 0 0 0 1px rgba(206, 61, 243, 0.3);
+  transform: scale(1.02);
 }
 
 .post-header {
   display: flex;
+  justify-content: space-between;
   align-items: center;
   margin-bottom: 10px;
 }
@@ -163,18 +198,37 @@ watch(
   height: 40px;
   border-radius: 50%;
   background-color: white;
-  border-color: black;
-  margin-right: 10px;
+  border: 1px solid black;
   display: flex;
   justify-content: center;
   align-items: center;
-  color: black;
-  margin-bottom: 12px;
+  overflow: hidden;
+}
+
+.profile-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.more-options-icon {
+  font-size: 1.2em;
+  cursor: pointer;
+  color: white;
+  transition: color 0.3s ease;
+}
+
+.more-options-icon:hover {
+  color: #9747ff;
+}
+
+.post-details {
+  margin-bottom: 10px;
 }
 
 .post-title {
   font-size: 1.2em;
-  margin: 0;
+  margin: 0 0 8px 0;
   overflow: hidden;
   text-overflow: ellipsis;
   display: -webkit-box;
@@ -182,8 +236,22 @@ watch(
   -webkit-box-orient: vertical;
   line-height: 1.3em;
   height: 3.9em;
-  margin-bottom: 8px;
   color: white;
+}
+
+.post-author,
+.post-date {
+  margin: 0;
+  font-size: 0.9em;
+  color: white;
+}
+
+.post-author {
+  margin-top: 5px;
+}
+
+.post-date {
+  margin-top: 2px;
 }
 
 .post-image-placeholder {
@@ -198,37 +266,26 @@ watch(
   color: rgba(0, 0, 0, 0.699);
 }
 
-.post-author {
-  margin-top: 5px;
-  font-size: 0.9em;
-  color: white;
-}
-.post-date {
-  font-size: 0.9em;
-  color: white;
-}
-
 .post-actions {
   display: flex;
   justify-content: space-between;
   margin-top: auto;
   gap: 10px;
   padding-top: 10px;
-  border-top: 1px solid #eee;
-  color: white;
+  border-top: 1px solid;
+  border-image: linear-gradient(to left, rgba(206, 61, 243, 1), #ce3df3) 1;
 }
+
 .post-actions .action-icon:not(:last-child) {
-  margin-right: 10px; /* Abstand nach rechts, außer beim letzten Icon */
+  margin-right: 10px;
 }
 
 .action-icon {
-  font-size: 1.2em;
+  font-size: 1.6em;
   cursor: pointer;
   color: white;
-  transition: color 0.3s ease;
-  padding-right: 2px;
-  padding-left: 2px;
-  transition: transform 0.3s ease;
+  transition: color 0.3s ease, transform 0.3s ease;
+  padding: 2px;
 }
 
 .action-icon:hover {
@@ -245,6 +302,10 @@ watch(
     flex-wrap: wrap;
     justify-content: space-around;
     padding: 20px;
+  }
+
+  .post-card {
+    width: 100%;
   }
 }
 </style>

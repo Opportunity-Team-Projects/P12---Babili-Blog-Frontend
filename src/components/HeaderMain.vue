@@ -1,24 +1,25 @@
 <template>
   <header class="app-header">
     <div class="header-left">
-      <router-link to="/" class="logo-placeholder">Logo
-      </router-link>
+      <router-link to="/" class="logo-placeholder">Logo</router-link>
     </div>
     <div class="header-center">
-            <input
-        type="text"
-        class="search-bar"
-        placeholder="Search..."
-        v-model="searchQuery"
-        @input="onSearchInput"
-      />
+      <div class="search-container">
+        <i class="fas fa-search search-icon"></i>
+        <input
+          type="text"
+          class="search-bar"
+          placeholder="Search..."
+          v-model="searchQuery"
+          @input="onSearchInput"
+        />
+      </div>
     </div>
     <div class="header-right">
-      <router-link to="/create" class="new-post-btn">New Post
-      </router-link>
-      <button class="dark-mode-toggle">
+      <router-link to="/create" class="new-post-btn">New Post</router-link>
+      <!--       <button class="dark-mode-toggle">
         <i class="fas fa-moon"></i>
-      </button>
+      </button> -->
       <div class="profile-icon">
         <i class="fas fa-user"></i>
       </div>
@@ -66,15 +67,19 @@ const onSearchInput = debounce(() => {
   top: 0;
   height: 84px;
   display: flex;
+
   align-items: center;
   justify-content: space-between;
   padding: 0 20px;
-  background-color: #0E1217;
-  box-shadow: 0 -1px 5px rgba(255, 255, 255, 0.3);
+  background-color: #0e1217;
+  box-shadow: 0 -1px 5px rgba(206, 61, 243, 0.8);
 }
 
-.header-left, .header-center, .header-right {
+.header-left,
+.header-center,
+.header-right {
   display: flex;
+  gap: 20px;
   align-items: center;
 }
 
@@ -86,21 +91,43 @@ const onSearchInput = debounce(() => {
   cursor: pointer;
 }
 
+.search-container {
+  position: relative;
+  display: flex;
+  align-items: center;
+  right: -10%;
+}
+
+.search-icon {
+  position: absolute;
+  left: 10px;
+
+  color: white;
+}
+
 .search-bar {
-  width: 300px;
-  padding: 10px;
-  border: 1px solid #ddd;
-  border-radius: 5px;
+  background-color: #20252d;
+  border: solid 1px;
+  color: white;
+  width: 500px;
+  padding: 10px 10px 10px 35px;
+  border: 1px solid white;
+  border-radius: 14px;
 }
 
 .new-post-btn {
-  padding: 14px 20px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 12px 24px;
   background-color: black;
   color: white;
-  border: none;
-  border-radius: 10px;
+  border: solid 1px;
+  border-radius: 15px;
+  border-color: white;
   cursor: pointer;
-  margin-right: 10px;
+  font-size: 16px;
+  font-weight: 600;
 }
 
 .dark-mode-toggle {
@@ -113,14 +140,16 @@ const onSearchInput = debounce(() => {
 }
 
 .profile-icon {
-  width: 40px;
-  height: 40px;
+  width: 60px;
+  height: 60px;
   background-color: white;
+  border: solid 3px #ce3df3;
   border-radius: 50%;
   display: flex;
   justify-content: center;
   align-items: center;
   cursor: pointer;
+  font-size: 30px;
 }
 
 @media screen and (max-width: 768px) {
@@ -130,7 +159,8 @@ const onSearchInput = debounce(() => {
     padding: 10px;
   }
 
-  .header-left, .header-right {
+  .header-left,
+  .header-right {
     width: 100%;
     justify-content: space-between;
   }
@@ -150,7 +180,8 @@ const onSearchInput = debounce(() => {
     font-size: 0.9em;
   }
 
-  .dark-mode-toggle, .profile-icon {
+  .dark-mode-toggle,
+  .profile-icon {
     font-size: 1em;
   }
 }
@@ -161,7 +192,8 @@ const onSearchInput = debounce(() => {
     font-size: 0.8em;
   }
 
-  .dark-mode-toggle, .profile-icon {
+  .dark-mode-toggle,
+  .profile-icon {
     font-size: 0.9em;
   }
 }
