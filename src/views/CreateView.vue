@@ -135,7 +135,7 @@ onMounted(() => {
     autofocus: true,
     spellChecker: false,
     status: false,
-    placeholder: "Schreiben Sie hier Ihren Bloginhalt...",
+    placeholder: "Write your blog content here...",
     toolbar: [
       "bold", "italic", "heading", "|", 
       "quote", "unordered-list", "ordered-list", "|", 
@@ -182,7 +182,7 @@ onBeforeUnmount(() => {
     height: 760px;
     background-color: #1C1F26;
     border-radius: 8px;
-    padding: 20px;
+    padding: 10px;
     display: flex;
     flex-direction: column;
   }
