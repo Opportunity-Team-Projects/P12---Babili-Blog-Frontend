@@ -33,14 +33,4 @@ onMounted(async () => {
 const savePreferences = () => {
   console.log("Ausgewählte Kategorien:", selectedCategories.value);
 };
-
-onMounted(async () => {
-  try {
-    const response = await CategoryService.getCategories();
-    console.log("Kategorien vom Backend:", response.data); // Überprüfen
-    categories.value = response.data;
-  } catch (error) {
-    console.error("Fehler beim Laden der Kategorien:", error);
-  }
-});
 </script>
