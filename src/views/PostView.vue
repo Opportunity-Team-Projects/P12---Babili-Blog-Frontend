@@ -62,6 +62,17 @@
             <div class="comment-content">
               <span class="commenter-name">{{ comment.user.name }}</span>
               <p>{{ comment.commentContent }}</p>
+              <button
+                v-if="
+                  currentUserId &&
+                  comment.user &&
+                  currentUserId === comment.user.id
+                "
+                @click="deleteComment(comment.id)"
+                class="delete-comment-button"
+              >
+                <i class="fas fa-trash"></i>
+              </button>
             </div>
           </div>
         </div>
@@ -79,18 +90,35 @@ import Sidebar from "@/components/Sidebar.vue";
 
 const route = useRoute();
 const post = ref(null);
-const newCommentTitle = ref("");
+
 const newCommentContent = ref("");
 const isFollowing = ref(false);
 const likeCount = ref(0);
 const isLiked = ref(false);
+const currentUserId = ref(null);
 
 const postId = computed(() => route.params.id);
 
 onMounted(async () => {
   await fetchPost();
   await fetchLikeCount();
+  await fetchCurrentUser();
 });
+
+const fetchCurrentUser = async () => {
+  try {
+    const response = await authClient.get("/api/user");
+    console.log("User response:", response.data);
+    if (response.data && response.data.user && response.data.user.id) {
+      currentUserId.value = response.data.user.id;
+    } else {
+      console.error("User ID not found in response");
+    }
+    console.log("Current user ID:", currentUserId.value);
+  } catch (error) {
+    console.error("Error fetching current user:", error);
+  }
+};
 
 const fetchPost = async () => {
   try {
@@ -115,19 +143,30 @@ const formatDate = (date) => {
 };
 
 const submitComment = async () => {
+  if (!newCommentContent.value.trim()) {
+    console.error("Comment content cannot be empty");
+    return;
+  }
+
   try {
-    const response = await authClient.post(
-      `/api/posts/${postId.value}/comments`,
-      {
-        commentTitle: newCommentTitle.value,
-        commentContent: newCommentContent.value,
-      }
-    );
-    post.value.comments.push(response.data.comment);
-    newCommentTitle.value = "";
-    newCommentContent.value = "";
+    await authClient.post(`/api/posts/${postId.value}/comments`, {
+      commentContent: newCommentContent.value,
+    });
+
+    // Kommentar wurde erfolgreich gepostet, Seite neu laden
+    window.location.reload();
   } catch (error) {
     console.error("Error submitting comment:", error);
+  }
+};
+
+const deleteComment = async (commentId) => {
+  try {
+    await authClient.delete(`/api/comments/${commentId}`);
+    // Nach erfolgreichem Löschen die Seite neu laden
+    window.location.reload();
+  } catch (error) {
+    console.error("Error deleting comment:", error);
   }
 };
 
@@ -283,6 +322,7 @@ textarea {
 .comment {
   display: flex;
   margin-bottom: 20px;
+  position: relative; /* Hinzugefügt */
 }
 
 .commenter-image {
@@ -292,9 +332,40 @@ textarea {
   margin-right: 15px;
 }
 
+.comment-content {
+  flex: 1;
+}
+
 .commenter-name {
   font-weight: bold;
   margin-bottom: 5px;
   display: block;
+}
+
+.delete-comment-button {
+  position: absolute; /* Positioniert den Button absolut innerhalb des comment-Containers */
+  right: 0; /* Setzt den Button an die rechte Seite */
+  top: 0; /* Setzt den Button an die obere Kante */
+  background-color: #ff4136; /* Roter Hintergrund */
+  color: white;
+  border: none;
+  padding: 5px 10px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 0.8em;
+  display: flex; /* Verwendet Flexbox für die Zentrierung des Icons */
+  align-items: center;
+  justify-content: center;
+  width: 30px; /* Feste Breite für einen quadratischen Button */
+  height: 30px; /* Feste Höhe für einen quadratischen Button */
+}
+
+.delete-comment-button:hover {
+  background-color: #d63a2f; /* Dunkleres Rot beim Hover */
+}
+
+/* Stellt sicher, dass der Kommentarinhalt nicht vom Button überdeckt wird */
+.comment-content {
+  padding-right: 40px; /* Gibt Platz für den Button */
 }
 </style>
