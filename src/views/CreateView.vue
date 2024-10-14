@@ -39,11 +39,7 @@
         </div>
   
         <div class="content-area">
-          <textarea v-if="activeTab === 'write'" v-model="post.content" placeholder="Write your blog content here..."></textarea>
-          <div v-else class="preview-content">
-            <!-- Add preview logic here -->
-            Preview content placeholder
-          </div>
+           <textarea ref="editor"></textarea>
         </div>
   
         <div class="action-buttons">
@@ -55,7 +51,9 @@
   </template>
   
   <script setup>
-  import { ref, onMounted } from 'vue';
+  import { ref, onMounted, onBeforeUnmount } from 'vue';
+  import EasyMDE from 'easymde';
+  import 'easymde/dist/easymde.min.css';
   import { useRouter } from 'vue-router';
   import { authClient } from '@/services/AuthService';
   import HeaderMain from '@/components/HeaderMain.vue';
@@ -64,6 +62,9 @@
   const router = useRouter();
   const fileInput = ref(null);
   const activeTab = ref('write');
+
+  const editor = ref(null);
+  let easyMDE = null;
   
   const post = ref({
     contentTitle: '',
@@ -133,10 +134,39 @@
     router.push('/'); 
   };
   
-  onMounted(() => {
+onMounted(() => {
+  easyMDE = new EasyMDE({
+    element: editor.value,
+    autofocus: true,
+    spellChecker: false,
+    status: false,
+    placeholder: "Schreiben Sie hier Ihren Bloginhalt...",
+    toolbar: [
+      "bold", "italic", "heading", "|", 
+      "quote", "unordered-list", "ordered-list", "|", 
+      "link", "image", "|", 
+      "preview", "side-by-side", "fullscreen", "|", 
+      "guide"
+    ]
+});
 
-  });
-  </script>
+easyMDE.value(post.value.content);
+
+easyMDE.codemirror.on("change", () => {
+  post.value.content = easyMDE.value();
+});
+});
+
+onBeforeUnmount(() => {
+  if (easyMDE) {
+    easyMDE.toTextArea();
+    easyMDE = null;
+  }
+});
+
+
+
+</script>
   
   <style scoped>
   .main-content {
@@ -315,4 +345,35 @@
       padding-left: 0;
     }
   }
+
+  /* Fügen Sie diese Stile hinzu, um EasyMDE an Ihr Design anzupassen */
+.EasyMDEContainer {
+  background-color: #20262D;
+}
+
+.EasyMDEContainer .CodeMirror {
+  color: white;
+  background-color: #20262D;
+  border-radius: 14px;
+  border: 1px solid #909090;
+}
+
+.editor-toolbar {
+  background-color: #1C1F26;
+  border: none;
+}
+
+.editor-toolbar button {
+  color: white !important;
+}
+
+.editor-toolbar button:hover,
+.editor-toolbar button.active {
+  background-color: #2C3E50;
+}
+
+.editor-preview {
+  background-color: #20262D;
+  color: white;
+}
   </style>
