@@ -126,7 +126,7 @@ const login = async () => {
 .bodycontainer {
   background-image: url("../assets/bg.svg");
   background-size: cover;
-  background-position: center;
+  background-position: left;
   background-repeat: no-repeat;
   height: 100vh;
 }
