@@ -38,42 +38,56 @@
           <i class="fas fa-bookmark action-icon"></i>
         </div>
       </div>
-
-      <div class="comment-container">
-        <h2>Discussions about this post</h2>
-        <div class="comment-input">
-          <textarea
-            v-model="newCommentContent"
-            placeholder="Write a comment..."
-          ></textarea>
-          <button @click="submitComment" class="comment-button">Comment</button>
-        </div>
-        <div class="comments-list">
-          <div
-            v-for="comment in post.comments"
-            :key="comment.id"
-            class="comment"
-          >
-            <img
-              :src="comment.user.profile_photo_url"
-              alt="Commenter profile"
-              class="commenter-image"
-            />
-            <div class="comment-content">
-              <span class="commenter-name">{{ comment.user.name }}</span>
-              <p>{{ comment.commentContent }}</p>
-              <button
-                v-if="
-                  currentUserId &&
-                  comment.user &&
-                  currentUserId === comment.user.id
-                "
-                @click="deleteComment(comment.id)"
-                class="delete-comment-button"
-              >
-                <i class="fas fa-trash"></i>
-              </button>
+    </div>
+    <div class="comment-container" v-if="post">
+      <h2>Discussions about this post</h2>
+      <div class="comment-input">
+        <textarea
+          v-model="newCommentContent"
+          placeholder="Write a comment..."
+        ></textarea>
+        <button @click="submitComment" class="comment-button">Comment</button>
+      </div>
+      <div class="comments-list">
+        <div v-for="comment in post.comments" :key="comment.id" class="comment">
+          <div class="comment-header">
+            <div class="author-info" v-if="post.user">
+              <img
+                :src="post.user.profile_photo_url"
+                alt="Author profile"
+                class="profile-image"
+              />
+              <!-- Rest of the template -->
             </div>
+
+            <div class="comment-info">
+              <span class="commenter-name">{{
+                comment.user?.name || "Anonymous"
+              }}</span>
+              <span class="comment-date">{{
+                formatCommentDate(comment.created_at)
+              }}</span>
+            </div>
+          </div>
+          <p class="comment-content">
+            {{ comment.commentContent || comment.content }}
+          </p>
+          <div class="comment-footer">
+            <div class="comment-likes">
+              <i class="fas fa-heart"></i>
+              <span>{{ comment.likes || 0 }}</span>
+            </div>
+            <button
+              v-if="
+                currentUserId &&
+                comment.user &&
+                currentUserId === comment.user.id
+              "
+              @click="deleteComment(comment.id)"
+              class="delete-comment-button"
+            >
+              <i class="fas fa-trash"></i>
+            </button>
           </div>
         </div>
       </div>
@@ -90,7 +104,6 @@ import Sidebar from "@/components/Sidebar.vue";
 
 const route = useRoute();
 const post = ref(null);
-
 const newCommentContent = ref("");
 const isFollowing = ref(false);
 const likeCount = ref(0);
@@ -140,6 +153,10 @@ const fetchLikeCount = async () => {
 
 const formatDate = (date) => {
   return new Date(date).toLocaleDateString();
+};
+
+const formatCommentDate = (dateString) => {
+  return new Date(dateString).toLocaleString();
 };
 
 const submitComment = async () => {
@@ -202,28 +219,35 @@ const toggleLike = async () => {
 <style scoped>
 .post-container {
   background: linear-gradient(135deg, #1c1f26 0%, #2c3e50 100%);
-  height: 100vh;
+  min-height: 100vh;
+  padding: 20px;
 }
+
 .post-view {
-  max-width: 800px;
+  max-width: 850px;
   margin: 0 auto;
+  background-color: #1c1f26;
+  padding-bottom: 20px;
+
+  border-radius: 14px;
+  overflow: hidden;
+  margin-bottom: 56px;
 }
 
 .post-header {
-  padding: 20px;
-  border-radius: 8px;
+  padding: 21px;
   color: white;
-  margin-bottom: 20px;
 }
 
 .post-date {
-  font-size: 0.9em;
+  font-size: 0.94em;
   margin-bottom: 10px;
 }
 
 .post-title {
-  font-size: 2em;
-  margin-bottom: 15px;
+  font-size: 28px;
+  font-weight: 600;
+  margin-bottom: 17px;
 }
 
 .author-info {
@@ -232,10 +256,10 @@ const toggleLike = async () => {
 }
 
 .profile-image {
-  width: 50px;
-  height: 50px;
+  width: 53px;
+  height: 53px;
   border-radius: 50%;
-  margin-right: 15px;
+  margin-right: 17px;
 }
 
 .author-details {
@@ -246,126 +270,167 @@ const toggleLike = async () => {
 .author-name {
   font-weight: bold;
   margin-bottom: 5px;
+  font-size: 1.02em;
 }
 
 .follow-button {
   background-color: white;
   color: #9e15d9;
   border: none;
-  padding: 5px 10px;
+  padding: 6px 12px;
   border-radius: 5px;
   cursor: pointer;
+  font-size: 0.85em;
 }
 
 .post-content {
-  margin-bottom: 30px;
+  padding: 20px;
+
   color: white;
+  font-size: 22px;
 }
 
 .post-image {
   width: 100%;
-  max-height: 400px;
+  max-height: 425px;
   object-fit: cover;
   margin-bottom: 20px;
 }
 
 .post-text {
-  line-height: 1.6;
-  margin-bottom: 20px;
+  padding-top: 10px;
+  line-height: 1.45;
+  margin-bottom: 21px;
+  font-size: 22px;
+  font-weight: 350;
 }
 
 .post-actions {
   display: flex;
-  gap: 15px;
+  gap: 17px;
 }
 
 .action-icon {
-  font-size: 1.5em;
+  font-size: 1.53em;
   cursor: pointer;
 }
 
 .comment-container {
-  border-radius: 8px;
   color: white;
+  max-width: 850px;
+  display: flex;
+  flex-direction: column;
+  margin: 0 auto;
+  font-size: 20px;
+  padding-bottom: 8px;
 }
 
 .comment-input {
-  margin-bottom: 20px;
-  color: white;
+  margin-bottom: 21px;
 }
 
 textarea {
+  margin-top: 8px;
   width: 100%;
-  height: 100px;
+  height: 106px;
   padding: 10px;
   margin-bottom: 10px;
   border: 1px solid #ddd;
   border-radius: 5px;
   background-color: #20252d;
   color: white;
+  font-size: 0.94em;
 }
 
 .comment-button {
   background-color: #9e15d9;
   color: white;
   border: none;
-  padding: 10px 20px;
+  padding: 10px 21px;
   border-radius: 5px;
   cursor: pointer;
   float: right;
+  font-size: 0.94em;
 }
 
 .comments-list {
-  margin-top: 30px;
+  margin-top: 10px;
 }
 
 .comment {
+  background-color: #2c3e50;
+  border-radius: 8px;
+  padding: 17px;
+  margin-bottom: 21px;
+  font-size: 22px;
+}
+
+.comment-header {
   display: flex;
-  margin-bottom: 20px;
-  position: relative; /* Hinzugefügt */
+  align-items: flex-start;
+  margin-bottom: 10px;
 }
 
 .commenter-image {
-  width: 40px;
-  height: 40px;
+  width: 42px;
+  height: 42px;
   border-radius: 50%;
-  margin-right: 15px;
+  margin-right: 17px;
 }
 
-.comment-content {
-  flex: 1;
+.comment-info {
+  display: flex;
+  flex-direction: column;
 }
 
 .commenter-name {
   font-weight: bold;
-  margin-bottom: 5px;
-  display: block;
+  margin-bottom: 2.5px;
+  font-size: 0.94em;
+}
+
+.comment-date {
+  font-size: 0.76em;
+  color: #bbb;
+}
+
+.comment-content {
+  margin-bottom: 10px;
+  line-height: 1.28;
+  font-size: 0.94em;
+}
+
+.comment-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.comment-likes {
+  display: flex;
+  align-items: center;
+  font-size: 0.94em; /* Reduced from 1.1em */
+}
+
+.comment-likes i {
+  color: #ff4136;
+  margin-right: 6px; /* Reduced from 7px */
 }
 
 .delete-comment-button {
-  position: absolute; /* Positioniert den Button absolut innerhalb des comment-Containers */
-  right: 0; /* Setzt den Button an die rechte Seite */
-  top: 0; /* Setzt den Button an die obere Kante */
-  background-color: #ff4136; /* Roter Hintergrund */
+  background-color: #ff4136;
   color: white;
   border: none;
-  padding: 5px 10px;
-  border-radius: 5px;
+  padding: 6px 12px; /* Reduced from 7px 14px */
+  border-radius: 5px; /* Reduced from 6px */
   cursor: pointer;
-  font-size: 0.8em;
-  display: flex; /* Verwendet Flexbox für die Zentrierung des Icons */
+  font-size: 0.76em; /* Reduced from 0.9em */
+  display: flex;
   align-items: center;
   justify-content: center;
-  width: 30px; /* Feste Breite für einen quadratischen Button */
-  height: 30px; /* Feste Höhe für einen quadratischen Button */
 }
 
 .delete-comment-button:hover {
-  background-color: #d63a2f; /* Dunkleres Rot beim Hover */
-}
-
-/* Stellt sicher, dass der Kommentarinhalt nicht vom Button überdeckt wird */
-.comment-content {
-  padding-right: 40px; /* Gibt Platz für den Button */
+  background-color: #d63a2f;
 }
 </style>
