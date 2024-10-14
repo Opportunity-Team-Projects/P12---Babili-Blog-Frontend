@@ -1,18 +1,88 @@
+//TODO Erfolgsmeldung einstellen,
+
+<script setup>
+import { ref, onMounted } from "vue";
+import { useRoute, useRouter } from "vue-router";
+import AuthService from "@/services/AuthService";
+
+const route = useRoute();
+const router = useRouter();
+
+const token = ref("");
+const email = ref("");
+const password = ref("");
+const password_confirmation = ref("");
+const error = ref("");
+const success = ref("");
+
+onMounted(() => {
+  token.value = route.query.token || "";
+  email.value = route.query.email || "";
+});
+
+const submit = async () => {
+  error.value = "";
+  success.value = "";
+
+  // Validierung der Eingaben (optional)
+  if (password.value !== password_confirmation.value) {
+    error.value = "Die Passwörter stimmen nicht überein.";
+    return;
+  }
+
+  try {
+    const payload = {
+      token: token.value,
+      email: email.value,
+      password: password.value,
+      password_confirmation: password_confirmation.value,
+    };
+    await AuthService.resetPassword(payload);
+    // Erfolgsmeldung anzeigen oder weiterleiten
+    success.value = "Passwort erfolgreich zurückgesetzt!";
+    // Optional: Weiterleiten zur Login-Seite nach kurzer Verzögerung
+    setTimeout(() => {
+      router.push("/login");
+    }, 2000);
+  } catch (e) {
+    // Fehlerbehandlung
+    if (e.response && e.response.data && e.response.data.errors) {
+      error.value = Object.values(e.response.data.errors).flat().join(" ");
+    } else if (e.response && e.response.data && e.response.data.message) {
+      error.value = e.response.data.message;
+    } else {
+      error.value = "Fehler beim Zurücksetzen des Passworts.";
+    }
+  }
+};
+</script>
+
 <template>
   <div class="background-container">
     <div class="background-fader">
       <div class="content-wrapper">
         <main class="container">
           <h1 class="title">Tech & Game Nexus</h1>
-          <p class="title-description">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. </p>
+          <p class="title-description">
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
+            eiusmod tempor incididunt ut labore et dolore magna aliqua.
+          </p>
           <h2 class="subtitle">Change Password</h2>
-          <form>
+          <form @submit.prevent="submit">
             <label for="password">Password</label>
-            <input type="text" id="password">
-            <label for="email">Password confirmation</label>
-            <input type="text" id="password_confirmation">
-            <button>Send</button>
+            <input type="password" id="password" v-model="password" required />
+            <label for="password_confirmation">Password confirmation</label>
+            <input
+              type="password"
+              id="password_confirmation"
+              v-model="password_confirmation"
+              required
+            />
+            <button type="submit">Send</button>
           </form>
+          <div v-if="error">
+            <p>{{ error }}</p>
+          </div>
         </main>
       </div>
     </div>
@@ -22,14 +92,15 @@
 <style scoped>
 /* Desktop Styles (unchanged) */
 .background-container {
-  background-image: url('/register-bg.png');
+  background-image: url("/register-bg.png");
   background-size: 107% 110%;
   background-position: -220px -75px;
   background-repeat: no-repeat;
   min-height: 100vh;
   width: 100vw;
   position: relative;
-  box-shadow: 0px 2px 6px 0px #0000001A, 0px 0px 2px 0px #00000014, 0px 0px 0px 1px #00000033;
+  box-shadow: 0px 2px 6px 0px #0000001a, 0px 0px 2px 0px #00000014,
+    0px 0px 0px 1px #00000033;
   overflow: hidden;
 }
 
@@ -39,7 +110,13 @@
   left: 0;
   right: 0;
   bottom: 0;
-  background: linear-gradient(90deg, rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, 0.6) 65%, rgba(0, 0, 0, 0.8) 75%, #000000 85%);
+  background: linear-gradient(
+    90deg,
+    rgba(0, 0, 0, 0) 0%,
+    rgba(0, 0, 0, 0.6) 65%,
+    rgba(0, 0, 0, 0.8) 75%,
+    #000000 85%
+  );
   display: flex;
   justify-content: flex-end;
 }
@@ -64,7 +141,7 @@
 .title {
   font-family: "Audiowide", sans-serif;
   font-size: 32px;
-  color: #D7A8FC;
+  color: #d7a8fc;
   padding-bottom: 36px;
 }
 

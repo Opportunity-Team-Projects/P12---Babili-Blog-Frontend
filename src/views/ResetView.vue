@@ -1,6 +1,8 @@
+//TODO wenn eingeloggt weiterleiten auf start
+
 <script setup>
 import { ref } from "vue";
-import authService from "@/services/AuthService";
+import AuthService from "@/services/AuthService";
 
 const email = ref("");
 const message = ref("");
@@ -8,7 +10,7 @@ const message = ref("");
 async function submitForgotPassword() {
   try {
     const payload = { email: email.value };
-    await authService.forgotPassword(payload);
+    await AuthService.forgotPassword(payload);
     message.value = "Dein Passwort wurde zurückgesetzt.";
   } catch (error) {
     console.error("Error sending reset password email:", error);
