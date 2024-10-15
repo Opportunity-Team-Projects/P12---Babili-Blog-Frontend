@@ -1,20 +1,32 @@
 //TODO wenn eingeloggt weiterleiten auf start
 
 <script setup>
-import { ref } from "vue";
+import { ref, onMounted } from "vue";
 import AuthService from "@/services/AuthService";
+import { useRouter } from "vue-router";
+import { useAuthStore } from "@/stores/useAuthStore";
 
 const email = ref("");
 const message = ref("");
+const router = useRouter();
+const authStore = useAuthStore();
+
+onMounted(async () => {
+  await authStore.fetchUser();
+  if (authStore.isAuthenticated) {
+    router.push("/");
+  }
+});
 
 async function submitForgotPassword() {
   try {
     const payload = { email: email.value };
     await AuthService.forgotPassword(payload);
-    message.value = "Dein Passwort wurde zurückgesetzt.";
+    message.value =
+      "Dein Passwort wurde zurückgesetzt, und eine E-Mail wurde versendet.";
   } catch (error) {
     console.error("Error sending reset password email:", error);
-    message.value = "An error occurred. Please try again.";
+    message.value = "Es ist ein Fehler aufgetreten. Bitte versuche es erneut..";
   }
 }
 </script>
@@ -34,7 +46,7 @@ async function submitForgotPassword() {
             <input type="email" id="email" v-model="email" required />
             <button type="submit">Send</button>
           </form>
-          <p v-if="message" class="success-message">{{ message }}</p>
+          <p v-if="message" class="message">{{ message }}</p>
         </main>
       </div>
     </div>
@@ -144,7 +156,7 @@ button {
   width: 105px;
   height: 39px;
 }
-.success-message {
+.message {
   margin-top: 20px;
   color: #4caf50; /* Grün für erfolgreiche Nachrichten */
   font-size: 16px;
