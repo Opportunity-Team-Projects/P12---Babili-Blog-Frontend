@@ -56,7 +56,6 @@
   
   const router = useRouter();
   const fileInput = ref(null);
-  const activeTab = ref('write');
 
   const editor = ref(null);
   let easyMDE = null;
@@ -137,15 +136,37 @@ onMounted(() => {
     status: false,
     placeholder: "Write your blog content here...",
     toolbar: [
-      "link", 
+      { name: "bold",
+        action: EasyMDE.toggleBold,
+        className: "fa fa-bold",
+        title: "Bold",  /*Tooltip-Anzeige*/
+      },
+      {
+        name: "italic",
+        action: EasyMDE.toggleItalic,
+        className: "fa fa-italic",
+        title: "Italic",
+      },
+      {
+        name: "heading",
+        action: EasyMDE.toggleHeadingSmaller,
+        className: "fa fa-header",
+        title: "Heading",
+      },
+      "|",
       {
         name: "preview",
         action: EasyMDE.togglePreview,
         className: "fa fa-eye no-disable",
-        title: "Vorschau",
+        title: "Toggle Preview",
       },
-      
-      "guide",
+      "|",
+      {
+        name: "guide",
+        action: "https://www.markdownguide.org/basic-syntax/",
+        className: "fa fa-question-circle",
+        title: "Markdown Guide",  
+      },     
       
 /*    "bold", "italic", "heading", "|", 
       "quote", "unordered-list", "ordered-list", "|", 
@@ -156,11 +177,12 @@ onMounted(() => {
     ]
 });
 
+
 easyMDE.value(post.value.content);
 
 easyMDE.codemirror.on("change", () => {
-  post.value.content = easyMDE.value();
-});
+  post.value.content = easyMDE.value(); 
+  });
 });
 
 onBeforeUnmount(() => {
@@ -181,8 +203,9 @@ onBeforeUnmount(() => {
     width: 100%;
     transition: all 0.3s ease;
     padding: 20px; 
-    background-color: #0E1217;
-    background: radial-gradient(#62a0ea 0%, #1c71d8 28%, #1a5fb4 46%, #241f31 75%);    color: white;
+    /* background: radial-gradient(#3584e4 0%, #1a5fb4 15%, #1c71d8 34%, #241f31 62%, #000000 92%); */
+    background: radial-gradient(#62a0ea 0%, #1c71d8 28%, #1a5fb4 46%, #241f31 75%);    
+    color: white;
     display: flex;
     justify-content: center;
     padding-top: 43px;
@@ -260,7 +283,6 @@ onBeforeUnmount(() => {
   .form-group {
     margin-bottom: 20px;
   }
-
 
   label {
     display: block;
@@ -341,38 +363,61 @@ onBeforeUnmount(() => {
   background-color: #20262d;
   border-radius: 14px;
   border: 1px solid #909090 !important;
-  /* Nur die unteren Ecken abrunden */
   border-bottom-left-radius: 14px !important;
   border-bottom-right-radius: 14px !important;
-  /* Die oberen Ecken ohne Radius belassen */
   border-top-right-radius: 0;
   border-top-left-radius: 0;
 }
 
 .editor-toolbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
   background-color: #20262d;
   border: 1px solid #909090 !important;
   border-bottom: 2px solid #CE3DF3 !important;
-  /* Nur die oberen Ecken abrunden */
   border-top-left-radius: 14px !important;
   border-top-right-radius: 14px !important;
-  /* Die unteren Ecken ohne Radius belassen */
   border-bottom-right-radius: 0;
   border-bottom-left-radius: 0;
+  padding: 5px 10px;
+}
+
+/* Vergrößerter Guide-Button */
+.editor-toolbar button.guide {
   display: flex;
-  justify-content: flex-start;
+  justify-content: center;
   align-items: center;
+  margin: 0 20px;
+  padding: 8px 30px;
+}
+
+/* Vergrößerter Preview-Button */
+.editor-toolbar button.preview {
+  display: flex;
+  order: 0;   /* Mitte */
+  flex-grow: 1;    /* Füllt den verfügbaren Platz in der Mitte */
+  justify-content: center;
+  align-items: center;
+  max-width: none; 
+  margin: 0 100px;
+  padding: 8px 20px;
+  font-size: 16px;
+  border: 1px solid #909090;
+  border-radius: 4px;
+  background-color: #2C3E50;
 }
 
 .editor-toolbar button {
   color: white !important;
   font-weight: bold;
-  margin-right: 5px;
+  margin: 0 5px;
+  flex-shrink: 0;
 }
 
 .editor-toolbar button:hover,
 .editor-toolbar button.active {
-  background-color: #2C3E50;
+  background-color: #3E5060;
 }
 
 .editor-preview {
@@ -380,7 +425,6 @@ onBeforeUnmount(() => {
   color: white;
 }
 
-/* Sichtbarer blinkender Cursor */
 .CodeMirror-cursor {
   border-left: 1px solid white;
   animation: blink 1s step-end infinite;
@@ -391,35 +435,4 @@ onBeforeUnmount(() => {
     border-color: transparent;
   }
 }
-
-.editor-toolbar button::before {
-  font-family: "Roboto Slab", serif;
-}
-
-/* Anpassung der Toolbar-Symbole */
-.editor-toolbar button[title="Vorschau"]::before { content: "Preview"; }
-
-/* Guide-Button ganz rechts */
-.editor-toolbar button[title="Guide"] {
-  margin-left: auto;
-}
-
-/* Trennlinien in der Toolbar */
-.editor-toolbar .separator {
-  margin: 0 10px;
-}
-
-/* Zusätzliche Stile für bessere Sichtbarkeit */
-.CodeMirror-selected {
-  background-color: rgba(206, 61, 243, 0.3);
-}
-
-.cm-header {
-  color: #CE3DF3;
-}
-
-.cm-link {
-  color: #4A90E2;
-}
-
 </style>
