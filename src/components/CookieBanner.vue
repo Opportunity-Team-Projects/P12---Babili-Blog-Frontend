@@ -1,10 +1,10 @@
 
 <template>
 
-    <transition name="fade">
+    <transition name="slide">
         <div v-if="showBanner" class="cookie-banner">
             <img src="@/assets/cookie.svg" alt="Cookie Info" class="banner-image" />
-            <p>This website uses cookies to give you the best possible experience</p>
+            <p>This website uses cookies to give you the best possible experience.</p>
            
                 <button @click="acceptCookies" class="btn-acc">ACCEPT ALL</button>
                 <button @click="declineCookies" class="btn-dec">ACCEPT ONLY NECESSARY</button>
@@ -99,4 +99,26 @@ p {
 .btn-dec:hover {
     background-color: #7a909b;
 }
+
+/* Transition für das Hereinsliden */
+.slide-enter-active, .slide-leave-active {
+  transition: transform 0.5s ease;
+}
+
+.slide-enter-from {
+  transform: translateX(100%); /* Startposition - rechts außerhalb des Bildschirms */
+}
+
+.slide-enter-to {
+  transform: translateX(0); /* Endposition - im Sichtbereich */
+}
+
+.slide-leave-from {
+  transform: translateX(0); /* Startposition - im Sichtbereich */
+}
+
+.slide-leave-to {
+  transform: translateX(100%); /* Endposition - rechts außerhalb des Bildschirms */
+}
+
 </style>
