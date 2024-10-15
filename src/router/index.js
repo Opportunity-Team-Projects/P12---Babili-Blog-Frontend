@@ -11,6 +11,11 @@ const router = createRouter({
       props: (route) => ({ query: route.query.q }),
     },
     {
+      path: "/register",
+      name: "register",
+      component: () => import("../views/RegisterView.vue"),
+    },
+    {
       path: "/login",
       name: "login",
       component: () => import("../views/LoginView.vue"),
