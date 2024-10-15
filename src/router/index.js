@@ -18,7 +18,14 @@ const router = createRouter({
     {
       path: '/reset-password',
       name: 'ChangePassword',
-      component: () => import('../views/ChangeView.vue')
+      component: () => import('../views/ChangeView.vue'),
+      beforeEnter: (to, from, next) => {
+        if (to.query.token) {
+          next();
+        } else {
+          next({ name: 'home' }); // oder zu einer anderen Seite umleiten
+        }
+      },
     },
     {
       path: '/forgot-password',

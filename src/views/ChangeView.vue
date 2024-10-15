@@ -4,6 +4,7 @@
 import { ref, onMounted } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import AuthService from "@/services/AuthService";
+import { useAuthStore } from "@/stores/useAuthStore";
 
 const route = useRoute();
 const router = useRouter();
@@ -12,21 +13,28 @@ const token = ref("");
 const email = ref("");
 const password = ref("");
 const password_confirmation = ref("");
-const error = ref("");
-const success = ref("");
+const message = ref("");
+const authStore = useAuthStore();
 
-onMounted(() => {
-  token.value = route.query.token || "";
-  email.value = route.query.email || "";
+onMounted(async () => {
+  await authStore.fetchUser();
+  console.log("isAuthenticated:", authStore.isAuthenticated);
+  if (authStore.isAuthenticated) {
+    router.push("/");
+  } else {
+    token.value = route.query.token || "";
+    email.value = route.query.email || "";
+  }
 });
 
 const submit = async () => {
-  error.value = "";
-  success.value = "";
-
-  // Validierung der Eingaben (optional)
   if (password.value !== password_confirmation.value) {
-    error.value = "Die Passwörter stimmen nicht überein.";
+    message.value = "Die Passwörter stimmen nicht überein.";
+    return;
+  }
+
+  if (password.value.length < 8) {
+    message.value = "Das Passwort muss mindestens 8 Zeichen lang sein.";
     return;
   }
 
@@ -39,7 +47,9 @@ const submit = async () => {
     };
     await AuthService.resetPassword(payload);
     // Erfolgsmeldung anzeigen oder weiterleiten
-    success.value = "Passwort erfolgreich zurückgesetzt!";
+    message.value =
+      "Dein Passwort wurde erfolgreich zurückgesetzt. Du wirst zum Login weitergeleitet.";
+
     // Optional: Weiterleiten zur Login-Seite nach kurzer Verzögerung
     setTimeout(() => {
       router.push("/login");
@@ -47,11 +57,15 @@ const submit = async () => {
   } catch (e) {
     // Fehlerbehandlung
     if (e.response && e.response.data && e.response.data.errors) {
-      error.value = Object.values(e.response.data.errors).flat().join(" ");
+      const errors = Object.values(e.response.data.errors).flat().join(" ");
+      if (errors.includes("This password reset token is invalid.")) {
+        message.value = "Dieser Passwort-Reset-Token ist ungültig.";
+      }
     } else if (e.response && e.response.data && e.response.data.message) {
-      error.value = e.response.data.message;
+      message.value = e.response.data.message;
     } else {
-      error.value = "Fehler beim Zurücksetzen des Passworts.";
+      message.value =
+        "Es ist ein Fehler aufgetreten. Bitte versuche es erneut.";
     }
   }
 };
@@ -80,8 +94,8 @@ const submit = async () => {
             />
             <button type="submit">Send</button>
           </form>
-          <div v-if="error">
-            <p>{{ error }}</p>
+          <div v-if="message" class="message">
+            {{ message }}
           </div>
         </main>
       </div>
@@ -190,6 +204,11 @@ button {
   cursor: pointer;
   width: 105px;
   height: 39px;
+}
+.message {
+  margin-top: 20px;
+  color: #4caf50; /* Grün für erfolgreiche Nachrichten */
+  font-size: 16px;
 }
 
 /* Mobile Styles */

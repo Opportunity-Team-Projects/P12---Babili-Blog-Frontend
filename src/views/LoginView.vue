@@ -19,13 +19,9 @@ const authStore = useAuthStore();
 }); */
 
 onMounted(async () => {
+  await authStore.fetchUser();
   if (authStore.isAuthenticated) {
-    router.push("/"); // Weiterleitung, wenn der Benutzer bereits eingeloggt ist
-  } else {
-    await authStore.fetchUser();
-    if (authStore.isAuthenticated) {
-      router.push("/");
-    }
+    router.push("/");
   }
 });
 
