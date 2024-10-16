@@ -66,6 +66,12 @@ const router = createRouter({
       // which is lazy-loaded when the route is visited.
       component: () => import('../views/CustomFeedView.vue')
     },
+
+    {
+      path: "/my-feed",
+      name: "my-feed",
+      component: HomeView,
+    },
   ]
 })
 

@@ -62,7 +62,7 @@
 <script setup>
 import { ref, onMounted, watch } from "vue";
 import { useRouter, useRoute } from "vue-router";
-import { authClient } from "../services/AuthService";
+import PostService from "@/services/PostService";
 import HeaderMain from "@/components/HeaderMain.vue";
 import Sidebar from "@/components/Sidebar.vue";
 
@@ -78,7 +78,7 @@ const handleToggle = (collapsed) => {
 
 const fetchAllPosts = async () => {
   try {
-    const res = await authClient.get("/api/index");
+    const res = await PostService.getAllPosts();
     posts.value = res.data.sort(
       (a, b) => new Date(b.created_at) - new Date(a.created_at)
     );
@@ -90,11 +90,28 @@ const fetchAllPosts = async () => {
 
 const searchPosts = async (query) => {
   try {
-    const res = await authClient.get("/api/search", { params: { query } });
+    let res;
+    if (route.path === "/my-feed") {
+      res = await PostService.searchPostsInUserCategories(query);
+    } else {
+      res = await PostService.searchPosts(query);
+    }
     posts.value = res.data;
     console.log("Search results:", res.data);
   } catch (error) {
     console.error("Error searching posts:", error);
+  }
+};
+
+const fetchUserCategoryPosts = async () => {
+  try {
+    const res = await PostService.getPostsByUserCategories();
+    posts.value = res.data.sort(
+      (a, b) => new Date(b.created_at) - new Date(a.created_at)
+    );
+    console.log("Fetched user category posts:", res.data);
+  } catch (error) {
+    console.error("Error fetching user category posts:", error);
   }
 };
 
@@ -106,13 +123,33 @@ const navigateToPost = (postId) => {
   router.push(`/posts/${postId}`);
 };
 
+// Watcher für Pfadänderungen
+watch(
+  () => route.path,
+  (newPath) => {
+    if (route.query.q) {
+      searchPosts(route.query.q);
+    } else if (newPath === "/my-feed") {
+      fetchUserCategoryPosts();
+    } else if (newPath === "/") {
+      fetchAllPosts();
+    }
+  },
+  { immediate: true }
+);
+
+// Watcher für Suchanfragen
 watch(
   () => route.query.q,
   (newQuery) => {
     if (newQuery) {
       searchPosts(newQuery);
     } else {
-      fetchAllPosts();
+      if (route.path === "/my-feed") {
+        fetchUserCategoryPosts();
+      } else if (route.path === "/") {
+        fetchAllPosts();
+      }
     }
   },
   { immediate: true }
