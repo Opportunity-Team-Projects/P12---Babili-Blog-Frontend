@@ -25,7 +25,6 @@
           <i class="fas fa-image"></i>
           <span>Click to upload image</span>
         </div>
-<<<<<<< HEAD
         <div class="tags-container">
           <button
             v-for="tag in tags"
@@ -40,109 +39,41 @@
             ></i>
             {{ tag.name }}
           </button>
-=======
-  
-        <div class="form-group">
-          <input v-model="post.contentTitle" type="text" id="postTitle" required placeholder="Post Title">
-        </div>
-  
-        <div class="content-area">
-          <EasyMDEEditor v-model="post.content" />
-        </div>
-  
-        <div class="action-buttons">
-          <button class="cancel-btn" @click="cancelPost">Cancel</button>
-          <button class="post-btn" @click="createPost">Post</button>
->>>>>>> markdown-editor
-        </div>
-      </div>
 
-      <div class="form-group">
-        <input
-          v-model="post.contentTitle"
-          type="text"
-          id="postTitle"
-          required
-          placeholder="Post Title"
-        />
-      </div>
+          <div class="form-group">
+            <input
+              v-model="post.contentTitle"
+              type="text"
+              id="postTitle"
+              required
+              placeholder="Post Title"
+            />
+          </div>
 
-      <div class="content-tabs">
-        <button
-          :class="{ active: activeTab === 'write' }"
-          @click="activeTab = 'write'"
-        >
-          Write
-        </button>
-        <button
-          :class="{ active: activeTab === 'preview' }"
-          @click="activeTab = 'preview'"
-        >
-          Preview
-        </button>
-      </div>
+          <div class="content-areas">
+            <EasyMDEEditor v-model="post.content" id="postContent" />
+          </div>
 
-      <div class="content-area">
-        <textarea
-          v-if="activeTab === 'write'"
-          v-model="post.content"
-          placeholder="Write your blog content here..."
-        ></textarea>
-        <div v-else class="preview-content">
-          <!-- Add preview logic here -->
-          Preview content placeholder
+          <div class="action-buttons">
+            <button class="cancel-btn" @click="cancelPost">Cancel</button>
+            <button class="post-btn" @click="createPost">Post</button>
+          </div>
         </div>
-      </div>
-
-      <div class="action-buttons">
-        <button class="cancel-btn" @click="cancelPost">Cancel</button>
-        <button class="post-btn" @click="createPost">Post</button>
       </div>
     </div>
-<<<<<<< HEAD
   </div>
 </template>
-=======
-  </template>
-  
-  <script setup>
-  import { ref } from 'vue';
-  import { useRouter } from 'vue-router';
-  import { authClient } from '@/services/AuthService';
-  import HeaderMain from '@/components/HeaderMain.vue';
-  import Sidebar from '@/components/Sidebar.vue';
-  import EasyMDEEditor from '@/components/EasyMDEEditor.vue';
-  
-  const router = useRouter();
-  const fileInput = ref(null);
-  
-  const post = ref({
-    contentTitle: '',
-    content: '',
-    contentImg: '',
-    category_ids: []
-  });
-  
-  const tags = ref([
-    { id: 1, name: 'Technology' },
-    { id: 2, name: 'Gaming' },
-    { id: 3, name: 'Hardware' },
-    { id: 4, name: 'Software' },
-    { id: 5, name: 'Cybersecurity' },
-    { id: 6, name: 'Innovations' },
-    { id: 7, name: 'Education' },
->>>>>>> markdown-editor
 
 <script setup>
-import { ref, onMounted } from "vue";
+import { ref } from "vue";
 import { useRouter } from "vue-router";
 import { authClient } from "@/services/AuthService";
 import HeaderMain from "@/components/HeaderMain.vue";
 import Sidebar from "@/components/Sidebar.vue";
+import EasyMDEEditor from "@/components/EasyMDEEditor.vue";
 
 const router = useRouter();
 const fileInput = ref(null);
-const activeTab = ref("write");
 
 const post = ref({
   contentTitle: "",
@@ -203,13 +134,10 @@ const createPost = async () => {
     }
   }
 };
-<<<<<<< HEAD
 
 const cancelPost = () => {
   router.push("/");
 };
-
-onMounted(() => {});
 </script>
 
 <style scoped>
@@ -218,7 +146,14 @@ onMounted(() => {});
   width: 100%;
   transition: all 0.3s ease;
   padding: 20px;
-  background: linear-gradient(135deg, #1c1f26 0%, #2c3e50 100%);
+  background: radial-gradient(
+    #3584e4 0%,
+    #1a5fb4 15%,
+    #1c71d8 34%,
+    #241f31 62%,
+    #000000 92%
+  );
+  /* background: radial-gradient(#62a0ea 0%, #1c71d8 28%, #1a5fb4 46%, #241f31 75%);*/
   color: white;
   display: flex;
   justify-content: center;
@@ -228,15 +163,13 @@ onMounted(() => {});
 
 .create-post-container {
   width: 680px;
-  height: 760px;
+  height: min-content;
   background-color: #1c1f26;
   border-radius: 8px;
-  padding: 20px;
-  padding-left: 40px;
-  padding-right: 40px;
+  border: 1px solid #909090;
+  padding: 10px;
   display: flex;
   flex-direction: column;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1), 0 1px 3px rgba(0, 0, 0, 0.08);
 }
 
 h1 {
@@ -252,31 +185,16 @@ h1 {
 }
 
 .image-and-tags {
-  display: flex;
-  margin-bottom: 20px;
+  flex-direction: column;
 }
 
 .image-upload {
-  width: 278px;
-  height: 170px;
-  border-radius: 25px;
-  border-style: solid;
-  border-color: #909090;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  cursor: pointer;
+  width: 100%;
+  margin-bottom: 20px;
 }
 
 .tags-container {
-  flex-grow: 1;
-  display: flex;
-  flex-wrap: wrap;
-  gap: 10px;
-  padding-left: 20px;
-  width: 103px;
-  height: 39px;
+  padding-left: 0;
 }
 
 .tags-container button {
@@ -305,9 +223,8 @@ label {
   margin-bottom: 5px;
 }
 
-input[type="text"],
-textarea {
-  width: 615px;
+input[type="text"] {
+  width: 100%;
   height: 36px;
   padding: 10px;
   border: 1px solid #909090;
@@ -316,36 +233,9 @@ textarea {
   color: white;
 }
 
-.content-tabs {
-  display: flex;
-  gap: 16px;
-  margin-bottom: 10px;
-}
-
-.content-tabs button {
-  padding: 10px;
-  background: none;
-  border: none;
-  color: white;
-  cursor: pointer;
-}
-
-.content-tabs button.active {
-  background-color: #2c3e50;
-  border-radius: 8px;
-}
-
 .content-area {
   flex-grow: 1;
   margin-bottom: 20px;
-}
-
-textarea {
-  height: 100%;
-  resize: none;
-  width: 615px;
-  height: 250px;
-  border-radius: 14px;
 }
 
 .action-buttons {
@@ -380,54 +270,6 @@ textarea {
     min-height: 100vh;
   }
 
-=======
-  
-  const cancelPost = () => {
-    router.push('/'); 
-  };
-
-</script>
-  
-<style scoped>
-
-  .main-content {
-    z-index: 1; 
-    width: 100%;
-    transition: all 0.3s ease;
-    padding: 20px; 
-    background: radial-gradient(#3584e4 0%, #1a5fb4 15%, #1c71d8 34%, #241f31 62%, #000000 92%);
-    /* background: radial-gradient(#62a0ea 0%, #1c71d8 28%, #1a5fb4 46%, #241f31 75%);*/    
-    color: white;
-    display: flex;
-    justify-content: center;
-    padding-top: 43px;
-    min-height: 100vh;
-  }
-  
-  .create-post-container {
-    width: 680px;
-    height: min-content;
-    background-color: #1C1F26;
-    border-radius: 8px;
-    border: 1px solid #909090;
-    padding: 10px;
-    display: flex;
-    flex-direction: column;
-  }
-  
-  h1 {
-    font-size: 24px;
-    font-weight: 700;
-    margin-bottom: 10px;
-  }
-  
-  .purple-line {
-    height: 2px;
-    background-color: #CE3DF3;
-    margin-bottom: 20px;
-  }
-  
->>>>>>> markdown-editor
   .image-and-tags {
     flex-direction: column;
   }
@@ -440,94 +282,5 @@ textarea {
   .tags-container {
     padding-left: 0;
   }
-<<<<<<< HEAD
 }
-=======
-  
-  .tags-container button {
-    font-weight: 500;
-    font-size: 16px;
-    background-color: transparent;
-    border: 1px solid #CE3DF3;
-    color: #CE3DF3;
-    padding: 5px 10px;
-    border-radius: 15px;
-    cursor: pointer;
-    transition: all 0.3s ease;
-  }
-  
-  .tags-container button.selected {
-    background-color: #CE3DF3;
-    color: white;
-  }
-  
-  .form-group {
-    margin-bottom: 20px;
-  }
-
-  label {
-    display: block;
-    margin-bottom: 5px;
-  }
-  
-  input[type="text"] {
-    width: 100%;
-    height: 36px;
-    padding: 10px;
-    border: 1px solid #909090;
-    border-radius: 14px;
-    background-color: #20262D;
-    color: white;
-  }
-    
-  .content-area {
-    flex-grow: 1;
-    margin-bottom: 20px;
-  }
-    
-  .action-buttons {
-    display: flex;
-    justify-content: space-between;
-  }
-  
-  .cancel-btn, .post-btn {
-    padding: 10px 20px;
-    font-weight: 600;
-    font-size: 14px;
-    border: none;
-    border-radius: 14px;
-    cursor: pointer;
-  }
-  
-  .cancel-btn {
-    background-color: white;
-    color: black;
-  }
-  
-  .post-btn {
-    background-color: #CE3DF3;
-    color: white;
-  }
-  
-  @media screen and (max-width: 768px) {
-    .create-post-container {
-      width: 100%;
-      height: auto;
-      min-height: 100vh;
-    }
-  
-    .image-and-tags {
-      flex-direction: column;
-    }
-  
-    .image-upload {
-      width: 100%;
-      margin-bottom: 20px;
-    }
-  
-    .tags-container {
-      padding-left: 0;
-    }
-  }
->>>>>>> markdown-editor
 </style>
