@@ -20,19 +20,30 @@ import CategoryService from "@/services/CategoryService";
 const categories = ref([]);
 const selectedCategories = ref([]);
 
-// Kategorien abrufen
+// Kategorien und Benutzerpräferenzen abrufen
 onMounted(async () => {
   try {
-    const response = await CategoryService.getCategories();
-    console.log("API-Antwort:", response); // Logge die gesamte Antwort
-    console.log("Kategorie-Daten:", response.data); // Logge nur die Daten
-    categories.value = response.data;
+    const [categoriesResponse, preferencesResponse] = await Promise.all([
+      CategoryService.getCategories(),
+      CategoryService.getUserPreferences(),
+    ]);
+
+    categories.value = categoriesResponse.data;
+    selectedCategories.value = preferencesResponse.data.categories;
   } catch (error) {
-    console.error("Fehler beim Laden der Kategorien:", error);
+    console.error("Fehler beim Laden der Daten:", error);
   }
 });
 
-const savePreferences = () => {
-  console.log("Ausgewählte Kategorien:", selectedCategories.value);
+// Präferenzen speichern
+const savePreferences = async () => {
+  try {
+    await CategoryService.saveUserPreferences({
+      categories: selectedCategories.value,
+    });
+    console.log("Präferenzen erfolgreich gespeichert");
+  } catch (error) {
+    console.error("Fehler beim Speichern der Präferenzen:", error);
+  }
 };
 </script>
