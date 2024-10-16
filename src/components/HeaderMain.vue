@@ -53,9 +53,9 @@ watch(
 // Funktion, die aufgerufen wird, wenn der Benutzer etwas in das Suchfeld eingibt
 const onSearchInput = debounce(() => {
   if (searchQuery.value) {
-    router.push({ name: "home", query: { q: searchQuery.value } });
+    router.push({ path: route.path, query: { q: searchQuery.value } });
   } else {
-    router.push({ name: "home" });
+    router.push({ path: route.path });
   }
 }, 300);
 </script>

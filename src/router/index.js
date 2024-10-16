@@ -12,6 +12,11 @@ const router = createRouter({
       props: (route) => ({ query: route.query.q }),
     },
     {
+      path: "/register",
+      name: "register",
+      component: () => import("../views/RegisterView.vue"),
+    },
+    {
       path: "/login",
       name: "login",
       component: () => import("../views/LoginView.vue"),
@@ -66,6 +71,12 @@ const router = createRouter({
       // this generates a separate chunk (About.[hash].js) for this route
       // which is lazy-loaded when the route is visited.
       component: () => import('../views/CustomFeedView.vue')
+    },
+
+    {
+      path: "/my-feed",
+      name: "my-feed",
+      component: HomeView,
     },
   ]
 })
