@@ -7,14 +7,90 @@
   
     <div class="main-content">
 
+        <div class="profile-container">
 
+            <div class="profile-content">
+
+                <h1>Profile</h1>
+                <div class="purple-line"></div>
+
+                <section>
+                    <h2>Profile picture</h2>
+
+                    <p>Upload a picture to make your profile stand out and let people recognize your 
+                        posts and comments easily!</p>
+
+                    <!-- Hier Vorschaubild einfügen -->
+                    <div v-if="profileImage" class="image-preview">
+                        <img :src="profileImage" alt="Profile Picture" class="profile-picture"/>
+                    </div>
+
+                    <div class="image-upload" @click="triggerFileInput">
+                        <input type="file" ref="fileInput" style="display:none" @change="handleFileUpload">
+                        <i class="fas fa-camera fa-2x"></i>
+                        <span>Change profile picture</span>
+                    </div>
+                </section>
+
+                <section>
+
+                    <h2>Account Information</h2>
+                    
+                    <form @submit.prevent="submit">
+                                    
+                        <input
+                            id="username" class="placeholder" type="text" name="username" placeholder="Username"
+                            v-model="username"
+                        />
+                        
+                        <input
+                            id="email" class="placeholder" type="email" name="email" placeholder="Email"
+                            v-model="email"
+                        />
+                        <button type="submit">Save changes</button>
+                    </form>
+                </section>
+
+                <section>
+                    <h2>Security</h2>
+
+                    <p>Please enter your new password</p>
+
+                    <form @submit.prevent="submit">
+                        
+                        <input type="password" class="placeholder" id="password" v-model="password" 
+                        required 
+                        placeholder="Password"/>
+                        
+                        <input type="password" class="placeholder" id="password_confirmation" placeholder="Password confirmation"
+                        v-model="password_confirmation"
+                        required
+                        />
+                        <button type="submit">Set password</button>
+                    </form>
+                </section>
+
+                <section>
+                    <h2>Delete account</h2>
+
+                    <p>Deleting your account will:</p>
+                    <br>
+                    <ol>
+                        <li>Permanently delete your profile, along with your authentication associations.</li>
+                        <li>Permanently delete all your content, including your posts, bookmarks, comments, etc.</li>
+                        <li>Allow your username to become available to anyone.</li>   
+                    </ol>
+                </section>
+            </div>
+
+        </div>
 
     </div>
 </template>
 
 <script setup>
 
-import { ref } from 'vue';
+import { ref, onMounted } from 'vue';
 import { useRouter } from 'vue-router';
 import { authClient } from '@/services/AuthService';
 import HeaderMain from '@/components/HeaderMain.vue';
@@ -28,6 +104,38 @@ const handleToggle = (collapsed) => {
   isSidebarCollapsed.value = collapsed;
 };
 
+const triggerFileInput = () => {
+  fileInput.value.click();
+};
+
+// Funktion zum Hochladen des Bildes und zum Anzeigen der Vorschau
+const handleFileUpload = (event) => {
+  const file = event.target.files[0];
+  if (file) {
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      post.value.contentImg = e.target.result;
+    };
+    reader.readAsDataURL(file);
+  }
+};
+
+// Lädt das aktuelle Profilbild beim Laden der Seite
+onMounted(async () => {
+    try {
+        const response = await authClient.get('/api/user/profile-image'); // Backend-Route für das Profilbild
+        profileImage.value = response.data.profileImageUrl; // Profilbild-URL vom Server
+    } catch (error) {
+        console.error("Fehler beim Laden des Profilbildes:", error);
+    }
+});
+
+// den Upload des Bildes an das Backend auslösen
+const formData = new FormData();
+formData.append('profile_picture', file);
+authClient.post('/api/user/upload-profile-picture', formData)
+    .then(response => console.log('Bild erfolgreich hochgeladen'))
+    .catch(error => console.error('Fehler beim Hochladen:', error));
 
 </script>
 
@@ -56,7 +164,61 @@ const handleToggle = (collapsed) => {
     border: 1px solid #909090;
     display: flex;
     flex-direction: column;
+    padding: 10px;
+    margin: 0 10px;
 }
 
+.profile-content {
+    width: 100%;
+}
+
+h1 {
+    font-size: 24px;
+    font-weight: 700;
+    margin-bottom: 10px;
+}
+
+.purple-line {
+    height: 2px;
+    background-color: #CE3DF3;
+    margin-bottom: 20px;
+}
+
+h2 {
+    font-size: 20px;
+    font-weight: 500;
+    margin-bottom: 15px;
+}
+
+p {
+    font-size: 14px;
+}
+
+form {
+  display: flex;
+  flex-direction: column;
+}
+
+.placeholder {
+    padding-left: 2%;
+}
+
+section {
+    margin: 40px 0;
+}
+
+.image-upload {
+    width: 278px;
+    height: 100px;
+    border-radius: 25px;
+    border-style: solid;
+    border-color: #909090;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    margin-top: 20px;
+}
 
 </style>
