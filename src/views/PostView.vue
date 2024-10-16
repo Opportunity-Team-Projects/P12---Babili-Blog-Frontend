@@ -4,7 +4,12 @@
   <div class="post-container">
     <div class="post-view" v-if="post">
       <div class="post-header" :style="{ backgroundColor: '#9E15D9' }">
-        <div class="post-date">{{ formatDate(post.created_at) }}</div>
+        <div class="header-top">
+          <div class="post-date">{{ formatDate(post.created_at) }}</div>
+          <button class="close-button" @click="goBack">
+            <i class="fas fa-times"></i>
+          </button>
+        </div>
         <h1 class="post-title">{{ post.contentTitle }}</h1>
         <div class="author-info">
           <img
@@ -97,12 +102,14 @@
 
 <script setup>
 import { ref, onMounted, computed } from "vue";
-import { useRoute } from "vue-router";
+import { useRoute, useRouter } from "vue-router";
 import { authClient } from "@/services/AuthService";
 import HeaderMain from "@/components/HeaderMain.vue";
 import Sidebar from "@/components/Sidebar.vue";
 
 const route = useRoute();
+const router = useRouter();
+
 const post = ref(null);
 const newCommentContent = ref("");
 const isFollowing = ref(false);
@@ -111,6 +118,10 @@ const isLiked = ref(false);
 const currentUserId = ref(null);
 
 const postId = computed(() => route.params.id);
+
+const goBack = () => {
+  router.go(-1);
+};
 
 onMounted(async () => {
   await fetchPost();
@@ -221,6 +232,18 @@ const toggleLike = async () => {
   background: linear-gradient(135deg, #1c1f26 0%, #2c3e50 100%);
   min-height: 100vh;
   padding: 20px;
+  position: relative;
+}
+
+.post-header {
+  padding: 21px;
+  color: white;
+}
+.header-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
 }
 
 .post-view {
@@ -228,15 +251,44 @@ const toggleLike = async () => {
   margin: 0 auto;
   background-color: #1c1f26;
   padding-bottom: 20px;
-
   border-radius: 14px;
   overflow: hidden;
   margin-bottom: 56px;
+  position: relative;
 }
 
-.post-header {
-  padding: 21px;
+.close-button {
+  background-color: rgba(
+    255,
+    255,
+    255,
+    0.2
+  ); /* Leicht transparenter weißer Hintergrund */
   color: white;
+  border: 2px solid white; /* Weißer Rand */
+  cursor: pointer;
+  font-size: 1em;
+  width: 30px; /* Feste Breite */
+  height: 30px; /* Feste Höhe */
+  border-radius: 50%; /* Macht den Button kreisförmig */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+  padding: 0; /* Entfernt das Padding */
+}
+
+.close-button i {
+  font-size: 16px;
+}
+.close-button:hover {
+  background-color: rgba(
+    255,
+    255,
+    255,
+    0.3
+  ); /* Etwas weniger transparent beim Hover */
+  transform: scale(1.05); /* Leichte Vergrößerung beim Hover */
 }
 
 .post-date {
