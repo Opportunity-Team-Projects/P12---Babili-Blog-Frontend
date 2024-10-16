@@ -25,6 +25,7 @@
           <i class="fas fa-image"></i>
           <span>Click to upload image</span>
         </div>
+<<<<<<< HEAD
         <div class="tags-container">
           <button
             v-for="tag in tags"
@@ -39,6 +40,20 @@
             ></i>
             {{ tag.name }}
           </button>
+=======
+  
+        <div class="form-group">
+          <input v-model="post.contentTitle" type="text" id="postTitle" required placeholder="Post Title">
+        </div>
+  
+        <div class="content-area">
+          <EasyMDEEditor v-model="post.content" />
+        </div>
+  
+        <div class="action-buttons">
+          <button class="cancel-btn" @click="cancelPost">Cancel</button>
+          <button class="post-btn" @click="createPost">Post</button>
+>>>>>>> markdown-editor
         </div>
       </div>
 
@@ -84,8 +99,39 @@
         <button class="post-btn" @click="createPost">Post</button>
       </div>
     </div>
+<<<<<<< HEAD
   </div>
 </template>
+=======
+  </template>
+  
+  <script setup>
+  import { ref } from 'vue';
+  import { useRouter } from 'vue-router';
+  import { authClient } from '@/services/AuthService';
+  import HeaderMain from '@/components/HeaderMain.vue';
+  import Sidebar from '@/components/Sidebar.vue';
+  import EasyMDEEditor from '@/components/EasyMDEEditor.vue';
+  
+  const router = useRouter();
+  const fileInput = ref(null);
+  
+  const post = ref({
+    contentTitle: '',
+    content: '',
+    contentImg: '',
+    category_ids: []
+  });
+  
+  const tags = ref([
+    { id: 1, name: 'Technology' },
+    { id: 2, name: 'Gaming' },
+    { id: 3, name: 'Hardware' },
+    { id: 4, name: 'Software' },
+    { id: 5, name: 'Cybersecurity' },
+    { id: 6, name: 'Innovations' },
+    { id: 7, name: 'Education' },
+>>>>>>> markdown-editor
 
 <script setup>
 import { ref, onMounted } from "vue";
@@ -157,6 +203,7 @@ const createPost = async () => {
     }
   }
 };
+<<<<<<< HEAD
 
 const cancelPost = () => {
   router.push("/");
@@ -333,6 +380,54 @@ textarea {
     min-height: 100vh;
   }
 
+=======
+  
+  const cancelPost = () => {
+    router.push('/'); 
+  };
+
+</script>
+  
+<style scoped>
+
+  .main-content {
+    z-index: 1; 
+    width: 100%;
+    transition: all 0.3s ease;
+    padding: 20px; 
+    background: radial-gradient(#3584e4 0%, #1a5fb4 15%, #1c71d8 34%, #241f31 62%, #000000 92%);
+    /* background: radial-gradient(#62a0ea 0%, #1c71d8 28%, #1a5fb4 46%, #241f31 75%);*/    
+    color: white;
+    display: flex;
+    justify-content: center;
+    padding-top: 43px;
+    min-height: 100vh;
+  }
+  
+  .create-post-container {
+    width: 680px;
+    height: min-content;
+    background-color: #1C1F26;
+    border-radius: 8px;
+    border: 1px solid #909090;
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+  }
+  
+  h1 {
+    font-size: 24px;
+    font-weight: 700;
+    margin-bottom: 10px;
+  }
+  
+  .purple-line {
+    height: 2px;
+    background-color: #CE3DF3;
+    margin-bottom: 20px;
+  }
+  
+>>>>>>> markdown-editor
   .image-and-tags {
     flex-direction: column;
   }
@@ -345,5 +440,94 @@ textarea {
   .tags-container {
     padding-left: 0;
   }
+<<<<<<< HEAD
 }
+=======
+  
+  .tags-container button {
+    font-weight: 500;
+    font-size: 16px;
+    background-color: transparent;
+    border: 1px solid #CE3DF3;
+    color: #CE3DF3;
+    padding: 5px 10px;
+    border-radius: 15px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+  }
+  
+  .tags-container button.selected {
+    background-color: #CE3DF3;
+    color: white;
+  }
+  
+  .form-group {
+    margin-bottom: 20px;
+  }
+
+  label {
+    display: block;
+    margin-bottom: 5px;
+  }
+  
+  input[type="text"] {
+    width: 100%;
+    height: 36px;
+    padding: 10px;
+    border: 1px solid #909090;
+    border-radius: 14px;
+    background-color: #20262D;
+    color: white;
+  }
+    
+  .content-area {
+    flex-grow: 1;
+    margin-bottom: 20px;
+  }
+    
+  .action-buttons {
+    display: flex;
+    justify-content: space-between;
+  }
+  
+  .cancel-btn, .post-btn {
+    padding: 10px 20px;
+    font-weight: 600;
+    font-size: 14px;
+    border: none;
+    border-radius: 14px;
+    cursor: pointer;
+  }
+  
+  .cancel-btn {
+    background-color: white;
+    color: black;
+  }
+  
+  .post-btn {
+    background-color: #CE3DF3;
+    color: white;
+  }
+  
+  @media screen and (max-width: 768px) {
+    .create-post-container {
+      width: 100%;
+      height: auto;
+      min-height: 100vh;
+    }
+  
+    .image-and-tags {
+      flex-direction: column;
+    }
+  
+    .image-upload {
+      width: 100%;
+      margin-bottom: 20px;
+    }
+  
+    .tags-container {
+      padding-left: 0;
+    }
+  }
+>>>>>>> markdown-editor
 </style>
