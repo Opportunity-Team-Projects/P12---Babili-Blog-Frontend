@@ -30,7 +30,23 @@
       </div>
 
       <div class="form-group">
-        <input v-model="post.contentTitle" type="text" id="postTitle" required placeholder="Post Title">
+        <div class="title-input-container">
+          <input 
+            v-model="post.contentTitle" 
+            type="text" 
+            id="postTitle" 
+            required 
+            placeholder="Post Title"
+            @input="limitTitleLength"
+            :maxlength="maxTitleLength"
+          >
+          <span class="character-count" :class="{ 'error': remainingChars === 0 }">
+            {{ remainingChars }}
+          </span>
+        </div>
+        <p v-if="remainingChars === 0" class="error-message">
+          Maximum character limit reached
+        </p>
       </div>
 
       <div class="content-area">
@@ -48,7 +64,7 @@
 </template>
 
 <script setup>
-import { ref } from 'vue';
+import { ref, computed } from 'vue';
 import { useRouter } from 'vue-router';
 import { authClient } from '@/services/AuthService';
 import HeaderMain from '@/components/HeaderMain.vue';
@@ -58,6 +74,18 @@ import EasyMDEEditor from '@/components/EasyMDEEditor.vue';
 const router = useRouter();
 const fileInput = ref(null);
 const isSubmitting = ref(false);
+
+const maxTitleLength = 100;
+
+const remainingChars = computed(() => {
+  return maxTitleLength - (post.value.contentTitle?.length || 0);
+});
+
+const limitTitleLength = () => {
+  if (post.value.contentTitle.length > maxTitleLength) {
+    post.value.contentTitle = post.value.contentTitle.slice(0, maxTitleLength);
+  }
+};
 
 const post = ref({
   contentTitle: '',
@@ -235,8 +263,38 @@ const cancelPost = () => {
   }
   
   .form-group {
+    position: relative;
     margin-bottom: 20px;
   }
+
+  .title-input-container {
+  display: flex;
+  align-items: center;
+}
+
+.title-input-container input {
+  flex-grow: 1;
+  padding-right: 40px; /* Make space for the character count */
+}
+
+.character-count {
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 14px;
+  color: #909090;
+}
+
+.character-count.error {
+  color: #ff4d4d;
+}
+
+.error-message {
+  color: #ff4d4d;
+  font-size: 14px;
+  margin-top: 5px;
+}
 
   label {
     display: block;
