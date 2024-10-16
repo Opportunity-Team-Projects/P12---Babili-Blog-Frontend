@@ -50,56 +50,14 @@
             />
           </div>
 
-          <div class="content-area">
-            <EasyMDEEditor v-model="post.content" />
+          <div class="content-areas">
+            <EasyMDEEditor v-model="post.content" id="postContent" />
           </div>
 
           <div class="action-buttons">
             <button class="cancel-btn" @click="cancelPost">Cancel</button>
             <button class="post-btn" @click="createPost">Post</button>
           </div>
-        </div>
-
-        <div class="form-group">
-          <input
-            v-model="post.contentTitle"
-            type="text"
-            id="postTitle"
-            required
-            placeholder="Post Title"
-          />
-        </div>
-
-        <div class="content-tabs">
-          <button
-            :class="{ active: activeTab === 'write' }"
-            @click="activeTab = 'write'"
-          >
-            Write
-          </button>
-          <button
-            :class="{ active: activeTab === 'preview' }"
-            @click="activeTab = 'preview'"
-          >
-            Preview
-          </button>
-        </div>
-
-        <div class="content-area">
-          <textarea
-            v-if="activeTab === 'write'"
-            v-model="post.content"
-            placeholder="Write your blog content here..."
-          ></textarea>
-          <div v-else class="preview-content">
-            <!-- Add preview logic here -->
-            Preview content placeholder
-          </div>
-        </div>
-
-        <div class="action-buttons">
-          <button class="cancel-btn" @click="cancelPost">Cancel</button>
-          <button class="post-btn" @click="createPost">Post</button>
         </div>
       </div>
     </div>
