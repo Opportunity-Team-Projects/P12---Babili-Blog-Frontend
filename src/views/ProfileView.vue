@@ -21,9 +21,12 @@
                         your posts, comments and contributions easily!</p>
   
                     <div class="profileImage">
-                        <!-- Hier Vorschaubild einfügen -->
-                        <div v-if="profileImage" class="image-preview">
-                            <img :src="profileImage" alt="Profile Picture" class="profile-picture"/>
+                        <div class="image-preview">
+                            <img 
+                                :src="profileImage || '../user-profile-icon.jpg'" 
+                                :alt="profileImage ? 'Profile Picture' : 'Default Profile Picture'"
+                                class="profile-picture"
+                            />
                         </div>
 
                         <div class="image-upload" @click="triggerFileInput">
@@ -63,8 +66,17 @@
 
                     <form @submit.prevent="submit">
                         
-                        <input type="password" class="placeholder" id="password" v-model="password" 
-                        required placeholder="Password">
+                        <div class="input-container">
+                            <input
+                                :type="passwordVisible ? 'text' : 'password'"
+                                class="placeholder"
+                                id="password"
+                                v-model="password"
+                                required
+                                placeholder="Password"/>
+                                <i class="fas" :class="passwordVisible ? 'fa-eye-slash' : 'fa-eye'" @click="togglePasswordVisibility"></i>
+                                
+                        </div>
                         
                         <input type="password" class="placeholder" id="password_confirmation" placeholder="Password confirmation"
                         v-model="password_confirmation" required>
@@ -100,10 +112,11 @@
 import { ref, onMounted } from 'vue';
 import { useRouter } from 'vue-router';
 import { useAuthStore } from "@/stores/useAuthStore";
+import AuthService from "@/services/AuthService";
 import HeaderMain from '@/components/HeaderMain.vue';
 import Sidebar from '@/components/Sidebar.vue';
 import DeleteModal from '@/components/DeleteModal.vue';
-import axios from 'axios';
+
 
 
 const router = useRouter();
@@ -121,6 +134,49 @@ const isSidebarCollapsed = ref(true);
 const showDeleteModal = ref(false);
 const authUser = ref({}); // Benutzerinformationen hier speichern
 const joinedDate = ref(''); // das Beitrittsdatum speichern
+
+const password_confirmation = ref("");
+const message = ref("");
+
+const profileImage = ref(null);
+
+// Passwort Sichtbarkeit
+const passwordVisible = ref(false);
+const passwordConfirmationVisible = ref(false);
+
+// Funktion zum Umschalten der Passwortsichtbarkeit
+const togglePasswordVisibility = () => {
+  passwordVisible.value = !passwordVisible.value;
+};
+
+const togglePasswordConfirmationVisibility = () => {
+  passwordConfirmationVisible.value = !passwordConfirmationVisible.value;
+};
+
+// Passwortänderung übermitteln
+const submitPassword = async () => {
+  if (password.value !== password_confirmation.value) {
+    message.value = "Die Passwörter stimmen nicht überein.";
+    return;
+  }
+
+  if (password.value.length < 8) {
+    message.value = "Das Passwort muss mindestens 8 Zeichen lang sein.";
+    return;
+  }
+
+  try {
+    // API-Anfrage zum Ändern des Passworts
+    await AuthService.updatePassword({
+      password: password.value,
+      password_confirmation: password_confirmation.value,
+    });
+    message.value = "Das Passwort wurde erfolgreich geändert.";
+  } catch (error) {
+    console.error("Fehler bei der Passwortänderung:", error);
+    message.value = "Fehler beim Ändern des Passworts.";
+  }
+};
 
 // Modal zum Löschen öffnen
 const openDeleteModal = (userId) => {
@@ -143,7 +199,7 @@ onMounted(async () => {
 const submit = async () => {
   try {
     // Sende die geänderten Daten an das Backend
-    await axios.put('/api/user', {
+    await AuthService.put('/api/user', {
       username: authUser.value.username,
       email: authUser.value.email,
     });
@@ -155,7 +211,7 @@ const submit = async () => {
 
 // Funktion zum Löschen des Benutzers
 const deleteUser = (userId) => {
-  axios.delete(`/api/users/${userId}`)
+    AuthService.delete(`/api/users/${userId}`)
     .then(() => {
       showDeleteModal.value = false;
       router.push('/logout'); // Nach dem Löschen zur Logout-Seite navigieren
@@ -255,6 +311,35 @@ p {
     font-size: 14px;
 }
 
+.profileImage {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 1rem;
+    margin-top: 30px;
+}
+
+@media (max-width: 500px) {
+    .profileImage {
+        display: flex;
+        flex-direction: column;
+    }
+}
+
+.image-preview {
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    overflow: hidden;
+    border: 2px solid #909090;
+}
+
+.profile-picture {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
 form {
   display: flex;
   flex-direction: column;
@@ -271,14 +356,14 @@ section {
 }
 
 .image-upload {
-    width: 278px;
+    width: 250px;
     height: 100px;
     border-radius: 25px;
     border-style: solid;
     border-color: #909090;
     display: flex;
     flex-direction: column;
-    justify-content: center;
+    justify-content: space-evenly;
     align-items: center;
     cursor: pointer;
     margin-top: 20px;
@@ -287,11 +372,27 @@ section {
 input[type="text"],
 input[type="email"],
 input[type="password"]  {
-    max-width: 320px;
+    width: 320px;
     height: 35px;
     border-radius: 20px;
     border: solid 1px #FFFFFF;
     background-color: #20252D;
+    position: relative;
+}
+
+/* Passwortfeld mit Auge-Icon */
+.input-container {
+  position: relative;
+}
+
+/* Auge-Icon */
+i.fas {
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  cursor: pointer;
+  color: #ccc;
 }
 
 button[type="submit"],

@@ -6,8 +6,8 @@
                 <p>Warning: Deleting your account is permanent and cannot be undone.</p>
                 <div class="btns">
                     
-                    <button @click="closeModal">Cancel</button>
-                    <button @click="confirmAction">Delete account</button>
+                    <button @click="closeModal" class="btn-cancel">Cancel</button>
+                    <button @click="confirmAction" class="btn-del"->Delete account</button>
 
                 </div>  
             </div>
@@ -55,6 +55,22 @@
     flex-direction: row;
     justify-content: space-around;
 }
+
+button {
+    border-radius: 15px;
+    border: solid 1px #000000;
+    padding: 10px 15px;
+    font-size: 14px;
+    font-weight: 700;
+    text-align: center;
+    width: fit-content;
+}
+
+button:hover {
+    cursor: pointer;
+}
+
+
 
   </style>
   
