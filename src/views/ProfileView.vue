@@ -103,8 +103,10 @@
         </div>
     </div>
 
-    <DeleteModal v-if="showDeleteModal" @close="showDeleteModal = false" @confirm="deleteUser(authUser.id)" />
-
+    <DeleteModal 
+    v-model="showDeleteModal"
+    @confirm="deleteUser(authUser?.id)" 
+    />
 </template>
 
 <script setup>
