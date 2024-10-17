@@ -47,10 +47,10 @@ const mainMenuItems = [
   { name: "My Bookmarks", icon: "fas fa-bookmark", path: "/bookmarks" },
   { name: "My Posts", icon: "fas fa-edit", path: "/my-posts" },
   /*   { name: "Explore All", icon: "fas fa-compass", path: "/explore" }, */
-  { name: "Contact", icon: "fas fa-envelope", path: "/contact" },
 ];
 
 const bottomMenuItems = [
+  { name: "Contact", icon: "fas fa-envelope", path: "/contact" },
   { name: "Terms", icon: "fas fa-file-contract", path: "/terms" },
   { name: "Logout", icon: "fas fa-sign-out-alt", action: logout },
 ];
