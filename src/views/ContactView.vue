@@ -56,10 +56,11 @@
 </template>
 
 <script setup>
-import { ref, computed } from "vue";
+import { ref, computed, onMounted } from "vue";
 import HeaderMain from "@/components/HeaderMain.vue";
 import Sidebar from "@/components/Sidebar.vue";
-/* import ContactService from "@/services/ContactService"; */
+import ContactService from "@/services/ContactService";
+import AuthService from "@/services/AuthService";
 
 const isSidebarCollapsed = ref(true);
 const isSending = ref(false);
@@ -70,6 +71,17 @@ const contact = ref({
   message: "",
   agreeToTerms: false,
 });
+
+const fetchUserData = async () => {
+  try {
+    const response = await AuthService.getAuthUser();
+    const user = response.data.user;
+    contact.value.name = user.name;
+    contact.value.email = user.email;
+  } catch (error) {
+    console.error("Benutzerdaten konnten nicht abgerufen werden:", error);
+  }
+};
 
 const isFormValid = computed(() => {
   return (
@@ -95,11 +107,19 @@ const sendMessage = async () => {
     contact.value = { name: "", email: "", message: "", agreeToTerms: false };
   } catch (error) {
     console.error("Error sending message:", error);
-    alert("Failed to send message. Please try again.");
+    if (error.response && error.response.data && error.response.data.message) {
+      alert(`Failed to send message: ${error.response.data.message}`);
+    } else {
+      alert("An error occurred while sending the message. Please try again.");
+    }
   } finally {
     isSending.value = false;
   }
 };
+
+onMounted(() => {
+  fetchUserData();
+});
 </script>
 
 <style scoped>

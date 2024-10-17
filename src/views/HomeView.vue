@@ -136,33 +136,16 @@ const openCustomFeedSettings = () => {
   // Zum Beispiel: router.push('/custom-feed-settings');
 };
 
-// Watcher für Pfadänderungen
+// Watcher für Pfadänderungen und Suchanfragen
 watch(
-  () => route.path,
-  (newPath) => {
-    if (route.query.q) {
-      searchPosts(route.query.q);
+  [() => route.path, () => route.query.q],
+  ([newPath, newQuery]) => {
+    if (newQuery) {
+      searchPosts(newQuery);
     } else if (newPath === "/my-feed") {
       fetchUserCategoryPosts();
     } else if (newPath === "/") {
       fetchAllPosts();
-    }
-  },
-  { immediate: true }
-);
-
-// Watcher für Suchanfragen
-watch(
-  () => route.query.q,
-  (newQuery) => {
-    if (newQuery) {
-      searchPosts(newQuery);
-    } else {
-      if (route.path === "/my-feed") {
-        fetchUserCategoryPosts();
-      } else if (route.path === "/") {
-        fetchAllPosts();
-      }
     }
   },
   { immediate: true }
