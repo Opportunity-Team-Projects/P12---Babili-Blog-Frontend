@@ -281,7 +281,7 @@ authClient.post('/api/user/upload-profile-picture', formData)
     border: 1px solid #909090;
     display: flex;
     flex-direction: column;
-    padding: 10px;
+    padding: 15px;
     margin: 0 10px;
 }
 
@@ -317,13 +317,6 @@ p {
     align-items: center;
     gap: 1rem;
     margin-top: 30px;
-}
-
-@media (max-width: 500px) {
-    .profileImage {
-        display: flex;
-        flex-direction: column;
-    }
 }
 
 .image-preview {
@@ -438,6 +431,19 @@ button[type="submit"],
     color: #FFFFFF;
     border: solid 1px #FFFFFF;
     cursor: pointer;
+}
+
+@media (max-width: 500px) {
+    .profileImage {
+        display: flex;
+        flex-direction: column;
+    }
+}
+
+@media (max-width: 500px) {
+.profile-container {
+  margin: 0 5px;
+  }
 }
 
 </style>

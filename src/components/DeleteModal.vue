@@ -3,8 +3,8 @@
         <div v-if="isModalOpen" class="modal-overlay">
             <div class="modal">
                 <div class="modal-content">
-                    <h2 class="text-center">Delete account</h2>
-                    <p class="text-center">Warning: Deleting your account is permanent and cannot be undone.</p>
+                    <h2>Delete account</h2>
+                    <p>Warning: Deleting your account is permanent and cannot be undone.</p>
                     <div class="btns">
                         <button @click="closeModal" class="btn-cancel">Cancel</button>
                         <button @click="confirmAction" class="btn-del">Delete account</button>
@@ -67,27 +67,25 @@
 h2 {
     font-size: 1.5rem;
     font-weight: 600;
+    text-align: center;
 }
 
 p {
     color: #ff6b6b;
-}
-
-.text-center {
     text-align: center;
 }
 
 .btns {
     display: flex;
     flex-direction: row;
-    justify-content: space-around;
+    justify-content: space-between;
 }
 
 button {
     border-radius: 15px;
     border: solid 1px #000000;
     padding: 10px 15px;
-    font-size: 14px;
+    font-size: 16px;
     font-weight: 700;
     text-align: center;
     width: fit-content;
@@ -95,6 +93,23 @@ button {
 
 button:hover {
     cursor: pointer;
+}
+
+.btn-del {
+    background-color: #a80f33;
+    color: white;
+}
+
+.btn-cancel:hover {
+    background-color: #000000;
+    color: #FFFFFF;
+    border: solid 1px #FFFFFF;
+}
+
+.btn-del:hover {
+    color: #000000;
+    cursor: pointer;
+    background-color: #D91544;
 }
 
 /* Modal Animation */
