@@ -1,6 +1,8 @@
 import { createRouter, createWebHistory } from "vue-router";
 import HomeView from "../views/HomeView.vue";
 import MyPostsView from "@/views/MyPostsView.vue";
+import BookmarkView from "@/views/BookmarkView.vue";
+import ContactView from "../views/ContactView.vue";
 
 const router = createRouter({
   history: createWebHistory(),
@@ -22,21 +24,21 @@ const router = createRouter({
       component: () => import("../views/LoginView.vue"),
     },
     {
-      path: '/reset-password',
-      name: 'ChangePassword',
-      component: () => import('../views/ChangeView.vue'),
+      path: "/reset-password",
+      name: "ChangePassword",
+      component: () => import("../views/ChangeView.vue"),
       beforeEnter: (to, from, next) => {
         if (to.query.token) {
           next();
         } else {
-          next({ name: 'home' }); // oder zu einer anderen Seite umleiten
+          next({ name: "home" }); // oder zu einer anderen Seite umleiten
         }
       },
     },
     {
-      path: '/forgot-password',
-      name: 'forgot-password',
-      component: () => import('../views/ResetView.vue')
+      path: "/forgot-password",
+      name: "forgot-password",
+      component: () => import("../views/ResetView.vue"),
     },
 
     {
@@ -61,16 +63,32 @@ const router = createRouter({
       // route level code-splitting
       // this generates a separate chunk (About.[hash].js) for this route
       // which is lazy-loaded when the route is visited.
-      component: () => import('../views/AboutView.vue')
+      component: () => import("../views/AboutView.vue"),
     },
 
     {
-      path: '/customfeed',
-      name: 'customfeed',
+      path: "/customfeed",
+      name: "customfeed",
       // route level code-splitting
       // this generates a separate chunk (About.[hash].js) for this route
       // which is lazy-loaded when the route is visited.
-      component: () => import('../views/CustomFeedView.vue')
+      component: () => import("../views/CustomFeedView.vue"),
+    },
+    {
+      path: "/bookmarks",
+      name: "bookmarks",
+      // route level code-splitting
+      // this generates a separate chunk (About.[hash].js) for this route
+      // which is lazy-loaded when the route is visited.
+      component: () => import("../views/BookmarkView.vue"),
+    },
+    {
+      path: "/contact",
+      name: "contact",
+      // route level code-splitting
+      // this generates a separate chunk (About.[hash].js) for this route
+      // which is lazy-loaded when the route is visited.
+      component: () => import("../views/ContactView.vue"),
     },
 
     {
@@ -78,7 +96,7 @@ const router = createRouter({
       name: "my-feed",
       component: HomeView,
     },
-  ]
-})
+  ],
+});
 
 export default router;

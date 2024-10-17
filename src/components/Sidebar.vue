@@ -44,7 +44,7 @@ const logout = async () => {
 const mainMenuItems = [
   { name: "Home", icon: "fas fa-home", path: "/" },
   { name: "My Feed", icon: "fas fa-list", path: "/my-feed" },
-  { name: "My Bookmarks", icon: "fas fa-bookmark", path: "/my-bookmarks" },
+  { name: "My Bookmarks", icon: "fas fa-bookmark", path: "/bookmarks" },
   { name: "My Posts", icon: "fas fa-edit", path: "/my-posts" },
   { name: "Explore All", icon: "fas fa-compass", path: "/explore" },
   { name: "Contact", icon: "fas fa-envelope", path: "/contact" },
@@ -68,7 +68,7 @@ const bottomMenuItems = [
   border-bottom-right-radius: 14px;
 
   color: white;
-  transition: width 0.5s cubic-bezier(0.25, 0.1, 0.25, 1);
+  transition: width 0.5s cubic-bezier(0.25, 0.1, 0.15, 1);
   overflow-x: hidden;
   overflow-y: auto;
   display: flex;

@@ -12,8 +12,11 @@
   <!-- Hauptinhalt -->
   <div class="main-content">
     <div class="post-container">
+      <div v-if="bookmarkedPosts.length === 0" class="no-bookmarks">
+        <p>You haven't bookmarked any posts yet.</p>
+      </div>
       <div
-        v-for="post in posts"
+        v-for="post in bookmarkedPosts"
         :key="post.id"
         class="post-card"
         @click="navigateToPost(post.id)"
@@ -52,7 +55,7 @@
             <i class="fas fa-heart action-icon"></i>
             <i class="fas fa-comment action-icon"></i>
           </div>
-          <i class="fas fa-bookmark action-icon"></i>
+          <i class="fas fa-bookmark action-icon active"></i>
         </div>
       </div>
     </div>
@@ -60,58 +63,30 @@
 </template>
 
 <script setup>
-import { ref, onMounted, watch } from "vue";
-import { useRouter, useRoute } from "vue-router";
+import { ref, onMounted } from "vue";
+import { useRouter } from "vue-router";
 import PostService from "@/services/PostService";
 import HeaderMain from "@/components/HeaderMain.vue";
 import Sidebar from "@/components/Sidebar.vue";
 
 const router = useRouter();
-const route = useRoute();
 
-const posts = ref([]);
+const bookmarkedPosts = ref([]);
 const isSidebarCollapsed = ref(true);
 
 const handleToggle = (collapsed) => {
   isSidebarCollapsed.value = collapsed;
 };
 
-const fetchAllPosts = async () => {
+const fetchBookmarkedPosts = async () => {
   try {
-    const res = await PostService.getAllPosts();
-    posts.value = res.data.sort(
+    const res = await PostService.getBookmarkedPosts();
+    bookmarkedPosts.value = res.data.sort(
       (a, b) => new Date(b.created_at) - new Date(a.created_at)
     );
-    console.log("Fetched all posts:", res.data);
+    console.log("Fetched bookmarked posts:", res.data);
   } catch (error) {
-    console.error("Error fetching all posts:", error);
-  }
-};
-
-const searchPosts = async (query) => {
-  try {
-    let res;
-    if (route.path === "/my-feed") {
-      res = await PostService.searchPostsInUserCategories(query);
-    } else {
-      res = await PostService.searchPosts(query);
-    }
-    posts.value = res.data;
-    console.log("Search results:", res.data);
-  } catch (error) {
-    console.error("Error searching posts:", error);
-  }
-};
-
-const fetchUserCategoryPosts = async () => {
-  try {
-    const res = await PostService.getPostsByUserCategories();
-    posts.value = res.data.sort(
-      (a, b) => new Date(b.created_at) - new Date(a.created_at)
-    );
-    console.log("Fetched user category posts:", res.data);
-  } catch (error) {
-    console.error("Error fetching user category posts:", error);
+    console.error("Error fetching bookmarked posts:", error);
   }
 };
 
@@ -123,37 +98,9 @@ const navigateToPost = (postId) => {
   router.push(`/posts/${postId}`);
 };
 
-// Watcher für Pfadänderungen
-watch(
-  () => route.path,
-  (newPath) => {
-    if (route.query.q) {
-      searchPosts(route.query.q);
-    } else if (newPath === "/my-feed") {
-      fetchUserCategoryPosts();
-    } else if (newPath === "/") {
-      fetchAllPosts();
-    }
-  },
-  { immediate: true }
-);
-
-// Watcher für Suchanfragen
-watch(
-  () => route.query.q,
-  (newQuery) => {
-    if (newQuery) {
-      searchPosts(newQuery);
-    } else {
-      if (route.path === "/my-feed") {
-        fetchUserCategoryPosts();
-      } else if (route.path === "/") {
-        fetchAllPosts();
-      }
-    }
-  },
-  { immediate: true }
-);
+onMounted(() => {
+  fetchBookmarkedPosts();
+});
 </script>
 
 <style scoped>
@@ -167,14 +114,12 @@ watch(
   min-height: 100vh;
   transition: all 0.3s ease;
   padding: 20px;
-
   background: radial-gradient(
     #813d9c 0%,
     #613583 43%,
     #3d3846 73%,
     #241f31 91%
   );
-
   color: white;
 }
 
@@ -217,8 +162,9 @@ watch(
 }
 
 .post-card:hover {
-  border-color: rgba(207, 61, 243, 0.644);
+  border-color: rgba(206, 61, 243, 0.4);
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.7), 0 0 0 1px rgba(206, 61, 243, 0.3);
+  transform: scale(1.02);
 }
 
 .post-header {
@@ -326,6 +272,22 @@ watch(
 .action-icon:hover {
   color: rgba(255, 255, 255, 0.918);
   transform: scale(1.1);
+}
+
+/* Neue Styles für die Bookmark-Ansicht */
+.no-bookmarks {
+  width: 100%;
+  text-align: center;
+  padding: 20px;
+  font-size: 1.2em;
+  color: white;
+  background-color: rgba(0, 0, 0, 0.2);
+  border-radius: 8px;
+  margin-top: 20px;
+}
+
+.action-icon.active {
+  color: #9747ff;
 }
 
 @media screen and (max-width: 768px) {
