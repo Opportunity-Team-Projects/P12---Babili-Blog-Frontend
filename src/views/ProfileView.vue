@@ -17,37 +17,42 @@
                 <section>
                     <h2>Profile picture</h2>
 
-                    <p>Upload a picture to make your profile stand out and let people recognize your 
-                        posts and comments easily!</p>
+                    <p>Upload a picture to make your profile stand out and let people recognize 
+                        your posts, comments and contributions easily!</p>
+  
+                    <div class="profileImage">
+                        <!-- Hier Vorschaubild einfügen -->
+                        <div v-if="profileImage" class="image-preview">
+                            <img :src="profileImage" alt="Profile Picture" class="profile-picture"/>
+                        </div>
 
-                    <!-- Hier Vorschaubild einfügen -->
-                    <div v-if="profileImage" class="image-preview">
-                        <img :src="profileImage" alt="Profile Picture" class="profile-picture"/>
-                    </div>
-
-                    <div class="image-upload" @click="triggerFileInput">
-                        <input type="file" ref="fileInput" style="display:none" @change="handleFileUpload">
-                        <i class="fas fa-camera fa-2x"></i>
-                        <span>Change profile picture</span>
-                    </div>
+                        <div class="image-upload" @click="triggerFileInput">
+                            <input type="file" ref="fileInput" style="display:none" @change="handleFileUpload">
+                            <i class="fas fa-camera fa-2x"></i>
+                            <span>Change profile picture</span>
+                        </div>
+                    </div>    
                 </section>
 
                 <section>
 
                     <h2>Account Information</h2>
+
+                    <div>
+                        <p>Joined date</p>
+                    </div>
                     
                     <form @submit.prevent="submit">
                                     
                         <input
                             id="username" class="placeholder" type="text" name="username" placeholder="Username"
-                            v-model="username"
-                        />
+                            v-model="username">                        
                         
                         <input
                             id="email" class="placeholder" type="email" name="email" placeholder="Email"
-                            v-model="email"
-                        />
-                        <button type="submit">Save changes</button>
+                            v-model="email">
+                        
+                        <button type="submit" class="btn-1">Save changes</button>
                     </form>
                 </section>
 
@@ -59,14 +64,12 @@
                     <form @submit.prevent="submit">
                         
                         <input type="password" class="placeholder" id="password" v-model="password" 
-                        required 
-                        placeholder="Password"/>
+                        required placeholder="Password">
                         
                         <input type="password" class="placeholder" id="password_confirmation" placeholder="Password confirmation"
-                        v-model="password_confirmation"
-                        required
-                        />
-                        <button type="submit">Set password</button>
+                        v-model="password_confirmation" required>
+                        
+                        <button type="submit" class="btn-2">Set password</button>
                     </form>
                 </section>
 
@@ -80,6 +83,9 @@
                         <li>Permanently delete all your content, including your posts, bookmarks, comments, etc.</li>
                         <li>Allow your username to become available to anyone.</li>   
                     </ol>
+
+                    <button @click="openDeleteModal(user.id)" class="btn-danger">Delete account</button>
+
                 </section>
             </div>
 
@@ -95,6 +101,7 @@ import { useRouter } from 'vue-router';
 import { authClient } from '@/services/AuthService';
 import HeaderMain from '@/components/HeaderMain.vue';
 import Sidebar from '@/components/Sidebar.vue';
+import DeleteModal from '@/components/DeleteModal.vue';
 
 const router = useRouter();
 
@@ -108,6 +115,27 @@ const triggerFileInput = () => {
   fileInput.value.click();
 };
 
+const showDeleteModal = ref(false);
+const userToDelete = ref(null);
+
+// Funktion zum Löschen des Benutzers
+const deleteUser = (userId) => {
+  axios.delete(`/api/users/${userId}`)
+    .then(() => {
+      // Logik nach erfolgreichem Löschen
+      showDeleteModal.value = false;
+    })
+    .catch(error => {
+      console.error('Error:', error);
+    });
+};
+
+// Funktion zum Öffnen des Delete-Modals
+const openDeleteModal = (userId) => {
+  userToDelete.value = userId; // Setzt die userId, die gelöscht werden soll
+  showDeleteModal.value = true; // Öffnet das Modal
+};
+
 // Funktion zum Hochladen des Bildes und zum Anzeigen der Vorschau
 const handleFileUpload = (event) => {
   const file = event.target.files[0];
@@ -119,7 +147,7 @@ const handleFileUpload = (event) => {
     reader.readAsDataURL(file);
   }
 };
-
+/* 
 // Lädt das aktuelle Profilbild beim Laden der Seite
 onMounted(async () => {
     try {
@@ -128,14 +156,18 @@ onMounted(async () => {
     } catch (error) {
         console.error("Fehler beim Laden des Profilbildes:", error);
     }
-});
+}); */
 
-// den Upload des Bildes an das Backend auslösen
+/* // den Upload des Bildes an das Backend auslösen
 const formData = new FormData();
 formData.append('profile_picture', file);
 authClient.post('/api/user/upload-profile-picture', formData)
     .then(response => console.log('Bild erfolgreich hochgeladen'))
     .catch(error => console.error('Fehler beim Hochladen:', error));
+ */
+
+
+
 
 </script>
 
@@ -146,9 +178,9 @@ authClient.post('/api/user/upload-profile-picture', formData)
     width: 100%;
     transition: all 0.3s ease;
     padding: 20px; 
-    background-color: 0E1217;
-    /* background: radial-gradient(#3584e4 0%, #1a5fb4 15%, #1c71d8 34%, #241f31 62%, #000000 92%); */
-    /* background: radial-gradient(#62a0ea 0%, #1c71d8 28%, #1a5fb4 46%, #241f31 75%);*/    
+    /* background-color: 0E1217; */
+    background: radial-gradient(#3584e4 0%, #1a5fb4 15%, #1c71d8 34%, #241f31 62%, #000000 92%);
+    /* background: radial-gradient(#62a0ea 0%, #1c71d8 28%, #1a5fb4 46%, #241f31 75%);     */
     color: white;
     display: flex;
     justify-content: center;
@@ -197,6 +229,8 @@ p {
 form {
   display: flex;
   flex-direction: column;
+  gap: 15px 0;
+  margin: 20px 0;
 }
 
 .placeholder {
@@ -219,6 +253,61 @@ section {
     align-items: center;
     cursor: pointer;
     margin-top: 20px;
+}
+
+input[type="text"],
+input[type="email"],
+input[type="password"]  {
+    max-width: 320px;
+    height: 35px;
+    border-radius: 20px;
+    border: solid 1px #FFFFFF;
+    background-color: #20252D;
+}
+
+button[type="submit"],
+.btn-danger {
+    border-radius: 15px;
+    border: solid 1px #000000;
+    padding: 10px 15px;
+    font-size: 14px;
+    font-weight: 700;
+    text-align: center;
+    width: fit-content;
+}    
+
+.btn-danger {
+    margin-top: 15px;
+    background-color: #a80f33;
+    color: #FFFFFF;
+}
+
+.btn-1 {
+    background-color: #9E15D9;
+    color: white;
+}
+
+.btn-2 {
+    background-color: #FFFFFF;
+}
+
+.btn-danger:hover {
+    color: #000000;
+    cursor: pointer;
+    background-color: #D91544;
+}
+
+.btn-1:hover {
+    background-color: #d74cf6;
+    color: #000000;
+    cursor: pointer;
+}
+
+.btn-2:hover {
+    background-color: #000000;
+    color: #FFFFFF;
+    border: solid 1px #FFFFFF;
+    cursor: pointer;
 }
 
 </style>
