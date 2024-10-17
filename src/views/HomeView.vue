@@ -1,7 +1,7 @@
 <template>
   <HeaderMain />
 
-  <Sidebar :collapsed="true" @toggle="handleToggle" />
+  <Sidebar :collapsed="isSidebarCollapsed" @toggle="handleToggle" />
 
   <div
     v-if="!isSidebarCollapsed"
@@ -10,7 +10,7 @@
   ></div>
 
   <!-- Hauptinhalt -->
-  <div class="main-content">
+  <div class="main-content" :class="{ blurred: showCustomFeed }">
     <button
       v-if="$route.path === '/my-feed'"
       class="custom-feed-settings-button"
@@ -64,6 +64,12 @@
       </div>
     </div>
   </div>
+
+  <CustomFeed
+    v-if="showCustomFeed"
+    @close="closeCustomFeedSettings"
+    @save="saveCustomFeedSettings"
+  />
 </template>
 
 <script setup>
@@ -72,12 +78,14 @@ import { useRouter, useRoute } from "vue-router";
 import PostService from "@/services/PostService";
 import HeaderMain from "@/components/HeaderMain.vue";
 import Sidebar from "@/components/Sidebar.vue";
+import CustomFeed from "@/components/CustomFeed.vue";
 
 const router = useRouter();
 const route = useRoute();
 
 const posts = ref([]);
 const isSidebarCollapsed = ref(true);
+const showCustomFeed = ref(false);
 
 const handleToggle = (collapsed) => {
   isSidebarCollapsed.value = collapsed;
@@ -131,9 +139,18 @@ const navigateToPost = (postId) => {
 };
 
 const openCustomFeedSettings = () => {
-  // Implementieren Sie hier die Logik zum Öffnen der Custom Feed Einstellungen
-  console.log("Öffne Custom Feed Einstellungen");
-  // Zum Beispiel: router.push('/custom-feed-settings');
+  showCustomFeed.value = true;
+};
+
+const closeCustomFeedSettings = () => {
+  showCustomFeed.value = false;
+};
+
+const saveCustomFeedSettings = async (selectedCategories) => {
+  showCustomFeed.value = false;
+  if (route.path === "/my-feed") {
+    await fetchUserCategoryPosts();
+  }
 };
 
 // Watcher für Pfadänderungen und Suchanfragen
@@ -163,15 +180,17 @@ watch(
   min-height: 100vh;
   transition: all 0.3s ease;
   padding: 20px;
-
   background: radial-gradient(
     #813d9c 0%,
     #613583 43%,
     #3d3846 73%,
     #241f31 91%
   );
-
   color: white;
+}
+
+.main-content.blurred {
+  filter: blur(5px);
 }
 
 .overlay {
