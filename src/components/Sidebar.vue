@@ -46,7 +46,7 @@ const mainMenuItems = [
   { name: "My Feed", icon: "fas fa-list", path: "/my-feed" },
   { name: "My Bookmarks", icon: "fas fa-bookmark", path: "/bookmarks" },
   { name: "My Posts", icon: "fas fa-edit", path: "/my-posts" },
-  { name: "Explore All", icon: "fas fa-compass", path: "/explore" },
+  /*   { name: "Explore All", icon: "fas fa-compass", path: "/explore" }, */
   { name: "Contact", icon: "fas fa-envelope", path: "/contact" },
 ];
 

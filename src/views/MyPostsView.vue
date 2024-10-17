@@ -246,7 +246,7 @@ onMounted(fetchMyPosts);
 }
 
 .edit-button {
-  background-color: #4caf50;
+  background-color: #ce3df3;
   color: white;
 }
 
