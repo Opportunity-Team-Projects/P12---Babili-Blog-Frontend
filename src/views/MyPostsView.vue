@@ -54,9 +54,7 @@
 
         <!-- Edit Buttons -->
         <div class="edit-buttons">
-          <button @click="editPost(post.id)" class="edit-button">
-            Edit Post
-          </button>
+          <button @click.stop="editPost(post.id)">Edit</button>
           <button @click="deletePost(post.id)" class="delete-button">
             Delete Post
           </button>
@@ -113,7 +111,7 @@ const truncateContent = (content, lines) => {
 };
 
 const editPost = (postId) => {
-  router.push(`/edit-post/${postId}`);
+  router.push(`/post/${postId}/edit`);
 };
 
 const deletePost = async (postId) => {
