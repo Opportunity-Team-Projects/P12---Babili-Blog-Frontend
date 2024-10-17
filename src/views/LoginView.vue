@@ -3,6 +3,7 @@ import { useAuthStore } from "@/stores/useAuthStore";
 import AuthService from "@/services/AuthService.js";
 import { ref, onMounted } from "vue";
 import { useRouter } from "vue-router";
+import CookieBanner from "@/components/CookieBanner.vue";
 
 const router = useRouter();
 const email = ref("");
@@ -112,10 +113,12 @@ const login = async () => {
       </form>
       <p v-if="error" class="error-message">{{ error }}</p>
     </div>
+    <CookieBanner />
     <div class="footer">
       <p>© 2024 Tech & Game Nexus Terms</p>
     </div>
   </div>
+  
 </template>
 
 <style scoped>
