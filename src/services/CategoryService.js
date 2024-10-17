@@ -24,5 +24,15 @@ export default {
   // Kategorie löschen
   deleteCategory(id) {
     return authClient.delete(`api/categories/${id}`);
-  }
+  },
+
+  // Benutzerpräferenzen speichern
+  saveUserPreferences(payload) {
+    return authClient.post("api/user/preferences", payload);
+  },
+
+  // Benutzerpräferenzen abrufen
+  getUserPreferences() {
+    return authClient.get("api/user/preferences");
+  },
 };

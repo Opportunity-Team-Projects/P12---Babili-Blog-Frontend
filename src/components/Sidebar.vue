@@ -13,16 +13,19 @@
       </ul>
 
       <ul class="menu bottom-menu">
-        <li
-          v-for="item in bottomMenuItems"
-          :key="item.name"
-          class="menu-item"
-          @click="item.action"
-        >
-          <span class="menu-icon">
-            <i :class="item.icon"></i>
-          </span>
-          <span class="menu-text">{{ item.name }}</span>
+        <li v-for="item in bottomMenuItems" :key="item.name" class="menu-item">
+          <router-link v-if="item.path" :to="item.path" class="menu-link">
+            <span class="menu-icon">
+              <i :class="item.icon"></i>
+            </span>
+            <span class="menu-text">{{ item.name }}</span>
+          </router-link>
+          <div v-else @click="item.action" class="menu-link">
+            <span class="menu-icon">
+              <i :class="item.icon"></i>
+            </span>
+            <span class="menu-text">{{ item.name }}</span>
+          </div>
         </li>
       </ul>
     </div>
@@ -42,15 +45,15 @@ const logout = async () => {
 };
 
 const mainMenuItems = [
-  { name: "Home", icon: "fas fa-home", path: "/" },
-  { name: "My Feed", icon: "fas fa-list", path: "/my-feed" },
-  { name: "My Bookmarks", icon: "fas fa-bookmark", path: "/my-bookmarks" },
+  { name: "Explore All", icon: "fas fa-compass", path: "/" },
+  { name: "Custom Feed", icon: "fas fa-list", path: "/my-feed" },
+  { name: "Bookmarks", icon: "fas fa-bookmark", path: "/bookmarks" },
   { name: "My Posts", icon: "fas fa-edit", path: "/my-posts" },
-  { name: "Explore All", icon: "fas fa-compass", path: "/explore" },
-  { name: "Contact", icon: "fas fa-envelope", path: "/contact" },
+  /*   { name: "Explore All", icon: "fas fa-compass", path: "/explore" }, */
 ];
 
 const bottomMenuItems = [
+  { name: "Contact", icon: "fas fa-envelope", path: "/contact" },
   { name: "Terms", icon: "fas fa-file-contract", path: "/terms" },
   { name: "Logout", icon: "fas fa-sign-out-alt", action: logout },
 ];
@@ -68,7 +71,7 @@ const bottomMenuItems = [
   border-bottom-right-radius: 14px;
 
   color: white;
-  transition: width 0.5s cubic-bezier(0.25, 0.1, 0.25, 1);
+  transition: width 0.5s cubic-bezier(0.25, 0.1, 0.15, 1);
   overflow-x: hidden;
   overflow-y: auto;
   display: flex;

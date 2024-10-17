@@ -10,8 +10,8 @@
   ></div>
 
   <div class="main-content">
-    <div class="create-post-container">
-      <h1>Create Post</h1>
+    <div class="edit-post-container">
+      <h1>Edit Post</h1>
       <div class="purple-line"></div>
 
       <div class="image-and-tags">
@@ -22,8 +22,11 @@
             style="display: none"
             @change="handleFileUpload"
           />
-          <i class="fas fa-image"></i>
-          <span>Click to upload image</span>
+          <img v-if="post.contentImg" :src="post.contentImg" alt="Post image" />
+          <template v-else>
+            <i class="fas fa-image"></i>
+            <span>Click to upload image</span>
+          </template>
         </div>
         <div class="tags-container">
           <button
@@ -72,9 +75,9 @@
       </div>
 
       <div class="action-buttons">
-        <button class="cancel-btn" @click="cancelPost">Cancel</button>
-        <button class="post-btn" @click="createPost" :disabled="isSubmitting">
-          {{ isSubmitting ? "Posting..." : "Post" }}
+        <button class="cancel-btn" @click="cancelEdit">Cancel</button>
+        <button class="post-btn" @click="updatePost" :disabled="isSubmitting">
+          {{ isSubmitting ? "Updating..." : "Update Post" }}
         </button>
       </div>
     </div>
@@ -83,7 +86,7 @@
 
 <script setup>
 import { ref, computed, onMounted } from "vue";
-import { useRouter } from "vue-router";
+import { useRouter, useRoute } from "vue-router";
 import { authClient } from "@/services/AuthService";
 import HeaderMain from "@/components/HeaderMain.vue";
 import Sidebar from "@/components/Sidebar.vue";
@@ -91,6 +94,7 @@ import EasyMDEEditor from "@/components/EasyMDEEditor.vue";
 import CategoryService from "@/services/CategoryService";
 
 const router = useRouter();
+const route = useRoute();
 const fileInput = ref(null);
 const isSubmitting = ref(false);
 const categories = ref([]);
@@ -160,32 +164,50 @@ const validatePost = () => {
   return true;
 };
 
-const createPost = async () => {
+const updatePost = async () => {
   if (!validatePost()) return;
 
   isSubmitting.value = true;
   try {
-    const response = await authClient.post("/api/posts", post.value);
-    console.log("Post creation response:", response.data);
-    router.push("/");
+    const response = await authClient.put(
+      `/api/posts/${route.params.id}`,
+      post.value
+    );
+    console.log("Post update response:", response.data);
+    // Änderung hier: Weiterleitung zur MyPostsView statt zur einzelnen Post-Ansicht
+    router.push({ name: "myPosts" });
   } catch (error) {
-    console.error("Error creating post:", error);
+    console.error("Error updating post:", error);
     if (error.response) {
-      alert(`Failed to create post: ${error.response.data.message}`);
+      alert(`Failed to update post: ${error.response.data.message}`);
     } else {
-      alert("An error occurred while creating the post. Please try again.");
+      alert("An error occurred while updating the post. Please try again.");
     }
   } finally {
     isSubmitting.value = false;
   }
 };
 
-const cancelPost = () => {
-  if (confirm("Are you sure you want to cancel? All progress will be lost.")) {
+const cancelEdit = () => {
+  if (confirm("Are you sure you want to cancel? All changes will be lost.")) {
+    router.go(-1);
+  }
+};
+
+const fetchPost = async () => {
+  try {
+    const response = await authClient.get(`/api/posts/${route.params.id}`);
+    post.value = response.data.post;
+    post.value.category_ids = post.value.categories.map((cat) => cat.id);
+  } catch (error) {
+    console.error("Error fetching post:", error);
+    alert("Failed to fetch post data. Please try again.");
     router.push("/");
   }
 };
+
 onMounted(async () => {
+  await fetchPost();
   try {
     const response = await CategoryService.getCategories();
     categories.value = response.data;
@@ -208,7 +230,6 @@ onMounted(async () => {
     #241f31 62%,
     #000000 92%
   );
-  /* background: radial-gradient(#62a0ea 0%, #1c71d8 28%, #1a5fb4 46%, #241f31 75%);*/
   color: white;
   display: flex;
   justify-content: center;
@@ -216,7 +237,7 @@ onMounted(async () => {
   min-height: 100vh;
 }
 
-.create-post-container {
+.edit-post-container {
   width: 680px;
   height: min-content;
   background-color: #1c1f26;
@@ -255,6 +276,13 @@ h1 {
   justify-content: center;
   align-items: center;
   cursor: pointer;
+  overflow: hidden;
+}
+
+.image-upload img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
 }
 
 .tags-container {
@@ -263,8 +291,6 @@ h1 {
   flex-wrap: wrap;
   gap: 10px;
   padding-left: 20px;
-  width: 103px;
-  height: 39px;
 }
 
 .tags-container button {
@@ -296,7 +322,7 @@ h1 {
 
 .title-input-container input {
   flex-grow: 1;
-  padding-right: 40px; /* Make space for the character count */
+  padding-right: 40px;
 }
 
 .character-count {
@@ -316,11 +342,6 @@ h1 {
   color: #ff4d4d;
   font-size: 14px;
   margin-top: 5px;
-}
-
-label {
-  display: block;
-  margin-bottom: 5px;
 }
 
 input[type="text"] {
@@ -364,7 +385,7 @@ input[type="text"] {
 }
 
 @media screen and (max-width: 768px) {
-  .create-post-container {
+  .edit-post-container {
     width: 100%;
     height: auto;
     min-height: 100vh;

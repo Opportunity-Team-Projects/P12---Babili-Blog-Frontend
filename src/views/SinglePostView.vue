@@ -40,11 +40,13 @@
             :class="['fas', 'fa-heart', 'action-icon', { liked: isLiked }]"
           ></i>
           <span>{{ likeCount }} likes</span>
+          <i @click="scrollToComments" class="fas fa-comment action-icon"></i>
+          <span>{{ post.comments.length }} comments</span>
           <i class="fas fa-bookmark action-icon"></i>
         </div>
       </div>
     </div>
-    <div class="comment-container" v-if="post">
+    <div class="comment-container" v-if="post" ref="commentSection">
       <h2>Discussions about this post</h2>
       <div class="comment-input">
         <textarea
@@ -116,6 +118,16 @@ const isFollowing = ref(false);
 const likeCount = ref(0);
 const isLiked = ref(false);
 const currentUserId = ref(null);
+const commentSection = ref(null);
+
+const scrollToComments = () => {
+  console.log("scrollToComments function called");
+  if (commentSection.value) {
+    commentSection.value.scrollIntoView({ behavior: "smooth" });
+  } else {
+    console.log("commentSection ref is null");
+  }
+};
 
 const postId = computed(() => route.params.id);
 
@@ -365,6 +377,11 @@ const toggleLike = async () => {
 .action-icon {
   font-size: 1.53em;
   cursor: pointer;
+  margin-right: 5px;
+}
+
+.action-icon:hover {
+  color: #ddd;
 }
 
 .comment-container {

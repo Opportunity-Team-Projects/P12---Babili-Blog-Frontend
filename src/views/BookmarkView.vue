@@ -1,7 +1,7 @@
 <template>
   <HeaderMain />
 
-  <Sidebar :collapsed="isSidebarCollapsed" @toggle="handleToggle" />
+  <Sidebar :collapsed="true" @toggle="handleToggle" />
 
   <div
     v-if="!isSidebarCollapsed"
@@ -10,17 +10,13 @@
   ></div>
 
   <!-- Hauptinhalt -->
-  <div class="main-content" :class="{ blurred: showCustomFeed }">
-    <button
-      v-if="$route.path === '/my-feed'"
-      class="custom-feed-settings-button"
-      @click="openCustomFeedSettings"
-    >
-      <i class="fas fa-cog"></i> Custom Feed Settings
-    </button>
+  <div class="main-content">
     <div class="post-container">
+      <div v-if="bookmarkedPosts.length === 0" class="no-bookmarks">
+        <p>You haven't bookmarked any posts yet.</p>
+      </div>
       <div
-        v-for="post in posts"
+        v-for="post in bookmarkedPosts"
         :key="post.id"
         class="post-card"
         @click="navigateToPost(post.id)"
@@ -59,74 +55,38 @@
             <i class="fas fa-heart action-icon"></i>
             <i class="fas fa-comment action-icon"></i>
           </div>
-          <i class="fas fa-bookmark action-icon"></i>
+          <i class="fas fa-bookmark action-icon active"></i>
         </div>
       </div>
     </div>
   </div>
-
-  <CustomFeed
-    v-if="showCustomFeed"
-    @close="closeCustomFeedSettings"
-    @save="saveCustomFeedSettings"
-  />
 </template>
 
 <script setup>
-import { ref, onMounted, watch } from "vue";
-import { useRouter, useRoute } from "vue-router";
+import { ref, onMounted } from "vue";
+import { useRouter } from "vue-router";
 import PostService from "@/services/PostService";
 import HeaderMain from "@/components/HeaderMain.vue";
 import Sidebar from "@/components/Sidebar.vue";
-import CustomFeed from "@/components/CustomFeed.vue";
 
 const router = useRouter();
-const route = useRoute();
 
-const posts = ref([]);
+const bookmarkedPosts = ref([]);
 const isSidebarCollapsed = ref(true);
-const showCustomFeed = ref(false);
 
 const handleToggle = (collapsed) => {
   isSidebarCollapsed.value = collapsed;
 };
 
-const fetchAllPosts = async () => {
+const fetchBookmarkedPosts = async () => {
   try {
-    const res = await PostService.getAllPosts();
-    posts.value = res.data.sort(
+    const res = await PostService.getBookmarkedPosts();
+    bookmarkedPosts.value = res.data.sort(
       (a, b) => new Date(b.created_at) - new Date(a.created_at)
     );
-    console.log("Fetched all posts:", res.data);
+    console.log("Fetched bookmarked posts:", res.data);
   } catch (error) {
-    console.error("Error fetching all posts:", error);
-  }
-};
-
-const searchPosts = async (query) => {
-  try {
-    let res;
-    if (route.path === "/my-feed") {
-      res = await PostService.searchPostsInUserCategories(query);
-    } else {
-      res = await PostService.searchPosts(query);
-    }
-    posts.value = res.data;
-    console.log("Search results:", res.data);
-  } catch (error) {
-    console.error("Error searching posts:", error);
-  }
-};
-
-const fetchUserCategoryPosts = async () => {
-  try {
-    const res = await PostService.getPostsByUserCategories();
-    posts.value = res.data.sort(
-      (a, b) => new Date(b.created_at) - new Date(a.created_at)
-    );
-    console.log("Fetched user category posts:", res.data);
-  } catch (error) {
-    console.error("Error fetching user category posts:", error);
+    console.error("Error fetching bookmarked posts:", error);
   }
 };
 
@@ -138,35 +98,9 @@ const navigateToPost = (postId) => {
   router.push(`/posts/${postId}`);
 };
 
-const openCustomFeedSettings = () => {
-  showCustomFeed.value = true;
-};
-
-const closeCustomFeedSettings = () => {
-  showCustomFeed.value = false;
-};
-
-const saveCustomFeedSettings = async (selectedCategories) => {
-  showCustomFeed.value = false;
-  if (route.path === "/my-feed") {
-    await fetchUserCategoryPosts();
-  }
-};
-
-// Watcher für Pfadänderungen und Suchanfragen
-watch(
-  [() => route.path, () => route.query.q],
-  ([newPath, newQuery]) => {
-    if (newQuery) {
-      searchPosts(newQuery);
-    } else if (newPath === "/my-feed") {
-      fetchUserCategoryPosts();
-    } else if (newPath === "/") {
-      fetchAllPosts();
-    }
-  },
-  { immediate: true }
-);
+onMounted(() => {
+  fetchBookmarkedPosts();
+});
 </script>
 
 <style scoped>
@@ -189,10 +123,6 @@ watch(
   color: white;
 }
 
-.main-content.blurred {
-  filter: blur(5px);
-}
-
 .overlay {
   position: fixed;
   top: 0;
@@ -201,21 +131,6 @@ watch(
   height: 100%;
   z-index: 1000;
   transition: opacity 0.3s ease;
-}
-
-.custom-feed-settings-button {
-  margin-left: 190px;
-  padding: 10px 15px;
-  font-size: 0.9em;
-  color: white;
-  background-color: #cf3df3d2;
-  border: none;
-  border-radius: 20px;
-  cursor: pointer;
-  transition: background-color 0.3s ease, transform 0.2s ease;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
-  display: flex;
-  align-items: center;
 }
 
 .post-container {
@@ -247,8 +162,9 @@ watch(
 }
 
 .post-card:hover {
-  border-color: rgba(207, 61, 243, 0.644);
+  border-color: rgba(206, 61, 243, 0.4);
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.7), 0 0 0 1px rgba(206, 61, 243, 0.3);
+  transform: scale(1.02);
 }
 
 .post-header {
@@ -358,14 +274,23 @@ watch(
   transform: scale(1.1);
 }
 
-@media screen and (max-width: 768px) {
-  .custom-feed-settings-button {
-    top: 70px;
-    left: 10px;
-    font-size: 0.8em;
-    padding: 8px 12px;
-  }
+/* Neue Styles für die Bookmark-Ansicht */
+.no-bookmarks {
+  width: 100%;
+  text-align: center;
+  padding: 20px;
+  font-size: 1.2em;
+  color: white;
 
+  border-radius: 8px;
+  margin-top: 20px;
+}
+
+.action-icon.active {
+  color: #9747ff;
+}
+
+@media screen and (max-width: 768px) {
   .post-container {
     margin-top: 25px;
     margin-left: 25px;
