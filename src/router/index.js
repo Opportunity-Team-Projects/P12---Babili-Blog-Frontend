@@ -67,7 +67,7 @@ const router = createRouter({
     },
 
     {
-      path: "/customfeed",
+      path: "/custom-feed",
       name: "customfeed",
       // route level code-splitting
       // this generates a separate chunk (About.[hash].js) for this route

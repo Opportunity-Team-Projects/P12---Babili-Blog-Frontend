@@ -11,6 +11,13 @@
 
   <!-- Hauptinhalt -->
   <div class="main-content">
+    <button
+      v-if="$route.path === '/my-feed'"
+      class="custom-feed-settings-button"
+      @click="openCustomFeedSettings"
+    >
+      <i class="fas fa-cog"></i> Custom Feed Settings
+    </button>
     <div class="post-container">
       <div
         v-for="post in posts"
@@ -123,6 +130,12 @@ const navigateToPost = (postId) => {
   router.push(`/posts/${postId}`);
 };
 
+const openCustomFeedSettings = () => {
+  // Implementieren Sie hier die Logik zum Öffnen der Custom Feed Einstellungen
+  console.log("Öffne Custom Feed Einstellungen");
+  // Zum Beispiel: router.push('/custom-feed-settings');
+};
+
 // Watcher für Pfadänderungen
 watch(
   () => route.path,
@@ -186,6 +199,21 @@ watch(
   height: 100%;
   z-index: 1000;
   transition: opacity 0.3s ease;
+}
+
+.custom-feed-settings-button {
+  margin-left: 190px;
+  padding: 10px 15px;
+  font-size: 0.9em;
+  color: white;
+  background-color: #cf3df3d2;
+  border: none;
+  border-radius: 20px;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+  display: flex;
+  align-items: center;
 }
 
 .post-container {
@@ -329,6 +357,13 @@ watch(
 }
 
 @media screen and (max-width: 768px) {
+  .custom-feed-settings-button {
+    top: 70px;
+    left: 10px;
+    font-size: 0.8em;
+    padding: 8px 12px;
+  }
+
   .post-container {
     margin-top: 25px;
     margin-left: 25px;

@@ -281,7 +281,7 @@ onMounted(() => {
   padding: 20px;
   font-size: 1.2em;
   color: white;
-  background-color: rgba(0, 0, 0, 0.2);
+
   border-radius: 8px;
   margin-top: 20px;
 }
