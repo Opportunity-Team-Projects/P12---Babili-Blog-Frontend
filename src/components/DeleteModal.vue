@@ -1,39 +1,60 @@
 <template>
-    <div>
-      <button @click="openModal">Öffne Modal</button>
-      
+
       <div v-if="isModalOpen" class="modal">
-        <div class="modal-content">
-          <h2>Delete account</h2>
-          <p>Warning: Deleting your account is permanent and cannot be undone.</p>
-          <button @click="confirmAction">Ja</button>
-          <button @click="closeModal">Nein</button>
-        </div>
+            <div class="modal-content">
+                <h2>Delete account</h2>
+                <p>Warning: Deleting your account is permanent and cannot be undone.</p>
+                <div class="btns">
+                    
+                    <button @click="closeModal">Cancel</button>
+                    <button @click="confirmAction">Delete account</button>
+
+                </div>  
+            </div>
       </div>
-    </div>
+
   </template>
   
   <script setup>
-  import { ref } from 'vue'
+  import { ref, defineEmits } from 'vue'
 
   
-  const isModalOpen = ref(false)
-  
-  const openModal = () => {
-    isModalOpen.value = true
-  }
+  const isModalOpen = ref(true); // Modal geöffnet
+  const emit = defineEmits(['close', 'confirm']) // Event-Emitter für Schließen und Bestätigung
   
   const closeModal = () => {
-    isModalOpen.value = false
-  }
+  emit('close'); // Schließt das Modal
+};
   
   const confirmAction = () => {
-    console.log('Aktion bestätigt')
-    closeModal()
+    emit('confirm') // Sendet die Bestätigung des Löschens
+    closeModal() // Modal schließen
   }
   </script>
   
   <style scoped>
+
+.modal {
+    max-width: 450px;
+    height: 300px;
+    background-color: #20252D;
+    border: solid 1px #909090;
+    border-radius: 20px;
+    color: white;
+}
+
+.modal-content {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+}
+
+.btns {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+}
 
   </style>
   

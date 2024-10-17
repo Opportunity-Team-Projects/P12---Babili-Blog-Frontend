@@ -39,18 +39,18 @@
                     <h2>Account Information</h2>
 
                     <div>
-                        <p>Joined date</p>
+                        <p>Joined date: {{ joinedDate }}</p>
                     </div>
                     
                     <form @submit.prevent="submit">
                                     
                         <input
                             id="username" class="placeholder" type="text" name="username" placeholder="Username"
-                            v-model="username">                        
+                            v-model="authUser.username">                        
                         
                         <input
                             id="email" class="placeholder" type="email" name="email" placeholder="Email"
-                            v-model="email">
+                            v-model="authUser.email">
                         
                         <button type="submit" class="btn-1">Save changes</button>
                     </form>
@@ -77,35 +77,37 @@
                     <h2>Delete account</h2>
 
                     <p>Deleting your account will:</p>
-                    <br>
+                    <br />
                     <ol>
                         <li>Permanently delete your profile, along with your authentication associations.</li>
                         <li>Permanently delete all your content, including your posts, bookmarks, comments, etc.</li>
                         <li>Allow your username to become available to anyone.</li>   
                     </ol>
 
-                    <button @click="openDeleteModal(user.id)" class="btn-danger">Delete account</button>
-
+                    <button @click="openDeleteModal(authUser.id)" class="btn-danger">Delete account</button>
                 </section>
             </div>
 
         </div>
-
     </div>
+
+    <DeleteModal v-if="showDeleteModal" @close="showDeleteModal = false" @confirm="deleteUser(authUser.id)" />
+
 </template>
 
 <script setup>
 
 import { ref, onMounted } from 'vue';
 import { useRouter } from 'vue-router';
-import { authClient } from '@/services/AuthService';
+import { useAuthStore } from "@/stores/useAuthStore";
 import HeaderMain from '@/components/HeaderMain.vue';
 import Sidebar from '@/components/Sidebar.vue';
 import DeleteModal from '@/components/DeleteModal.vue';
+import axios from 'axios';
+
 
 const router = useRouter();
-
-const isSidebarCollapsed = ref(true);
+const authStore = useAuthStore();
 
 const handleToggle = (collapsed) => {
   isSidebarCollapsed.value = collapsed;
@@ -115,25 +117,52 @@ const triggerFileInput = () => {
   fileInput.value.click();
 };
 
+const isSidebarCollapsed = ref(true);
 const showDeleteModal = ref(false);
-const userToDelete = ref(null);
+const authUser = ref({}); // Benutzerinformationen hier speichern
+const joinedDate = ref(''); // das Beitrittsdatum speichern
+
+// Modal zum Löschen öffnen
+const openDeleteModal = (userId) => {
+  showDeleteModal.value = true;
+};
+
+// Benutzerdaten beim Laden der Seite abrufen
+onMounted(async () => {
+  await authStore.fetchUser(); // Lädt den Benutzer aus dem authStore
+  authUser.value = authStore.user; // Benutzerinformationen speichern
+
+    // Beitrittsdatum formatieren
+    if (authUser.value.created_at) {
+    const options = { day: 'numeric', month: 'long', year: 'numeric',   };
+    joinedDate.value = new Date(authUser.value.created_at).toLocaleDateString(undefined, options);
+  }
+});
+
+// Funktion zum Speichern von Änderungen (Name und E-Mail)
+const submit = async () => {
+  try {
+    // Sende die geänderten Daten an das Backend
+    await axios.put('/api/user', {
+      username: authUser.value.username,
+      email: authUser.value.email,
+    });
+    console.log("Profileinformation saved");
+  } catch (error) {
+    console.error("Error:", error);
+  }
+};
 
 // Funktion zum Löschen des Benutzers
 const deleteUser = (userId) => {
   axios.delete(`/api/users/${userId}`)
     .then(() => {
-      // Logik nach erfolgreichem Löschen
       showDeleteModal.value = false;
+      router.push('/logout'); // Nach dem Löschen zur Logout-Seite navigieren
     })
     .catch(error => {
       console.error('Error:', error);
     });
-};
-
-// Funktion zum Öffnen des Delete-Modals
-const openDeleteModal = (userId) => {
-  userToDelete.value = userId; // Setzt die userId, die gelöscht werden soll
-  showDeleteModal.value = true; // Öffnet das Modal
 };
 
 // Funktion zum Hochladen des Bildes und zum Anzeigen der Vorschau
