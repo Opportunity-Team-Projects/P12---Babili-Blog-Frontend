@@ -1,6 +1,6 @@
 <template>
     <Transition name="modal">
-        <div v-if="isModalOpen" class="modal-overlay">
+        <div v-if="modelValue" class="modal-overlay">
             <div class="modal">
                 <div class="modal-content">
                     <h2>Delete account</h2>
@@ -18,13 +18,18 @@
   <script setup>
   import { ref, defineEmits } from 'vue'
 
-  
-  const isModalOpen = ref(true); // Modal geöffnet
-  const emit = defineEmits(['close', 'confirm']) // Event-Emitter für Schließen und Bestätigung
+  const props = defineProps({
+    modelValue: {
+        type: Boolean,
+        required: true
+    }
+})
+
+  const emit = defineEmits(['update:modelValue', 'confirm']) // Event-Emitter für Schließen und Bestätigung
   
   const closeModal = () => {
-  emit('close'); // Schließt das Modal
-};
+    emit('update:modelValue', false) // Emit event to update parent's v-model
+}
   
   const confirmAction = () => {
     emit('confirm') // Sendet die Bestätigung des Löschens
