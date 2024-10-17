@@ -93,7 +93,12 @@ const fetchMyPosts = async () => {
     );
     console.log("Fetched my posts:", res.data);
   } catch (error) {
-    console.error("Error fetching my posts:", error);
+    console.error("Error fetching my posts:", error.response || error);
+    // Log more details about the error
+    if (error.response) {
+      console.error("Response status:", error.response.status);
+      console.error("Response data:", error.response.data);
+    }
   }
 };
 
