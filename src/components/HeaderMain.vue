@@ -17,13 +17,21 @@
     </div>
     <div class="header-right">
       <router-link to="/create" class="new-post-btn">New Post</router-link>
-      <!--       <button class="dark-mode-toggle">
-        <i class="fas fa-moon"></i>
-      </button> -->
-      <div class="profile-icon">
-        <i class="fas fa-user"></i>
-      </div>
-    </div>
+
+      <router-link 
+        to="/profile" 
+        custom 
+        v-slot="{ navigate }"
+      >
+        <div 
+          class="profile-icon" 
+          @click="navigate" 
+          role="link"
+        >
+          <i class="fas fa-user"></i>
+        </div>
+      </router-link>
+    </div>  
   </header>
 </template>
 
@@ -142,14 +150,19 @@ const onSearchInput = debounce(() => {
 .profile-icon {
   width: 60px;
   height: 60px;
-  background-color: white;
-  border: solid 3px #ce3df3;
+  background-color: black;
+  border: solid 2px #ce3df3;
   border-radius: 50%;
   display: flex;
   justify-content: center;
   align-items: center;
   cursor: pointer;
   font-size: 30px;
+}
+
+.profile-icon:hover {
+  background-color: #909090;
+  border: solid 2px white;
 }
 
 @media screen and (max-width: 768px) {
