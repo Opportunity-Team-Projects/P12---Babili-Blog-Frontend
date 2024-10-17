@@ -86,7 +86,7 @@ button {
     border: solid 1px #000000;
     padding: 10px 15px;
     font-size: 16px;
-    font-weight: 700;
+    font-weight: 600;
     text-align: center;
     width: fit-content;
 }

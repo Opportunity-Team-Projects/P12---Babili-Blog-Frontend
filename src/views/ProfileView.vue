@@ -371,6 +371,7 @@ input[type="password"]  {
     border: solid 1px #FFFFFF;
     background-color: #20252D;
     position: relative;
+    color: white;
 }
 
 /* Passwortfeld mit Auge-Icon */
