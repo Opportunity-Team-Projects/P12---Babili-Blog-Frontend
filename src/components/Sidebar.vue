@@ -13,16 +13,19 @@
       </ul>
 
       <ul class="menu bottom-menu">
-        <li
-          v-for="item in bottomMenuItems"
-          :key="item.name"
-          class="menu-item"
-          @click="item.action"
-        >
-          <span class="menu-icon">
-            <i :class="item.icon"></i>
-          </span>
-          <span class="menu-text">{{ item.name }}</span>
+        <li v-for="item in bottomMenuItems" :key="item.name" class="menu-item">
+          <router-link v-if="item.path" :to="item.path" class="menu-link">
+            <span class="menu-icon">
+              <i :class="item.icon"></i>
+            </span>
+            <span class="menu-text">{{ item.name }}</span>
+          </router-link>
+          <div v-else @click="item.action" class="menu-link">
+            <span class="menu-icon">
+              <i :class="item.icon"></i>
+            </span>
+            <span class="menu-text">{{ item.name }}</span>
+          </div>
         </li>
       </ul>
     </div>
