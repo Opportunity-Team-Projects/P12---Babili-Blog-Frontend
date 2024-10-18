@@ -18,20 +18,12 @@
     <div class="header-right">
       <router-link to="/create" class="new-post-btn">New Post</router-link>
 
-      <router-link 
-        to="/profile" 
-        custom 
-        v-slot="{ navigate }"
-      >
-        <div 
-          class="profile-icon" 
-          @click="navigate" 
-          role="link"
-        >
+      <router-link to="/profile" custom v-slot="{ navigate }">
+        <div class="profile-icon" @click="navigate" role="link">
           <i class="fas fa-user"></i>
         </div>
       </router-link>
-    </div>  
+    </div>
   </header>
 </template>
 
@@ -43,9 +35,6 @@ import debounce from "lodash.debounce";
 const searchQuery = ref("");
 const router = useRouter();
 const route = useRoute();
-
-//TODO Prüfe ob noch benötigit
-//const emit = defineEmits(["search"]);
 
 // Damit das Suchfeld den aktuellen Wert aus der URL anzeigt
 searchQuery.value = route.query.q || "";

@@ -2,6 +2,9 @@
 
 import { authClient } from "./AuthService";
 
+const PostLike_URL = "/api/posts";
+const CommentLike_URL = "/api/comments";
+
 export default {
   // Alle Posts abrufen
   getAllPosts() {
@@ -22,5 +25,19 @@ export default {
     return authClient.get("/api/search/user-categories", { params: { query } });
   },
 
+  async likePost(postId) {
+    return authClient.post(`${PostLike_URL}/${postId}/like`);
+  },
 
+  async unlikePost(postId) {
+    return authClient.delete(`${PostLike_URL}/${postId}/unlike`);
+  },
+  
+  async likeComment(commentId) {
+    return authClient.post(`${CommentLike_URL}/${commentId}/like`);
+  },
+
+  async unlikeComment(commentId) {
+    return authClient.delete(`${CommentLike_URL}/${commentId}/unlike`);
+  },
 };

@@ -13,6 +13,7 @@ export const useAuthStore = defineStore('auth', () => {
       const response = await AuthService.getAuthUser();
       user.value = response.data;
     } catch (error) {
+      console.error("Error fetching authenticated user:", error);
       user.value = null;
     }
   };
@@ -22,8 +23,12 @@ export const useAuthStore = defineStore('auth', () => {
   };
 
   const logout = async () => {
-    await AuthService.logout();
-    user.value = null;
+    try {
+      await AuthService.logout();
+      user.value = null;
+    } catch (error) {
+      console.error("Error during logout:", error);
+    }
   };
 
   return {
