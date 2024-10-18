@@ -38,7 +38,7 @@
         class="custom-feed-settings-button"
         @click="openCustomFeedSettings"
       >
-        <i class="fas fa-cog"></i> Custom Feed Settings
+        <i class="fas fa-cog"></i>&nbsp; Custom Feed Settings
       </button>
     </div>
 
@@ -272,11 +272,11 @@ watch(
 .filter-buttons button {
   padding: 10px 15px;
   font-size: 1em;
-  font-weight: 600;
+  font-weight: 550;
   color: #cf3df3d2;
   background-color: white;
   border: none;
-  border-radius: 20px;
+  border-radius: 14px;
   cursor: pointer;
   margin-right: 10px;
   transition: background-color 0.3s ease, transform 0.2s ease;
@@ -293,21 +293,20 @@ watch(
 
 .custom-feed-settings-button {
   padding: 10px 15px;
-  font-size: 0.9em;
+  font-size: 1em;
+  font-weight: 550;
   color: white;
   background-color: #cf3df3d2;
   border: none;
-  border-radius: 20px;
+  border-radius: 14px;
   cursor: pointer;
   transition: background-color 0.3s ease, transform 0.2s ease;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
   display: flex;
   align-items: center;
 }
 
 .custom-feed-settings-button:hover {
-  background-color: #9747ff;
-  transform: scale(1.05);
+  background-color: #cf3df3a2;
 }
 
 .post-container {
