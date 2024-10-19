@@ -53,24 +53,16 @@
         <!-- Post Actions -->
         <div class="post-actions">
           <div class="icon-left">
-            <button
-              class="action-icon-button"
-              :class="{ liked: post.is_liked }"
-              @click="toggleLike(post)"
-              :disabled="post.user.id === currentUserId"
-              aria-label="Like Post"
-            >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                viewBox="0 0 512 512"
-                fill="currentColor"
-                class="heart-icon"
-              >
-                <path
-                  d="M47.6 300.4L228.3 469.1c7.5 7 17.4 10.9 27.7 10.9s20.2-3.9 27.7-10.9L464.4 300.4c30.4-28.3 47.6-68 47.6-109.5v-5.8c0-69.9-50.5-129.5-119.4-141C347 36.5 300.6 51.4 268 84L256 96 244 84c-32.6-32.6-79-47.5-124.6-39.9C50.5 55.6 0 115.2 0 185.1v5.8c0 41.5 17.2 81.2 47.6 109.5z"
-                ></path>
-              </svg>
-            </button>
+            <HeartIcon
+              :postId="post.id"
+              :initiallyLiked="post.is_liked"
+              :isOwnPost="post.user.id === currentUserId"
+              @update-like="
+                (likes_count, is_liked) =>
+                  updateLikeCount(post.id, likes_count, is_liked)
+              "
+            />
+            <span>{{ post.likes_count }}</span>
             <i class="fas fa-comment action-icon"></i>
           </div>
           <i class="fas fa-bookmark action-icon"></i>
@@ -91,6 +83,7 @@ import { ref, defineProps, onMounted, watch, computed } from "vue";
 import { useRouter, useRoute } from "vue-router";
 import PostService from "@/services/PostService";
 import HeaderMain from "@/components/HeaderMain.vue";
+import HeartIcon from "@/components/HeartIcon.vue";
 import Sidebar from "@/components/Sidebar.vue";
 import CustomFeed from "@/components/CustomFeed.vue";
 import { useAuthStore } from "@/stores/useAuthStore";
@@ -107,7 +100,6 @@ const showCustomFeed = ref(false);
 const { user } = storeToRefs(authStore);
 
 const currentUserId = computed(() => user.value?.user?.id);
-
 const props = defineProps({
   query: {
     type: String, // Passe den Typ entsprechend an
@@ -122,11 +114,11 @@ const handleToggle = (collapsed) => {
 
 const fetchAllPosts = async () => {
   try {
-    const res = await PostService.getAllPosts();
-    posts.value = res.data.sort(
+    const postsArray = await PostService.getAllPosts();
+    posts.value = postsArray.sort(
       (a, b) => new Date(b.created_at) - new Date(a.created_at)
     );
-    console.log("Fetched all posts:", res.data);
+    console.log("Fetched all posts:", postsArray);
   } catch (error) {
     console.error("Error fetching all posts:", error);
   }
@@ -182,20 +174,11 @@ const saveCustomFeedSettings = async (selectedCategories) => {
   }
 };
 
-const toggleLike = async (post) => {
-  console.log(`toggleLike aufgerufen für Post-ID: ${currentUserId}`);
-  try {
-    if (post.is_liked) {
-      await PostService.unlikePost(post.id);
-      post.is_liked = false;
-      console.log(`Post-ID ${post.id} wurde unliked`);
-    } else {
-      await PostService.likePost(post.id);
-      post.is_liked = true;
-      console.log(`Post-ID ${post.id} wurde geliked`);
-    }
-  } catch (error) {
-    console.error("Fehler beim Toggle Like:", error);
+const updateLikeCount = (postId, likes_count, is_liked) => {
+  const post = posts.value.find((p) => p.id === postId);
+  if (post) {
+    post.likes_count = likes_count;
+    post.is_liked = is_liked;
   }
 };
 
@@ -216,30 +199,6 @@ watch(
 </script>
 
 <style scoped>
-.action-icon-button {
-  background: none;
-  border: none;
-  cursor: pointer;
-  font-size: 1.6em;
-  color: white;
-  transition: color 0.3s ease, transform 0.3s ease;
-  padding: 2px;
-}
-
-.action-icon-button.liked {
-  color: rgb(183, 0, 255);
-}
-
-.action-icon-button:hover {
-  transform: scale(1.1);
-}
-
-/* Optional: Style für das SVG-Icon */
-.heart-icon {
-  width: 1em;
-  height: 1em;
-}
-
 .app-container {
   position: relative;
 }
