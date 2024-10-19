@@ -26,19 +26,18 @@ onMounted(async () => {
   }
 });
 
-const login = async () => {
+const handleLogin = async () => {
   try {
     const payload = {
       email: email.value,
       password: password.value,
     };
-    await AuthService.login(payload);
-    const response = await AuthService.getAuthUser();
-    authUser.value = response.data;
-    router.push("/");
-    console.log(response.data);
+    await authStore.login(payload); // Nutzung der Login-Methode aus dem Store
+    if (authStore.isAuthenticated) {
+      router.push("/"); // Weiterleitung nach erfolgreichem Login
+    }
   } catch (err) {
-    console.log(err);
+    console.error(err);
     error.value = "Login fehlgeschlagen. Bitte überprüfe deine Anmeldedaten.";
   }
 };
@@ -68,7 +67,7 @@ const login = async () => {
           </p>
         </div>
       </div>
-      <form action="" method="post" @submit.prevent="login">
+      <form action="" method="post" @submit.prevent="handleLogin">
         <div class="login-container">
           <h2>Login</h2>
           <div>
@@ -118,7 +117,6 @@ const login = async () => {
       <p>© 2024 Tech & Game Nexus Terms</p>
     </div>
   </div>
-  
 </template>
 
 <style scoped>

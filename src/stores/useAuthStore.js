@@ -22,6 +22,16 @@ export const useAuthStore = defineStore('auth', () => {
     user.value = userData;
   };
 
+  const login = async (credentials) => {
+    try {
+      await AuthService.login(credentials);
+      await fetchUser();
+    } catch (error) {
+      console.error("Login error:", error);
+      throw error; 
+    }
+  };
+
   const logout = async () => {
     try {
       await AuthService.logout();
@@ -36,6 +46,7 @@ export const useAuthStore = defineStore('auth', () => {
     isAuthenticated,
     fetchUser,
     setUser,
+    login,
     logout,
   };
 });
