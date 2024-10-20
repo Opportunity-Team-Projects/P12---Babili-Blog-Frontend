@@ -127,15 +127,6 @@ const onSearchInput = debounce(() => {
   font-weight: 600;
 }
 
-.dark-mode-toggle {
-  background: none;
-  border: none;
-  font-size: 1.2em;
-  cursor: pointer;
-  margin-right: 10px;
-  color: white;
-}
-
 .profile-icon {
   width: 60px;
   height: 60px;
@@ -181,22 +172,12 @@ const onSearchInput = debounce(() => {
     padding: 10px 15px;
     font-size: 0.9em;
   }
-
-  .dark-mode-toggle,
-  .profile-icon {
-    font-size: 1em;
-  }
 }
 
 @media screen and (max-width: 480px) {
   .new-post-btn {
     padding: 8px 12px;
     font-size: 0.8em;
-  }
-
-  .dark-mode-toggle,
-  .profile-icon {
-    font-size: 0.9em;
   }
 }
 </style>
