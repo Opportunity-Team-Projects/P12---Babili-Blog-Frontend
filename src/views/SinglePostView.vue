@@ -35,10 +35,12 @@
         />
         <p class="post-text">{{ post.content }}</p>
         <div class="post-actions">
-          <i
-            @click="toggleLike"
-            :class="['fas', 'fa-heart', 'action-icon', { liked: isLiked }]"
-          ></i>
+          <HeartIcon
+            :postId="post.id"
+            :initiallyLiked="post.is_liked"
+            :isOwnPost="post.user.id === currentUserId"
+            @update-like="handleLikeUpdate"
+          />
           <span>{{ likeCount }} likes</span>
           <i @click="scrollToComments" class="fas fa-comment action-icon"></i>
           <span>{{ post.comments.length }} comments</span>
@@ -80,10 +82,17 @@
             {{ comment.commentContent || comment.content }}
           </p>
           <div class="comment-footer">
-            <div class="comment-likes">
-              <i class="fas fa-heart"></i>
-              <span>{{ comment.likes || 0 }}</span>
-            </div>
+            <HeartIcon
+              :type="'comment'"
+              :id="comment.id"
+              :initiallyLiked="comment.is_liked"
+              :isOwnItem="currentUserId === comment.user.id"
+              @update-like="
+                (likes_count, is_liked) =>
+                  updateCommentLike(comment.id, likes_count, is_liked)
+              "
+            />
+            <span>{{ comment.likes_count }} likes</span>
             <button
               v-if="
                 currentUserId &&
@@ -107,18 +116,32 @@ import { ref, onMounted, computed } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import { authClient } from "@/services/AuthService";
 import HeaderMain from "@/components/HeaderMain.vue";
+import HeartIcon from "@/components/HeartIcon.vue";
 import Sidebar from "@/components/Sidebar.vue";
+import PostService from "@/services/PostService";
+import { useAuthStore } from "@/stores/useAuthStore";
+import { storeToRefs } from "pinia";
 
 const route = useRoute();
 const router = useRouter();
+const authStore = useAuthStore();
+const { user } = storeToRefs(authStore);
 
 const post = ref(null);
 const newCommentContent = ref("");
 const isFollowing = ref(false);
 const likeCount = ref(0);
 const isLiked = ref(false);
-const currentUserId = ref(null);
+const currentUserId = computed(() => user.value?.user?.id);
 const commentSection = ref(null);
+
+const updateCommentLike = (commentId, likes_count, is_liked) => {
+  const comment = post.value.comments.find((c) => c.id === commentId);
+  if (comment) {
+    comment.likes_count = likes_count;
+    comment.is_liked = is_liked;
+  }
+};
 
 const scrollToComments = () => {
   console.log("scrollToComments function called");
@@ -135,43 +158,21 @@ const goBack = () => {
   router.go(-1);
 };
 
-onMounted(async () => {
-  await fetchPost();
-  await fetchLikeCount();
-  await fetchCurrentUser();
-});
-
-const fetchCurrentUser = async () => {
-  try {
-    const response = await authClient.get("/api/user");
-    console.log("User response:", response.data);
-    if (response.data && response.data.user && response.data.user.id) {
-      currentUserId.value = response.data.user.id;
-    } else {
-      console.error("User ID not found in response");
-    }
-    console.log("Current user ID:", currentUserId.value);
-  } catch (error) {
-    console.error("Error fetching current user:", error);
-  }
-};
-
 const fetchPost = async () => {
   try {
-    const response = await authClient.get(`/api/posts/${postId.value}`);
-    post.value = response.data.post;
+    post.value = await PostService.getSinglePost(postId.value);
+    console.log("Fetched post:", post.value); // Debugging
+    likeCount.value = Number(post.value.likes_count) || 0; // Sicherstellen, dass es eine Zahl ist
+    console.log("Like count:", likeCount.value); // Debugging
+    isLiked.value = post.value.is_liked;
   } catch (error) {
     console.error("Error fetching post:", error);
   }
 };
 
-const fetchLikeCount = async () => {
-  try {
-    const response = await authClient.get(`/api/posts/${postId.value}/likes`);
-    likeCount.value = response.data.likes;
-  } catch (error) {
-    console.error("Error fetching like count:", error);
-  }
+const handleLikeUpdate = (likes_count, liked) => {
+  likeCount.value = likes_count;
+  post.value.is_liked = liked;
 };
 
 const formatDate = (date) => {
@@ -223,20 +224,9 @@ const toggleFollow = async () => {
   }
 };
 
-const toggleLike = async () => {
-  try {
-    if (isLiked.value) {
-      await authClient.delete(`/api/posts/${postId.value}/unlike`);
-      likeCount.value--;
-    } else {
-      await authClient.post(`/api/posts/${postId.value}/like`);
-      likeCount.value++;
-    }
-    isLiked.value = !isLiked.value;
-  } catch (error) {
-    console.error("Error toggling like:", error);
-  }
-};
+onMounted(async () => {
+  await fetchPost();
+});
 </script>
 
 <style scoped>

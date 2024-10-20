@@ -44,12 +44,7 @@
 
     <!-- Post Container -->
     <div class="post-container">
-      <div
-        v-for="post in posts"
-        :key="post.id"
-        class="post-card"
-        @click="navigateToPost(post.id)"
-      >
+      <div v-for="post in posts" :key="post.id" class="post-card">
         <!-- Post Header -->
         <div class="post-header">
           <div class="profile-placeholder">
@@ -66,10 +61,12 @@
 
         <!-- Post Details -->
         <div class="post-details">
-          <h2 class="post-title">{{ post.contentTitle }}</h2>
+          <h2 class="post-title" @click="navigateToPost(post.id)">
+            {{ post.contentTitle }}
+          </h2>
 
           <!-- Post Image -->
-          <div class="post-image-placeholder">
+          <div class="post-image-placeholder" @click="navigateToPost(post.id)">
             <i class="fas fa-image"></i>
           </div>
           <p class="post-author">
@@ -81,8 +78,18 @@
         <!-- Post Actions -->
         <div class="post-actions">
           <div class="icon-left">
-            <i class="fas fa-heart action-icon"></i>
-            <span>{{ post.likesCount || 0 }}</span>
+
+            <HeartIcon
+              :postId="post.id"
+              :initiallyLiked="post.is_liked"
+              :isOwnPost="post.user.id === currentUserId"
+              @update-like="
+                (likes_count, is_liked) =>
+                  updateLikeCount(post.id, likes_count, is_liked)
+              "
+            />
+            <span>{{ post.likes_count }}</span>
+
             <i class="fas fa-comment action-icon"></i>
           </div>
           <i class="fas fa-bookmark action-icon"></i>
@@ -100,20 +107,36 @@
 </template>
 
 <script setup>
-import { ref, watch } from "vue";
+
+import { ref, watch, computed } from "vue";
 import { useRouter, useRoute } from "vue-router";
 import PostService from "@/services/PostService";
 import HeaderMain from "@/components/HeaderMain.vue";
+import HeartIcon from "@/components/HeartIcon.vue";
 import Sidebar from "@/components/Sidebar.vue";
 import CustomFeed from "@/components/CustomFeed.vue";
+import { useAuthStore } from "@/stores/useAuthStore";
+import { storeToRefs } from "pinia";
 
 const router = useRouter();
 const route = useRoute();
+const authStore = useAuthStore();
 
 const posts = ref([]);
 const isSidebarCollapsed = ref(true);
 const showCustomFeed = ref(false);
 const sortOption = ref("recent");
+
+const { user } = storeToRefs(authStore);
+
+const currentUserId = computed(() => user.value?.user?.id);
+const props = defineProps({
+  query: {
+    type: String, // Passe den Typ entsprechend an
+    required: false,
+    default: "",
+  },
+});
 
 const handleToggle = (collapsed) => {
   isSidebarCollapsed.value = collapsed;
@@ -129,10 +152,12 @@ const sortPosts = () => {
 
 const fetchAllPosts = async () => {
   try {
-    const res = await PostService.getAllPosts();
-    posts.value = res.data;
-    sortPosts();
-    console.log("Fetched all posts:", res.data);
+    const postsArray = await PostService.getAllPosts();
+    posts.value = postsArray.sort(
+      (a, b) => new Date(b.created_at) - new Date(a.created_at)
+    );
+    console.log("Fetched all posts:", postsArray);
+
   } catch (error) {
     console.error("Error fetching all posts:", error);
   }
@@ -185,6 +210,14 @@ const saveCustomFeedSettings = async (selectedCategories) => {
   showCustomFeed.value = false;
   if (route.path === "/my-feed") {
     await fetchUserCategoryPosts();
+  }
+};
+
+const updateLikeCount = (postId, likes_count, is_liked) => {
+  const post = posts.value.find((p) => p.id === postId);
+  if (post) {
+    post.likes_count = likes_count;
+    post.is_liked = is_liked;
   }
 };
 
@@ -313,7 +346,6 @@ watch(
   flex-direction: column;
   transition: border-color 0.3s ease, box-shadow 0.3s ease,
     transform 0.2s ease-in-out;
-  cursor: pointer;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(255, 255, 255, 0.1);
 }
 
@@ -373,6 +405,7 @@ watch(
   line-height: 1.3em;
   height: 3.9em;
   color: white;
+  cursor: pointer;
 }
 
 .post-author,
@@ -400,6 +433,7 @@ watch(
   align-items: center;
   font-size: 3em;
   color: rgba(0, 0, 0, 0.699);
+  cursor: pointer;
 }
 
 .post-actions {
@@ -427,6 +461,7 @@ watch(
 .action-icon:hover {
   color: rgba(255, 255, 255, 0.918);
   transform: scale(1.1);
+  pointer-events: auto;
 }
 
 @media screen and (max-width: 768px) {
