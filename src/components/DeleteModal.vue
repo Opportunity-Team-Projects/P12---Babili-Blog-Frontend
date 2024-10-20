@@ -50,6 +50,7 @@
     justify-content: center;
     align-items: center;
     z-index: 1000;
+    
 }
 
 .modal {
@@ -60,6 +61,7 @@
     border: solid 1px #909090;
     border-radius: 20px;
     color: white;
+    margin: 0 10px;
 }
 
 .modal-content {

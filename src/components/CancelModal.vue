@@ -49,6 +49,7 @@ const props = defineProps({
     border: solid 1px #909090;
     border-radius: 20px;
     color: white;
+    margin: 0 10px;
 }
 
 .modal-content {
@@ -65,7 +66,7 @@ h2 {
 }
 
 p {
-    color: #ff6b6b;
+    color: white;
     text-align: center;
 }
 
