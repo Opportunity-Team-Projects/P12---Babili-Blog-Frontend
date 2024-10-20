@@ -85,7 +85,7 @@ const navigateToPost = (postId) => {
 
 const fetchMyPosts = async () => {
   try {
-    const res = await authClient.get("/api/my-posts");
+    const res = await authClient.get("/api/myposts");
     posts.value = res.data.sort(
       (a, b) => new Date(b.created_at) - new Date(a.created_at)
     );
