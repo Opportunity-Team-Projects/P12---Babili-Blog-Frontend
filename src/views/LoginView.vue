@@ -59,7 +59,7 @@ const handleLogin = async () => {
         </div>
       </div>
       <div class="text-container">
-        <H1>Tech & Game Nexus</H1>
+        <h1>Tech & Game Nexus</h1>
         <div class="text">
           <p>
             Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
