@@ -79,7 +79,7 @@
 </template>
 
 <script setup>
-import { ref, defineProps, onMounted, watch, computed } from "vue";
+import { ref, watch, computed } from "vue";
 import { useRouter, useRoute } from "vue-router";
 import PostService from "@/services/PostService";
 import HeaderMain from "@/components/HeaderMain.vue";

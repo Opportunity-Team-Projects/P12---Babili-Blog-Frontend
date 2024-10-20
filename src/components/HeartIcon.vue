@@ -3,7 +3,12 @@ import { ref } from "vue";
 import PostService from "@/services/PostService";
 
 const props = defineProps({
-  postId: {
+  type: {
+    type: String,
+    required: true,
+    validator: (value) => ["post", "comment"].includes(value),
+  },
+  id: {
     type: [Number, String],
     required: true,
   },
@@ -11,7 +16,7 @@ const props = defineProps({
     type: Boolean,
     default: false,
   },
-  isOwnPost: {
+  isOwnItem: {
     type: Boolean,
     default: false,
   },
@@ -25,9 +30,19 @@ const toggleLike = async () => {
   try {
     let response;
     if (isLiked.value) {
-      response = await PostService.unlikePost(props.postId);
+      // Unlike
+      if (props.type === "post") {
+        response = await PostService.unlikePost(props.id);
+      } else if (props.type === "comment") {
+        response = await PostService.unlikeComment(props.id);
+      }
     } else {
-      response = await PostService.likePost(props.postId);
+      // Like
+      if (props.type === "post") {
+        response = await PostService.likePost(props.id);
+      } else if (props.type === "comment") {
+        response = await PostService.likeComment(props.id);
+      }
     }
     isLiked.value = response.is_liked;
     emits("update-like", response.likes_count, response.is_liked);

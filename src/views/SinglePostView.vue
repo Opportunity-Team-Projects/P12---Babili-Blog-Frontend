@@ -82,10 +82,17 @@
             {{ comment.commentContent || comment.content }}
           </p>
           <div class="comment-footer">
-            <div class="comment-likes">
-              <i class="fas fa-heart"></i>
-              <span>{{ comment.likes || 0 }}</span>
-            </div>
+            <HeartIcon
+              :type="'comment'"
+              :id="comment.id"
+              :initiallyLiked="comment.is_liked"
+              :isOwnItem="currentUserId === comment.user.id"
+              @update-like="
+                (likes_count, is_liked) =>
+                  updateCommentLike(comment.id, likes_count, is_liked)
+              "
+            />
+            <span>{{ comment.likes_count }} likes</span>
             <button
               v-if="
                 currentUserId &&
@@ -127,6 +134,14 @@ const likeCount = ref(0);
 const isLiked = ref(false);
 const currentUserId = computed(() => user.value?.user?.id);
 const commentSection = ref(null);
+
+const updateCommentLike = (commentId, likes_count, is_liked) => {
+  const comment = post.value.comments.find((c) => c.id === commentId);
+  if (comment) {
+    comment.likes_count = likes_count;
+    comment.is_liked = is_liked;
+  }
+};
 
 const scrollToComments = () => {
   console.log("scrollToComments function called");

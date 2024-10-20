@@ -86,13 +86,24 @@ export default {
   },
   
   async likeComment(commentId) {
-    return authClient.post(`${CommentLike_URL}/${commentId}/like`);
+    try {
+      const response = await authClient.post(`/api/comments/${commentId}/like`);
+      return response.data; // { message, likes_count, is_liked }
+    } catch (error) {
+      console.error("Error liking comment:", error);
+      throw error;
+    }
   },
 
   async unlikeComment(commentId) {
-    return authClient.delete(`${CommentLike_URL}/${commentId}/unlike`);
+    try {
+      const response = await authClient.delete(`/api/comments/${commentId}/unlike`);
+      return response.data; // { message, likes_count, is_liked }
+    } catch (error) {
+      console.error("Error unliking comment:", error);
+      throw error;
+    }
   },
-
   
 };
 
