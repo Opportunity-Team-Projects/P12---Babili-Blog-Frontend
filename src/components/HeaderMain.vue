@@ -19,16 +19,16 @@
     </div>
     <div class="header-right">
       <!-- Zeigt "New Post" und "Profile" nur an, wenn der Nutzer eingeloggt ist -->
-      <router-link v-if="authUser" to="/create" class="new-post-btn">New Post</router-link>
-      <router-link v-if="authUser" to="/profile" custom v-slot="{ navigate }">
+      <router-link v-if="isAuthenticated" to="/create" class="new-post-btn">New Post</router-link>
+      <router-link v-if="isAuthenticated" to="/profile" custom v-slot="{ navigate }">
         <div class="profile-icon" @click="navigate" role="link">
           <i class="fas fa-user"></i>
         </div>
       </router-link>
 
       <!-- Zeigt "Login" und "Sign up" nur an, wenn der Nutzer nicht eingeloggt ist -->
-      <router-link v-if="!authUser" to="/login" class="log-in-btn">Log in</router-link>
-      <router-link v-if="!authUser" to="/register" class="sign-up-btn">Sign up</router-link>
+      <router-link v-if="!isAuthenticated" to="/login" class="log-in-btn">Log in</router-link>
+      <router-link v-if="!isAuthenticated" to="/register" class="sign-up-btn">Sign up</router-link>
     </div>
   </header>
 </template>
@@ -37,13 +37,13 @@
 import { ref, watch, onMounted } from "vue";
 import { useRouter, useRoute } from "vue-router";
 import debounce from "lodash.debounce";
-import { useAuthStore } from "@/stores/useAuthStore";
-import { storeToRefs } from "pinia";
+import { useAuthStore } from '@/stores/useAuthStore'; 
+
 
 const searchQuery = ref("");
 const router = useRouter();
 const route = useRoute();
-const { authUser } = storeToRefs(useAuthStore());
+const authStore = useAuthStore(); 
 
 // Damit das Suchfeld den aktuellen Wert aus der URL anzeigt
 searchQuery.value = route.query.q || "";
@@ -67,15 +67,12 @@ const onSearchInput = debounce(() => {
 
 // API-Aufruf, um den aktuellen Benutzerstatus zu prüfen
 onMounted(async () => {
-  try {
-    const user = await AuthService.getCurrentUser(); // Verwende die Methode aus AuthService
-    if (user) {
-      isAuthenticated.value = true; // Benutzer ist eingeloggt
-    }
-  } catch (error) {
-    isAuthenticated.value = false; // Benutzer ist nicht eingeloggt oder Authentifizierung fehlgeschlagen
-  }
+  await authStore.fetchUser(); // Hole den Benutzerstatus beim Laden der Komponente
 });
+
+// Reaktive Berechnung, ob der Nutzer eingeloggt ist
+const isAuthenticated = authStore.isAuthenticated;
+
 </script>
 
 <style scoped>
