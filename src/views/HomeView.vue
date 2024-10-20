@@ -78,11 +78,11 @@
         <!-- Post Actions -->
         <div class="post-actions">
           <div class="icon-left">
-
             <HeartIcon
-              :postId="post.id"
+              :type="'post'"
+              :id="post.id"
               :initiallyLiked="post.is_liked"
-              :isOwnPost="post.user.id === currentUserId"
+              :isOwnItem="post.user.id === currentUserId"
               @update-like="
                 (likes_count, is_liked) =>
                   updateLikeCount(post.id, likes_count, is_liked)
@@ -107,7 +107,6 @@
 </template>
 
 <script setup>
-
 import { ref, watch, computed } from "vue";
 import { useRouter, useRoute } from "vue-router";
 import PostService from "@/services/PostService";
@@ -157,7 +156,6 @@ const fetchAllPosts = async () => {
       (a, b) => new Date(b.created_at) - new Date(a.created_at)
     );
     console.log("Fetched all posts:", postsArray);
-
   } catch (error) {
     console.error("Error fetching all posts:", error);
   }

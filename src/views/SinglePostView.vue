@@ -36,9 +36,10 @@
         <p class="post-text">{{ post.content }}</p>
         <div class="post-actions">
           <HeartIcon
-            :postId="post.id"
+            :type="'post'"
+            :id="post.id"
             :initiallyLiked="post.is_liked"
-            :isOwnPost="post.user.id === currentUserId"
+            :isOwnItem="post.user.id === currentUserId"
             @update-like="handleLikeUpdate"
           />
           <span>{{ likeCount }} likes</span>

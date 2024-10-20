@@ -44,6 +44,7 @@ const toggleLike = async () => {
         response = await PostService.likeComment(props.id);
       }
     }
+    console.log("API Response:", response); // Fügen Sie diese Zeile hinzu
     isLiked.value = response.is_liked;
     emits("update-like", response.likes_count, response.is_liked);
   } catch (error) {
@@ -58,8 +59,8 @@ const toggleLike = async () => {
     class="action-icon-button"
     :class="{ liked: isLiked }"
     @click="toggleLike"
-    :disabled="isOwnPost"
-    aria-label="Like Post"
+    :disabled="isOwnItem"
+    aria-label="Like"
   >
     <svg
       xmlns="http://www.w3.org/2000/svg"
