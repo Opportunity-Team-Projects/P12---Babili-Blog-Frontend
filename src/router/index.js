@@ -1,8 +1,5 @@
 import { createRouter, createWebHistory } from "vue-router";
 import HomeView from "../views/HomeView.vue";
-import MyPostsView from "@/views/MyPostsView.vue";
-import BookmarkView from "@/views/BookmarkView.vue";
-import ContactView from "../views/ContactView.vue";
 
 const router = createRouter({
   history: createWebHistory(),
@@ -79,7 +76,8 @@ const router = createRouter({
       // route level code-splitting
       // this generates a separate chunk (About.[hash].js) for this route
       // which is lazy-loaded when the route is visited.
-      //component: () => import("../views/CustomFeedView.vue"),
+      component: () => import("../components/CustomFeed.vue"),
+
     },
     {
       path: "/bookmarks",

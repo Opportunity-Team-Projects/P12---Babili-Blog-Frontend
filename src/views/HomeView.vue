@@ -11,13 +11,38 @@
 
   <!-- Hauptinhalt -->
   <div class="main-content" :class="{ blurred: showCustomFeed }">
-    <button
-      v-if="$route.path === '/my-feed'"
-      class="custom-feed-settings-button"
-      @click="openCustomFeedSettings"
-    >
-      <i class="fas fa-cog"></i> Custom Feed Settings
-    </button>
+    <!-- Filter- und Einstellungen-Buttons -->
+    <div class="top-buttons">
+      <div class="filter-buttons">
+        <button
+          :class="{ active: sortOption === 'recent' }"
+          @click="
+            sortOption = 'recent';
+            sortPosts();
+          "
+        >
+          Most Recent
+        </button>
+        <button
+          :class="{ active: sortOption === 'popular' }"
+          @click="
+            sortOption = 'popular';
+            sortPosts();
+          "
+        >
+          Most Popular
+        </button>
+      </div>
+      <button
+        v-if="$route.path === '/my-feed'"
+        class="custom-feed-settings-button"
+        @click="openCustomFeedSettings"
+      >
+        <i class="fas fa-cog"></i>&nbsp; Custom Feed Settings
+      </button>
+    </div>
+
+    <!-- Post Container -->
     <div class="post-container">
       <div v-for="post in posts" :key="post.id" class="post-card">
         <!-- Post Header -->
@@ -53,6 +78,7 @@
         <!-- Post Actions -->
         <div class="post-actions">
           <div class="icon-left">
+
             <HeartIcon
               :postId="post.id"
               :initiallyLiked="post.is_liked"
@@ -63,6 +89,7 @@
               "
             />
             <span>{{ post.likes_count }}</span>
+
             <i class="fas fa-comment action-icon"></i>
           </div>
           <i class="fas fa-bookmark action-icon"></i>
@@ -71,6 +98,7 @@
     </div>
   </div>
 
+  <!-- Custom Feed Component -->
   <CustomFeed
     v-if="showCustomFeed"
     @close="closeCustomFeedSettings"
@@ -79,6 +107,7 @@
 </template>
 
 <script setup>
+
 import { ref, watch, computed } from "vue";
 import { useRouter, useRoute } from "vue-router";
 import PostService from "@/services/PostService";
@@ -96,6 +125,7 @@ const authStore = useAuthStore();
 const posts = ref([]);
 const isSidebarCollapsed = ref(true);
 const showCustomFeed = ref(false);
+const sortOption = ref("recent");
 
 const { user } = storeToRefs(authStore);
 
@@ -112,6 +142,14 @@ const handleToggle = (collapsed) => {
   isSidebarCollapsed.value = collapsed;
 };
 
+const sortPosts = () => {
+  if (sortOption.value === "recent") {
+    posts.value.sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
+  } else if (sortOption.value === "popular") {
+    posts.value.sort((a, b) => (b.likesCount || 0) - (a.likesCount || 0));
+  }
+};
+
 const fetchAllPosts = async () => {
   try {
     const postsArray = await PostService.getAllPosts();
@@ -119,6 +157,7 @@ const fetchAllPosts = async () => {
       (a, b) => new Date(b.created_at) - new Date(a.created_at)
     );
     console.log("Fetched all posts:", postsArray);
+
   } catch (error) {
     console.error("Error fetching all posts:", error);
   }
@@ -133,6 +172,7 @@ const searchPosts = async (query) => {
       res = await PostService.searchPosts(query);
     }
     posts.value = res.data;
+    sortPosts();
     console.log("Search results:", res.data);
   } catch (error) {
     console.error("Error searching posts:", error);
@@ -142,9 +182,8 @@ const searchPosts = async (query) => {
 const fetchUserCategoryPosts = async () => {
   try {
     const res = await PostService.getPostsByUserCategories();
-    posts.value = res.data.sort(
-      (a, b) => new Date(b.created_at) - new Date(a.created_at)
-    );
+    posts.value = res.data;
+    sortPosts();
     console.log("Fetched user category posts:", res.data);
   } catch (error) {
     console.error("Error fetching user category posts:", error);
@@ -232,31 +271,67 @@ watch(
   transition: opacity 0.3s ease;
 }
 
-.custom-feed-settings-button {
-  margin-left: 190px;
+/* Neue Styles für die obere Button-Leiste */
+.top-buttons {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-left: 180px;
+  margin-right: 190px;
+  margin-top: 20px;
+}
+
+.filter-buttons {
+  display: flex;
+}
+
+.filter-buttons button {
   padding: 10px 15px;
-  font-size: 0.9em;
+  font-size: 1em;
+  font-weight: 550;
+  color: #cf3df3d2;
+  background-color: white;
+  border: none;
+  border-radius: 14px;
+  cursor: pointer;
+  margin-right: 10px;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.filter-buttons button.active {
+  background-color: #ce3df3;
+  color: white;
+}
+
+.filter-buttons button:hover {
+  background-color: rgba(255, 255, 255, 0.836);
+}
+
+.custom-feed-settings-button {
+  padding: 10px 15px;
+  font-size: 1em;
+  font-weight: 550;
   color: white;
   background-color: #cf3df3d2;
   border: none;
-  border-radius: 20px;
+  border-radius: 14px;
   cursor: pointer;
   transition: background-color 0.3s ease, transform 0.2s ease;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
   display: flex;
   align-items: center;
+}
+
+.custom-feed-settings-button:hover {
+  background-color: #cf3df3a2;
 }
 
 .post-container {
   margin-left: 170px;
   margin-right: 170px;
-  margin-top: 20px;
   display: flex;
   justify-content: space-between;
   flex-wrap: wrap;
-  padding: 20px;
   color: white;
-  background-color: rgba(0, 0, 0, 0);
 }
 
 .post-card {
@@ -390,21 +465,32 @@ watch(
 }
 
 @media screen and (max-width: 768px) {
-  .custom-feed-settings-button {
-    top: 70px;
-    left: 10px;
-    font-size: 0.8em;
+  .top-buttons {
+    flex-direction: column;
+    align-items: flex-start;
+    margin-left: 25px;
+    margin-right: 25px;
+  }
+
+  .filter-buttons {
+    margin-bottom: 10px;
+  }
+
+  .filter-buttons button {
     padding: 8px 12px;
+    font-size: 0.8em;
+  }
+
+  .custom-feed-settings-button {
+    padding: 8px 12px;
+    font-size: 0.8em;
+    margin-bottom: 20px;
   }
 
   .post-container {
-    margin-top: 25px;
     margin-left: 25px;
     margin-right: 25px;
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: space-around;
-    padding: 20px;
+    justify-content: center;
   }
 
   .post-card {
