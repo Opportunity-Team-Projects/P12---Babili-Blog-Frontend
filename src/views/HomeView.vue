@@ -54,15 +54,16 @@
         <div class="post-actions">
           <div class="icon-left">
             <HeartIcon
-              :postId="post.id"
+              :type="'post'"
+              :id="post.id"
               :initiallyLiked="post.is_liked"
-              :isOwnPost="post.user.id === currentUserId"
+              :isOwnItem="post.user.id === currentUserId"
               @update-like="
                 (likes_count, is_liked) =>
                   updateLikeCount(post.id, likes_count, is_liked)
               "
             />
-            <span>{{ post.likes_count }}</span>
+            <span>{{ post.likes_count }} likes</span>
             <i class="fas fa-comment action-icon"></i>
           </div>
           <i class="fas fa-bookmark action-icon"></i>

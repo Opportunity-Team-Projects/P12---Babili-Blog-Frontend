@@ -74,7 +74,7 @@ export default {
       throw error;
     }
   },
-
+  
   async unlikePost(postId) {
     try {
       const response = await authClient.delete(`/api/posts/${postId}/unlike`);
