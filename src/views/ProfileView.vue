@@ -48,11 +48,13 @@
                     <form @submit.prevent="submit">
                                     
                         <input
-                            id="username" class="placeholder" type="text" name="username" placeholder="Username"
+                            id="username" class="placeholder" type="text" name="username" 
+                            :placeholder="authUser.user?.name || 'Username'"
                             v-model="authUser.username">                        
                         
                         <input
-                            id="email" class="placeholder" type="email" name="email" placeholder="Email"
+                            id="email" class="placeholder" type="email" name="email" 
+                            :placeholder="authUser.user?.email || 'Email'"
                             v-model="authUser.email">
                         
                         <button type="submit" class="btn-1">Save changes</button>
@@ -64,25 +66,59 @@
 
                     <p>Please enter your new password</p>
 
-                    <form @submit.prevent="submit">
-                        
+                    <form @submit.prevent="handleSubmit" class="password-form">
+                      <div class="input-group">
                         <div class="input-container">
-                            <input
-                                :type="passwordVisible ? 'text' : 'password'"
-                                class="placeholder"
-                                id="password"
-                                v-model="password"
-                                required
-                                placeholder="Password"/>
-                                <i class="fas" :class="passwordVisible ? 'fa-eye-slash' : 'fa-eye'" @click="togglePasswordVisibility"></i>
-                                
+                          <input
+                            :type="passwordVisible ? 'text' : 'password'"
+                            class="placeholder password-input"
+                            id="password"
+                            v-model="password"
+                            required
+                            placeholder="Password"
+                            minlength="8"
+                          />
+                          <i 
+                            class="fas eye-icon" 
+                            :class="passwordVisible ? 'fa-eye-slash' : 'fa-eye'" 
+                            @click="togglePasswordVisibility"
+                          ></i>
                         </div>
+                        <span class="error-message" v-if="errors.password">{{ errors.password }}</span>
+                      </div>
+
+                      <div class="input-group">
+                        <div class="input-container">
+                          <input 
+                            :type="passwordConfirmVisible ? 'text' : 'password'"
+                            class="placeholder password-input"
+                            id="password_confirmation"
+                            v-model="password_confirmation"
+                            required
+                            placeholder="Password confirmation"
+                            minlength="8"
+                          />
+                          <i 
+                            class="fas eye-icon" 
+                            :class="passwordConfirmVisible ? 'fa-eye-slash' : 'fa-eye'" 
+                            @click="togglePasswordConfirmVisibility"
+                          ></i>
+                        </div>
+                        <span class="error-message" v-if="errors.confirmation">{{ errors.confirmation }}</span>
+                      </div>
+
+                      <div class="submit-section">
+                        <button 
+                          type="submit" 
+                          class="btn-2"
+                          :disabled="isLoading"
+                        >
+                          {{ isLoading ? 'Saving...' : 'Save' }}
+                        </button>
                         
-                        <input type="password" class="placeholder" id="password_confirmation" placeholder="Password confirmation"
-                        v-model="password_confirmation" required>
-                        
-                        <button type="submit" class="btn-2">Set password</button>
-                    </form>
+                        <span class="success-message" v-if="successMessage">{{ successMessage }}</span>
+                      </div>
+                  </form>
                 </section>
 
                 <section>
@@ -111,18 +147,16 @@
 
 <script setup>
 
-import { ref, onMounted } from 'vue';
+import { ref, computed, onMounted } from 'vue';
 import { useRouter } from 'vue-router';
 import { useAuthStore } from "@/stores/useAuthStore";
-import AuthService from "@/services/AuthService";
 import HeaderMain from '@/components/HeaderMain.vue';
 import Sidebar from '@/components/Sidebar.vue';
 import DeleteModal from '@/components/DeleteModal.vue';
 
-
-
 const router = useRouter();
 const authStore = useAuthStore();
+
 
 const handleToggle = (collapsed) => {
   isSidebarCollapsed.value = collapsed;
@@ -137,46 +171,115 @@ const showDeleteModal = ref(false);
 const authUser = ref({}); // Benutzerinformationen hier speichern
 const joinedDate = ref(''); // das Beitrittsdatum speichern
 
-const password_confirmation = ref("");
-const message = ref("");
+const password = ref('');
+const password_confirmation = ref('');
+const passwordVisible = ref(false);
+const passwordConfirmVisible = ref(false);
+const isLoading = ref(false);
+const successMessage = ref('');
+const errors = ref({
+  password: '',
+  confirmation: ''
+});
 
 const profileImage = ref(null);
-
-// Passwort Sichtbarkeit
-const passwordVisible = ref(false);
-const passwordConfirmationVisible = ref(false);
 
 // Funktion zum Umschalten der Passwortsichtbarkeit
 const togglePasswordVisibility = () => {
   passwordVisible.value = !passwordVisible.value;
 };
 
-const togglePasswordConfirmationVisibility = () => {
-  passwordConfirmationVisible.value = !passwordConfirmationVisible.value;
+const togglePasswordConfirmVisibility = () => {
+  passwordConfirmVisible.value = !passwordConfirmVisible.value;
+};
+
+const validatePasswords = () => {
+  errors.value = {
+    password: '',
+    confirmation: ''
+  };
+
+  if (password.value.length < 8) {
+    errors.value.password = 'Das Passwort muss mindestens 8 Zeichen lang sein';
+    return false;
+  }
+
+  if (password.value !== password_confirmation.value) {
+    errors.value.confirmation = 'Die Passwörter stimmen nicht überein';
+    return false;
+  }
+
+  return true;
 };
 
 // Passwortänderung übermitteln
-const submitPassword = async () => {
-  if (password.value !== password_confirmation.value) {
-    message.value = "Die Passwörter stimmen nicht überein.";
+const handleSubmit = async () => {
+  successMessage.value = '';
+  
+  if (!validatePasswords()) {
     return;
   }
 
-  if (password.value.length < 8) {
-    message.value = "Das Passwort muss mindestens 8 Zeichen lang sein.";
-    return;
-  }
+  isLoading.value = true;
 
   try {
-    // API-Anfrage zum Ändern des Passworts
-    await AuthService.updatePassword({
+    await authStore.updatePassword({
       password: password.value,
-      password_confirmation: password_confirmation.value,
+      password_confirmation: password_confirmation.value
     });
-    message.value = "Das Passwort wurde erfolgreich geändert.";
+
+    successMessage.value = 'Password changed ';
+    // Formular zurücksetzen
+    password.value = '';
+    password_confirmation.value = '';
+    
   } catch (error) {
-    console.error("Fehler bei der Passwortänderung:", error);
-    message.value = "Fehler beim Ändern des Passworts.";
+    errors.value.password = 'Fehler beim Speichern des Passworts';
+    console.error('Fehler beim Speichern des Passworts:', error);
+  } finally {
+    isLoading.value = false;
+  }
+};
+
+// Benutzerdaten beim Laden der Seite abrufen
+onMounted(async () => {
+  try {
+    await authStore.fetchUser();
+    authUser.value = authStore.user;
+    // Beitrittsdatum formatieren
+    if (authUser.value.user?.created_at) {
+      const options = { 
+        day: 'numeric', 
+        month: 'long', 
+        year: 'numeric' 
+      };
+      joinedDate.value = new Date(authUser.value.user.created_at)
+        .toLocaleDateString('de-DE', options);
+    }
+  } catch (error) {
+    console.error('Fehler beim Laden des Users:', error);
+  }
+});
+
+// Funktion zum Speichern von Änderungen (Name und E-Mail)
+const submit = async () => {
+  try {
+    // Überprüfe ob Daten vorhanden sind
+    if (!authUser.value.user) {
+      console.error('Keine Benutzerdaten vorhanden');
+      return;
+    }
+
+    // Sende die geänderten Daten an das Backend
+    await authStore.updateUser({
+      name: authUser.value.user.name,
+      email: authUser.value.user.email,
+    });
+
+    // Erfolgsmeldung
+    console.log("Profileinformation gespeichert");
+  } catch (error) {
+    console.error("Fehler beim Speichern:", error);
   }
 };
 
@@ -185,38 +288,12 @@ const openDeleteModal = (userId) => {
   showDeleteModal.value = true;
 };
 
-// Benutzerdaten beim Laden der Seite abrufen
-onMounted(async () => {
-  await authStore.fetchUser(); // Lädt den Benutzer aus dem authStore
-  authUser.value = authStore.user; // Benutzerinformationen speichern
-
-    // Beitrittsdatum formatieren
-    if (authUser.value.created_at) {
-    const options = { day: 'numeric', month: 'long', year: 'numeric',   };
-    joinedDate.value = new Date(authUser.value.created_at).toLocaleDateString(undefined, options);
-  }
-});
-
-// Funktion zum Speichern von Änderungen (Name und E-Mail)
-const submit = async () => {
-  try {
-    // Sende die geänderten Daten an das Backend
-    await AuthService.put('/api/user', {
-      username: authUser.value.username,
-      email: authUser.value.email,
-    });
-    console.log("Profileinformation saved");
-  } catch (error) {
-    console.error("Error:", error);
-  }
-};
-
 // Funktion zum Löschen des Benutzers
 const deleteUser = (userId) => {
     AuthService.delete(`/api/users/${userId}`)
     .then(() => {
       showDeleteModal.value = false;
-      router.push('/logout'); // Nach dem Löschen zur Logout-Seite navigieren
+      router.push('/login'); // Nach dem Löschen zur Login-Seite navigieren
     })
     .catch(error => {
       console.error('Error:', error);
@@ -224,19 +301,22 @@ const deleteUser = (userId) => {
 };
 
 // Funktion zum Hochladen des Bildes und zum Anzeigen der Vorschau
-const handleFileUpload = (event) => {
+const handleFileUpload = async (event) => {
   const file = event.target.files[0];
   if (file) {
-    const reader = new FileReader();
-    reader.onload = (e) => {
-      post.value.contentImg = e.target.result;
-    };
-    reader.readAsDataURL(file);
+    try {
+      const formData = new FormData();
+      formData.append('profile_picture', file);
+      await authStore.uploadProfilePicture(formData);
+      // Erfolgsmeldung anzeigen
+    } catch (error) {
+      // Fehlerbehandlung
+    }
   }
 };
-/* 
+
 // Lädt das aktuelle Profilbild beim Laden der Seite
-onMounted(async () => {
+/* onMounted(async () => {
     try {
         const response = await authClient.get('/api/user/profile-image'); // Backend-Route für das Profilbild
         profileImage.value = response.data.profileImageUrl; // Profilbild-URL vom Server
@@ -245,16 +325,13 @@ onMounted(async () => {
     }
 }); */
 
-/* // den Upload des Bildes an das Backend auslösen
-const formData = new FormData();
+// den Upload des Bildes an das Backend auslösen
+/* const formData = new FormData();
 formData.append('profile_picture', file);
 authClient.post('/api/user/upload-profile-picture', formData)
     .then(response => console.log('Bild erfolgreich hochgeladen'))
     .catch(error => console.error('Fehler beim Hochladen:', error));
  */
-
-
-
 
 </script>
 
