@@ -80,13 +80,21 @@ const isAuthenticated = authStore.isAuthenticated;
   z-index: 1002;
   position: sticky;
   top: 0;
-  height: 84px;
+  height: 90px;
   display: flex;
   align-items: center;
   justify-content: space-between;
   padding: 0 20px;
-  background-color: #0e1217;
-  box-shadow: 0 -1px 5px rgba(206, 61, 243, 0.8);
+  background: linear-gradient(0deg, #241f31 10%, #613583 25%, #813d9c 50%, #613583 75%, #241f31 90%);
+  /* background: linear-gradient(0deg, #241f31 10%, #1a5fb4 25%, #1c71d8 50%, #1a5fb4 75%, #241f31 90%); */
+  /* background: linear-gradient(0deg, #241f31 10%, #1a5fb4 25%, #1c71d8 50%, #1a5fb4 75%); */
+  /* background: linear-gradient(0deg, #3584e4 25%, #1c71d8 50%, #1a5fb4 75%, #241f31 90%); */
+  /* background: linear-gradient(0deg, #613583 25%, #3A0CA3 54%, #241f31 90%); */
+  /* background: linear-gradient(0deg, #613583 23%, #3A0CA3 48%, #241f31 94%); */
+  /* background: linear-gradient(0deg, #813d9c 18%, #613583 35%, #3A0CA3 59%, #241f31 94%); */
+  /* background: linear-gradient(0deg, #241f31 10%, #613583 25%, #813d9c 50%, #613583 75%, #241f31 90%); */
+  /* background-color: #0e1217; */
+  /* box-shadow: 0 -1px 5px rgba(206, 61, 243, 0.8); */
 }
 
 .header-left,
