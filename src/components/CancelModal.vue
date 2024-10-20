@@ -3,40 +3,29 @@
         <div v-if="modelValue" class="modal-overlay">
             <div class="modal">
                 <div class="modal-content">
-                    <h2>Delete account</h2>
-                    <p>Warning: Deleting your account is permanent and cannot be undone.</p>
+                    <h2>Discard changes</h2>
+                    <p>You have unsaved changes that will be lost</p>
                     <div class="btns">
                         <button @click="closeModal" class="btn-cancel">Cancel</button>
-                        <button @click="confirmAction" class="btn-del">Delete account</button>
+                        <button @click="confirmAction" class="btn-disc">Yes, discard</button>
                     </div>  
                 </div>
             </div>
         </div>
     </Transition>
 </template>
-  
-  <script setup>
-  import { ref, defineEmits } from 'vue'
 
-  const props = defineProps({
-    modelValue: {
-        type: Boolean,
-        required: true
-    }
+<script setup>
+
+const props = defineProps({
+  modelValue: {
+      type: Boolean,
+      required: true
+  }
 })
 
-  const emit = defineEmits(['update:modelValue', 'confirm']) // Event-Emitter für Schließen und Bestätigung
-  
-  const closeModal = () => {
-    emit('update:modelValue', false) // Emit event to update parent's v-model
-}
-  
-  const confirmAction = () => {
-    emit('confirm') // Sendet die Bestätigung des Löschens
-    closeModal() // Modal schließen
-  }
-  </script>
-  
+</script>
+
 <style scoped>
 
 .modal-overlay {
@@ -100,9 +89,9 @@ button:hover {
     cursor: pointer;
 }
 
-.btn-del {
-    background-color: #a80f33;
-    color: white;
+.btn-disc {
+    color: #000000;
+    background-color: #D91544;
 }
 
 .btn-cancel:hover {
@@ -111,9 +100,9 @@ button:hover {
     border: solid 1px #FFFFFF;
 }
 
-.btn-del:hover {
-    color: #000000;
-    background-color: #D91544;
+.btn-disc:hover {
+    background-color: #a80f33;
+    color: white;
 }
 
 /* Modal Animation */
@@ -142,4 +131,3 @@ button:hover {
     transform: scale(0.8) translateY(30px);
 }
 </style>
-  
