@@ -29,11 +29,11 @@
       <div class="post-content">
         <img
           v-if="post.contentImg"
-          :src="post.contentImg"
+          :src="getImageUrl(post.contentImg)"
           alt="Post image"
           class="post-image"
         />
-        <p class="post-text">{{ post.content }}</p>
+        <p class="post-text" v-html="content"></p>
         <div class="post-actions">
           <HeartIcon
             :type="'post'"
@@ -128,6 +128,8 @@ import Sidebar from "@/components/Sidebar.vue";
 import PostService from "@/services/PostService";
 import { useAuthStore } from "@/stores/useAuthStore";
 import { storeToRefs } from "pinia";
+import { marked } from 'marked';
+
 
 const route = useRoute();
 const router = useRouter();
@@ -135,12 +137,17 @@ const authStore = useAuthStore();
 const { user } = storeToRefs(authStore);
 
 const post = ref(null);
+const content = ref(null);
 const newCommentContent = ref("");
 const isFollowing = ref(false);
 const likeCount = ref(0);
 const isLiked = ref(false);
 const currentUserId = computed(() => user.value?.user?.id);
 const commentSection = ref(null);
+
+const getImageUrl = (imagePath) => {
+  return `${import.meta.env.VITE_APP_BACKEND_URL}/storage/${imagePath}`;
+};
 
 const updateCommentLike = (commentId, likes_count, is_liked) => {
   const comment = post.value.comments.find((c) => c.id === commentId);
@@ -171,6 +178,7 @@ const fetchPost = async () => {
     console.log("Fetched post:", post.value); // Debugging
     likeCount.value = Number(post.value.likes_count) || 0; // Sicherstellen, dass es eine Zahl ist
     console.log("Like count:", likeCount.value); // Debugging
+    content.value = marked.parse(post.value.content);
     isLiked.value = post.value.is_liked;
   } catch (error) {
     console.error("Error fetching post:", error);
