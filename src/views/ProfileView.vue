@@ -46,16 +46,19 @@
                     </div>
                     
                     <form @submit.prevent="submit">
-                                    
-                        <input
-                            id="username" class="placeholder" type="text" name="username" 
-                            :placeholder="authUser.user?.name || 'Username'"
-                            v-model="authUser.username">                        
-                        
-                        <input
-                            id="email" class="placeholder" type="email" name="email" 
-                            :placeholder="authUser.user?.email || 'Email'"
-                            v-model="authUser.email">
+                      <input
+                          id="username" 
+                          class="placeholder" 
+                          type="text" 
+                          name="username" 
+                          v-model="authUser.user.name">
+                      
+                      <input
+                          id="email" 
+                          class="placeholder" 
+                          type="email" 
+                          name="email" 
+                          v-model="authUser.user.email">
                         
                         <button type="submit" class="btn-1">Save changes</button>
                     </form>
@@ -168,8 +171,14 @@ const triggerFileInput = () => {
 
 const isSidebarCollapsed = ref(true);
 const showDeleteModal = ref(false);
-const authUser = ref({}); // Benutzerinformationen hier speichern
 const joinedDate = ref(''); // das Beitrittsdatum speichern
+
+const authUser = ref({  // Benutzerinformationen hier speichern
+    user: {
+        name: '',
+        email: ''
+    }
+}); 
 
 const password = ref('');
 const password_confirmation = ref('');
@@ -243,22 +252,30 @@ const handleSubmit = async () => {
 
 // Benutzerdaten beim Laden der Seite abrufen
 onMounted(async () => {
-  try {
-    await authStore.fetchUser();
-    authUser.value = authStore.user;
-    // Beitrittsdatum formatieren
-    if (authUser.value.user?.created_at) {
-      const options = { 
-        day: 'numeric', 
-        month: 'long', 
-        year: 'numeric' 
-      };
-      joinedDate.value = new Date(authUser.value.user.created_at)
-        .toLocaleDateString('de-DE', options);
+    try {
+        await authStore.fetchUser();
+        // Ensure we're creating a proper structure
+        authUser.value = {
+            user: {
+                name: authStore.user?.user?.name || '',
+                email: authStore.user?.user?.email || '',
+                created_at: authStore.user?.user?.created_at
+            }
+        };
+        
+        // Format join date
+        if (authUser.value.user?.created_at) {
+            const options = { 
+                day: 'numeric', 
+                month: 'long', 
+                year: 'numeric' 
+            };
+            joinedDate.value = new Date(authUser.value.user.created_at)
+                .toLocaleDateString('de-DE', options);
+        }
+    } catch (error) {
+        console.error('Fehler beim Laden des Users:', error);
     }
-  } catch (error) {
-    console.error('Fehler beim Laden des Users:', error);
-  }
 });
 
 // Funktion zum Speichern von Änderungen (Name und E-Mail)
