@@ -286,6 +286,14 @@ const updateBookmarkStatus = (postId, isBookmarked) => {
 watch(
   [() => route.path, () => route.query.q],
   ([newPath, newQuery]) => {
+    // Überprüfung der geschützten Pfade und des Benutzers
+    const protectedPaths = ["/my-feed", "/bookmarks"];
+    if (protectedPaths.includes(newPath) && !user.value) {
+      router.push("/login");
+      return; // Den Rest der Logik nicht ausführen, wenn umgeleitet wird
+    }
+
+    // Bestehende Logik bleibt unberührt
     if (newQuery) {
       searchPosts(newQuery);
     } else if (newPath === "/my-feed") {
