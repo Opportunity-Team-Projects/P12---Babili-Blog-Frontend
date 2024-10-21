@@ -111,7 +111,9 @@
             />
             <span>{{ post.likes_count }}</span>
 
+            <!-- Comment Icon and Count -->
             <i class="fas fa-comment action-icon"></i>
+            <span>{{ post.comments_count || 0 }} </span>
           </div>
           <i class="fas fa-bookmark action-icon"></i>
         </div>
