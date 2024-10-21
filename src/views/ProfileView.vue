@@ -87,11 +87,12 @@
                             placeholder="Password"
                             minlength="8"
                           />
-                          <i 
-                            class="fas eye-icon" 
-                            :class="passwordVisible ? 'fa-eye-slash' : 'fa-eye'" 
+                            <!-- Auge-Icon für Passwortsichtbarkeit -->
+                          <font-awesome-icon 
+                            :icon="passwordVisible ? 'eye-slash' : 'eye'" 
+                            class="eye-icon"
                             @click="togglePasswordVisibility"
-                          ></i>
+                          />
                         </div>
                         <span class="error-message" v-if="errors.password">{{ errors.password }}</span>
                       </div>
@@ -107,11 +108,12 @@
                             placeholder="Password confirmation"
                             minlength="8"
                           />
-                          <i 
-                            class="fas eye-icon" 
-                            :class="passwordConfirmVisible ? 'fa-eye-slash' : 'fa-eye'" 
+                          <!-- Auge-Icon für Passwortsichtbarkeit -->
+                          <font-awesome-icon 
+                            :icon="passwordConfirmVisible ? 'eye-slash' : 'eye'" 
+                            class="eye-icon"
                             @click="togglePasswordConfirmVisibility"
-                          ></i>
+                          />
                         </div>
                         <span class="error-message" v-if="errors.confirmation">{{ errors.confirmation }}</span>
                       </div>
@@ -122,7 +124,7 @@
                           class="btn-2"
                           :disabled="isLoading"
                         >
-                          {{ isLoading ? 'Saving...' : 'Save' }}
+                          {{ isLoading ? 'Saving...' : 'Set password' }}
                         </button>
                         
                         <span class="success-message" v-if="successMessage">{{ successMessage }}</span>
@@ -156,7 +158,7 @@
 
 <script setup>
 
-import { ref, computed, onMounted } from 'vue';
+import { ref, onMounted } from 'vue';
 import { useRouter } from 'vue-router';
 import { useAuthStore } from "@/stores/useAuthStore";
 import HeaderMain from '@/components/HeaderMain.vue';
@@ -218,12 +220,12 @@ const validatePasswords = () => {
   };
 
   if (password.value.length < 8) {
-    errors.value.password = 'Das Passwort muss mindestens 8 Zeichen lang sein';
+    errors.value.password = 'The password must be at least 8 characters long';
     return false;
   }
 
   if (password.value !== password_confirmation.value) {
-    errors.value.confirmation = 'Die Passwörter stimmen nicht überein';
+    errors.value.confirmation = 'The passwords do not match';
     return false;
   }
 
@@ -251,9 +253,24 @@ const handleSubmit = async () => {
     password.value = '';
     password_confirmation.value = '';
     
-  } catch (error) {
-    errors.value.password = 'Fehler beim Speichern des Passworts';
-    console.error('Fehler beim Speichern des Passworts:', error);
+    if (err.response && err.response.data) {
+      // Serverseitige Fehlermeldungen anzeigen
+      console.error('Error saving password:', error.response.data);
+      errors.value.password = err.response.data.message || 'Error saving password';
+      if (err.response.data.errors) {
+        // Detailierte Validierungsfehler anzeigen (wenn vorhanden)
+        if (err.response.data.errors.password) {
+          errors.value.password = err.response.data.errors.password[0];
+        }
+        if (err.response.data.errors.password_confirmation) {
+          errors.value.confirmation = err.response.data.errors.password_confirmation[0];
+        }
+      }
+    } else {
+      // Generische Fehlermeldung
+      errors.value.password = 'Error saving password';
+      console.error('Error saving password:', error);
+    }
   } finally {
     isLoading.value = false;
   }
@@ -496,19 +513,26 @@ input[type="password"]  {
     color: white;
 }
 
+input[type="password"]  {
+  padding-right: 40px;  /* Platz für das Auge-Icon reservieren */
+  padding-left: 4%;
+}
+
 /* Passwortfeld mit Auge-Icon */
 .input-container {
   position: relative;
+  width: 320px;
 }
 
-/* Auge-Icon */
-i.fas {
-  position: absolute;
-  right: 10px;
+/* Stil für das SVG-Auge-Icon */
+.eye-icon {
+  position: absolute; 
+  right: 10px;      /* Abstand von der rechten Seite des Containers */
   top: 50%;
   transform: translateY(-50%);
   cursor: pointer;
   color: #ccc;
+  z-index: 1;  /* Setzt das Icon in den Vordergrund */
 }
 
 button[type="submit"],

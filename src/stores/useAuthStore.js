@@ -38,6 +38,19 @@ export const useAuthStore = defineStore('auth', () => {
     }
   };
 
+  const updatePassword = async (passwordData) => {
+    try {
+      loading.value = true;
+      const response = await AuthService.updatePassword(passwordData);
+      return response.data;
+    } catch (err) {
+      error.value = err.response?.data?.message || 'Error updating password';
+      throw err;
+    } finally {
+      loading.value = false;
+    }
+  };
+
   const login = async (credentials) => {
     try {
       await AuthService.login(credentials);
@@ -67,5 +80,6 @@ export const useAuthStore = defineStore('auth', () => {
     login,
     logout,
     updateUser,
+    updatePassword,
   };
 });
