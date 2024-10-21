@@ -115,7 +115,12 @@
             <i class="fas fa-comment action-icon"></i>
             <span>{{ post.comments_count || 0 }} </span>
           </div>
-          <i class="fas fa-bookmark action-icon"></i>
+          <BookmarkIcon
+            :postId="post.id"
+            :initiallyBookmarked="post.is_bookmarked"
+            :isOwnPost="post.user.id === currentUserId"
+            @update-bookmark="updateBookmarkStatus(post.id, $event)"
+          />
         </div>
       </div>
     </div>
@@ -130,12 +135,13 @@
 </template>
 
 <script setup>
-import { ref, watch, computed } from "vue";
+import { ref, watch, computed, onMounted } from "vue";
 import { useRouter, useRoute } from "vue-router";
 import PostService from "@/services/PostService";
 import HeaderMain from "@/components/HeaderMain.vue";
 import HeartIcon from "@/components/HeartIcon.vue";
 import Sidebar from "@/components/Sidebar.vue";
+import BookmarkIcon from "@/components/BookmarkIcon.vue";
 import CustomFeed from "@/components/CustomFeed.vue";
 import { useAuthStore } from "@/stores/useAuthStore";
 import { storeToRefs } from "pinia";
@@ -202,6 +208,8 @@ const searchPosts = async (query) => {
     let res;
     if (route.path === "/my-feed") {
       res = await PostService.searchPostsInUserCategories(query);
+    } else if (route.path === "/bookmarks") {
+      res = await PostService.searchBookmarkedPosts(query);
     } else {
       res = await PostService.searchPosts(query);
     }
@@ -221,6 +229,18 @@ const fetchUserCategoryPosts = async () => {
     console.log("Fetched user category posts:", res.data);
   } catch (error) {
     console.error("Error fetching user category posts:", error);
+  }
+};
+
+const fetchBookmarkedPosts = async () => {
+  try {
+    const bookmarkedPosts = await PostService.getBookmarkedPosts();
+    posts.value = bookmarkedPosts.sort(
+      (a, b) => new Date(b.created_at) - new Date(a.created_at)
+    );
+    console.log("Fetched bookmarked posts:", bookmarkedPosts);
+  } catch (error) {
+    console.error("Error fetching bookmarked posts:", error);
   }
 };
 
@@ -255,6 +275,13 @@ const updateLikeCount = (postId, likes_count, is_liked) => {
   }
 };
 
+const updateBookmarkStatus = (postId, isBookmarked) => {
+  const post = posts.value.find((p) => p.id === postId);
+  if (post) {
+    post.is_bookmarked = isBookmarked;
+  }
+};
+
 // Watcher für Pfadänderungen und Suchanfragen
 watch(
   [() => route.path, () => route.query.q],
@@ -263,12 +290,21 @@ watch(
       searchPosts(newQuery);
     } else if (newPath === "/my-feed") {
       fetchUserCategoryPosts();
+    } else if (newPath === "/bookmarks") {
+      fetchBookmarkedPosts();
     } else if (newPath === "/") {
       fetchAllPosts();
     }
   },
   { immediate: true }
 );
+
+onMounted(() => {
+  const protectedPaths = ["/my-feed", "/bookmarks"];
+  if (protectedPaths.includes(route.path) && !user.value) {
+    router.push("/login");
+  }
+});
 </script>
 
 <style scoped>

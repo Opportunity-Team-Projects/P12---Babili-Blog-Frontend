@@ -68,12 +68,16 @@
 import { ref, onMounted } from "vue";
 import { useRouter } from "vue-router";
 import { authClient } from "../services/AuthService";
+import { useAuthStore } from "@/stores/useAuthStore";
+import { storeToRefs } from "pinia";
 import HeaderMain from "@/components/HeaderMain.vue";
 import Sidebar from "@/components/Sidebar.vue";
 
 const router = useRouter();
 const posts = ref([]);
 const isSidebarCollapsed = ref(true);
+const authStore = useAuthStore();
+const { user } = storeToRefs(authStore);
 
 const handleToggle = (collapsed) => {
   isSidebarCollapsed.value = collapsed;
@@ -125,7 +129,14 @@ const deletePost = async (postId) => {
   }
 };
 
-onMounted(fetchMyPosts);
+onMounted(() => {
+  if (!user.value) {
+    router.push("/login");
+  } else {
+    // Laden Sie hier Ihre Posts oder führen Sie andere initiale Aktionen aus
+    fetchMyPosts();
+  }
+});
 </script>
 
 <style scoped>

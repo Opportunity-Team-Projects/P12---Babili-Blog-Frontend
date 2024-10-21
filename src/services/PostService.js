@@ -33,6 +33,10 @@ export default {
     return authClient.get("/api/search/user-categories", { params: { query } });
   },
 
+  searchBookmarkedPosts(query) {
+    return authClient.get("/api/search/bookmarked", { params: { query } });
+  },
+
   /**
    * Ruft einen einzelnen Post anhand der ID ab.
    * @param {Number|String} postId - Die ID des Posts.
@@ -101,6 +105,36 @@ export default {
       return response.data; // { message, likes_count, is_liked }
     } catch (error) {
       console.error("Error unliking comment:", error);
+      throw error;
+    }
+  },
+
+  async bookmarkPost(postId) {
+    try {
+      const response = await authClient.post(`/api/posts/${postId}/bookmark`);
+      return response.data; // { message }
+    } catch (error) {
+      console.error("Error bookmarking post:", error);
+      throw error;
+    }
+  },
+
+  async unbookmarkPost(postId) {
+    try {
+      const response = await authClient.delete(`/api/posts/${postId}/unbookmark`);
+      return response.data; // { message }
+    } catch (error) {
+      console.error("Error unbookmarking post:", error);
+      throw error;
+    }
+  },
+
+  async getBookmarkedPosts() {
+    try {
+      const response = await authClient.get(`/api/bookmarked-posts`);
+      return response.data.bookmarked_posts; // Angenommen, die API gibt die Posts unter 'bookmarked_posts' zurück
+    } catch (error) {
+      console.error("Error fetching bookmarked posts:", error);
       throw error;
     }
   },
