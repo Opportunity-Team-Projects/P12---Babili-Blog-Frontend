@@ -133,14 +133,12 @@ const triggerFileInput = () => {
   fileInput.value.click();
 };
 
+const selectedFile = ref(null);
+
 const handleFileUpload = (event) => {
   const file = event.target.files[0];
   if (file) {
-    const reader = new FileReader();
-    reader.onload = (e) => {
-      post.value.contentImg = e.target.result;
-    };
-    reader.readAsDataURL(file);
+    selectedFile.value = file;
   }
 };
 
@@ -165,7 +163,24 @@ const createPost = async () => {
 
   isSubmitting.value = true;
   try {
-    const response = await authClient.post("/api/posts", post.value);
+    const formData = new FormData();
+    formData.append("contentTitle", post.value.contentTitle);
+    formData.append("content", post.value.content);
+
+    post.value.category_ids.forEach((id) => {
+      formData.append("category_ids[]", id);
+    });
+
+    if (selectedFile.value) {
+      formData.append("contentImg", selectedFile.value);
+    }
+
+    const response = await authClient.post("/api/posts", formData, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    });
+
     console.log("Post creation response:", response.data);
     router.push("/");
   } catch (error) {

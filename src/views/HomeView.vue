@@ -66,9 +66,7 @@
           </h2>
 
           <!-- Post Image -->
-          <div class="post-image-placeholder" @click="navigateToPost(post.id)">
-            <i class="fas fa-image"></i>
-          </div>
+          <img :src="getImageUrl(post.contentImg)" alt="Post Image" />
           <p class="post-author">
             by {{ post.user ? post.user.name : "Unknown" }}
           </p>
@@ -125,6 +123,10 @@ const posts = ref([]);
 const isSidebarCollapsed = ref(true);
 const showCustomFeed = ref(false);
 const sortOption = ref("recent");
+
+const getImageUrl = (imagePath) => {
+  return `${import.meta.env.VITE_APP_BACKEND_URL}/storage/${imagePath}`;
+};
 
 const { user } = storeToRefs(authStore);
 
