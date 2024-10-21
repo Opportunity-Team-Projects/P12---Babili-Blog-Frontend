@@ -85,7 +85,9 @@ const isAuthenticated = authStore.isAuthenticated;
   align-items: center;
   justify-content: space-between;
   padding: 0 20px;
-  background: linear-gradient(0deg, #241f31 10%, #613583 25%, #813d9c 50%, #613583 75%, #241f31 90%);
+  background: linear-gradient(0deg, #3a0ca3 27%, #3a0ca3 58%, #241f31 88%);
+  /* background: linear-gradient(0deg, #241f31 10%, #613583 25%, #813d9c 50%, #613583 75%, #241f31 90%); */
+  /* background: linear-gradient(0deg, #241f31 10%, #3a0ca3 32%, #3a0ca3 63%, #613583 89%); */
   /* background: linear-gradient(0deg, #241f31 10%, #1a5fb4 25%, #1c71d8 50%, #1a5fb4 75%, #241f31 90%); */
   /* background: linear-gradient(0deg, #241f31 10%, #1a5fb4 25%, #1c71d8 50%, #1a5fb4 75%); */
   /* background: linear-gradient(0deg, #3584e4 25%, #1c71d8 50%, #1a5fb4 75%, #241f31 90%); */
