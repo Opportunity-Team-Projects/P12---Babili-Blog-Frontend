@@ -1,37 +1,36 @@
 <!-- <script setup>
 import { ref } from "vue";
-import { useAuthStore } from "@/store/AuthStore.js";
+import { useAuthStore } from "@/stores/useAuthStore";
 import router from "../router";
 
 // useAuthStore importieren
 const authStore = useAuthStore(); // Korrekte Zuweisung
 
-const { register, getAuthUser} = useAuthStore();
-   
+const { register, getAuthUser } = useAuthStore();
+
 const name = ref("");
 const email = ref("");
 const password = ref("");
 const password_confirmation = ref("");
 
 const handleRegister = async () => {
-  const resRegister = await register(
-    {
+  const resRegister = await register({
     name: name.value,
     email: email.value,
     password: password.value,
-    password_confirmation: password_confirmation.value
-  })
-    if(resRegister.status !==201){
-      return alert("Someting went wrong")
-    }
-    const resUser = await getAuthUser()
+    password_confirmation: password_confirmation.value,
+  });
+  if (resRegister.status !== 201) {
+    return alert("Someting went wrong");
+  }
+  const resUser = await getAuthUser();
 
-    if(resUser.status == 200) router.push("/dashboard")
-
+  if (resUser.status == 200) router.push("/dashboard");
 };
-</script> -->
+</script>
 
 <template>
+
 <main>
     
   <div class="register-container">
@@ -288,3 +287,4 @@ h1{
 
 }
 </style>
+
