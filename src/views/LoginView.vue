@@ -123,7 +123,7 @@ const handleLogin = async () => {
 .bodycontainer {
   background-image: url("../assets/bg.svg");
   background-size: cover;
-  background-position: left;
+  background-position: center;
   background-repeat: no-repeat;
   height: 100vh;
 }

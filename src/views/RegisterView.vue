@@ -108,8 +108,6 @@ const handleRegister = async () => {
 </template>
 
 <style scoped>
-
-
 .bodycontainer {
   background-image: url('../assets/bg.svg');
   background-size: cover;
@@ -118,17 +116,16 @@ const handleRegister = async () => {
   height: 100vh;
 }
 
-@media (min-width: 768px) {
   .register-container{
-      margin-left: 117px;
+  margin-left: 117px;
   
 }
   .header{
-      display: flex;
-      flex-direction: row;
-      justify-content: space-between;
-      margin-right: 117px;
-      padding-top: 5%;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  margin-right: 117px;
+  padding-top: 5%;
 }
 .without-logging-in{
   color: #FFFF;
@@ -153,13 +150,13 @@ h1{
   font-size: 24px;
 }
 .container-regist{
-    display: flex;
-    flex-direction: column;
-    color: #FFFF;
-    width: 379px;
-    height: 269px;
-    padding-top: 30px;
-    gap: 10px;
+  display: flex;
+  flex-direction: column;
+  color: #FFFF;
+  width: 379px;
+  height: 269px;
+  padding-top: 30px;
+  gap: 10px;
 }
 .form-group{
     display: flex;
@@ -172,28 +169,26 @@ h1{
   padding-left: 15px;
 }
 .footer{
-        color: #FFFF;
-        display: flex;
-        justify-content: center;
-        bottom: 15px;
-        position: fixed;
-        width: 100%;
-        font-size: 16px;
+  color: #FFFF;
+  display: flex;
+  justify-content: center;
+  bottom: 15px;
+  position: fixed;
+  width: 100%;
+  font-size: 16px;
 }
 .button-container{
-        display: flex;
+  display: flex;
         
-        
-        /* justify-content: space-between; */
 
 }
 .button{
-        height: 34px;
-        width: 107px;
-        background-color: #D7A8FC;
-        border-radius: 10px;
-        color: #FFFF;
-        margin-left: 170px;
+  height: 34px;
+  width: 107px;
+  background-color: #D7A8FC;
+  border-radius: 10px;
+  color: #FFFF;
+  margin-left: 170px;
 }
 .login-button{
   width: 107px;
@@ -205,11 +200,6 @@ h1{
 }
 .policy{
   padding-top: 10px;
-}
-
-
-
-
 }
 </style>
 
