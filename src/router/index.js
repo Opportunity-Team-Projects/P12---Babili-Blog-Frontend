@@ -96,6 +96,11 @@ const router = createRouter({
       name: "profile",
       component: () => import("../views/ProfileView.vue"),
     },
+    {
+      path: "/terms",
+      name: "terms",
+      component: () => import("../views/TermsView.vue"),
+    },
   ],
 });
 
