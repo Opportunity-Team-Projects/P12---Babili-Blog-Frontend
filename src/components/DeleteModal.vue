@@ -16,7 +16,7 @@
 </template>
   
   <script setup>
-  import { ref, defineEmits } from 'vue'
+  import { defineEmits } from 'vue'
 
   const props = defineProps({
     modelValue: {
@@ -60,6 +60,7 @@
     border: solid 1px #909090;
     border-radius: 20px;
     color: white;
+    margin: 0 5px;
 }
 
 .modal-content {

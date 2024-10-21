@@ -60,7 +60,13 @@
                           name="email" 
                           v-model="authUser.user.email">
                         
-                        <button type="submit" class="btn-1">Save changes</button>
+                          <button type="submit" class="btn-1" :disabled="isSubmitting">
+                            {{ isSubmitting ? 'Saving...' : 'Save changes' }}
+                          </button>
+
+                      <p v-if="updateMessage" :class="{ 'success-message': !updateError, 'error-message': updateError }">
+                        {{ updateMessage }}
+                      </p>
                     </form>
                 </section>
 
@@ -160,6 +166,9 @@ import DeleteModal from '@/components/DeleteModal.vue';
 const router = useRouter();
 const authStore = useAuthStore();
 
+const isSubmitting = ref(false);
+const updateMessage = ref('');
+const updateError = ref(false);
 
 const handleToggle = (collapsed) => {
   isSidebarCollapsed.value = collapsed;
@@ -281,23 +290,28 @@ onMounted(async () => {
 // Funktion zum Speichern von Änderungen (Name und E-Mail)
 const submit = async () => {
   try {
-    // Überprüfe ob Daten vorhanden sind
-    if (!authUser.value.user) {
-      console.error('Keine Benutzerdaten vorhanden');
-      return;
-    }
+      isSubmitting.value = true;
+      updateError.value = false;
+      updateMessage.value = '';
+    
 
     // Sende die geänderten Daten an das Backend
-    await authStore.updateUser({
-      name: authUser.value.user.name,
-      email: authUser.value.user.email,
-    });
+      const userData = {
+            name: authUser.value.user.name,
+            email: authUser.value.user.email,
+        };
+    // Call the store method to update user
+    await authStore.updateUser(userData);    
 
     // Erfolgsmeldung
+    updateMessage.value = 'Profile updated successfully!';
+    updateError.value = false;
     console.log("Profileinformation gespeichert");
   } catch (error) {
     console.error("Fehler beim Speichern:", error);
-  }
+    updateMessage.value = 'Failed to update profile. Please try again.';
+    updateError.value = true;
+  } 
 };
 
 // Modal zum Löschen öffnen
@@ -306,15 +320,17 @@ const openDeleteModal = (userId) => {
 };
 
 // Funktion zum Löschen des Benutzers
-const deleteUser = (userId) => {
-    AuthService.delete(`/api/users/${userId}`)
-    .then(() => {
-      showDeleteModal.value = false;
-      router.push('/login'); // Nach dem Löschen zur Login-Seite navigieren
-    })
-    .catch(error => {
-      console.error('Error:', error);
-    });
+const deleteUser = async (userId) => {
+    try {
+        await AuthService.delete(`/api/users/${userId}`);
+        showDeleteModal.value = false;
+        // Kurze Verzögerung für die Modal-Animation
+        setTimeout(() => {
+            router.push('/login');
+        }, 300);
+    } catch (error) {
+        console.error('Error:', error);
+    }
 };
 
 // Funktion zum Hochladen des Bildes und zum Anzeigen der Vorschau
@@ -434,6 +450,16 @@ form {
   flex-direction: column;
   gap: 15px 0;
   margin: 20px 0;
+}
+
+.success-message {
+    color: #4CAF50;
+    margin-top: 10px;
+}
+
+.error-message {
+    color: #f44336;
+    margin-top: 10px;
 }
 
 .placeholder {

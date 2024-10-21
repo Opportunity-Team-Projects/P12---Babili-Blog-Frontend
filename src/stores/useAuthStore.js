@@ -5,6 +5,8 @@ import AuthService from '@/services/AuthService';
 
 export const useAuthStore = defineStore('auth', () => {
   const user = ref(null);
+  const loading = ref(false);
+  const error = ref(null);
 
   const isAuthenticated = computed(() => user.value !== null);
 
@@ -20,6 +22,20 @@ export const useAuthStore = defineStore('auth', () => {
 
   const setUser = (userData) => {
     user.value = userData;
+  };
+
+  const updateUser = async (userData) => {
+    try {
+      loading.value = true;
+      const response = await AuthService.updateUser(userData);
+      user.value = response.data;
+      return response.data;
+    } catch (err) {
+      error.value = err.response?.data?.message || 'Error updating user data';
+      throw err;
+    } finally {
+      loading.value = false;
+    }
   };
 
   const login = async (credentials) => {
@@ -43,10 +59,13 @@ export const useAuthStore = defineStore('auth', () => {
 
   return {
     user,
+    loading,
+    error,
     isAuthenticated,
     fetchUser,
     setUser,
     login,
     logout,
+    updateUser,
   };
 });
