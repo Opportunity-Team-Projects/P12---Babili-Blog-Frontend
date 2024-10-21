@@ -60,7 +60,7 @@
                           name="email" 
                           v-model="authUser.user.email">
                         
-                          <button type="submit" class="btn-1" :disabled="isSubmitting">
+                          <button type="submit" class="btn-save" :disabled="isSubmitting">
                             {{ isSubmitting ? 'Saving...' : 'Save changes' }}
                           </button>
 
@@ -119,15 +119,10 @@
                         <span class="error-message" v-if="errors.confirmation">{{ errors.confirmation }}</span>
                         
                       </div>
-
+                      <!-- Button zum Öffnen des Modals -->
                       <div class="submit-section">
-                        <button 
-                          type="submit" 
-                          class="btn-2"
-                          :disabled="isLoading"
-                        >
-                          {{ isLoading ? 'Saving...' : 'Set password' }}
-                        </button>
+                        <button @click="openPasswordModal" class="btn-set">
+                            Set Password</button>                         
                         
                         <span class="success-message" v-if="successMessage">{{ successMessage }}</span>
                       </div>
@@ -154,10 +149,17 @@
         </div>
     </div>
 
+
+    <PasswordModal
+      :isVisible="showPasswordModal"
+      @confirm="submitPasswordChange"
+      @close="closePasswordModal"
+    />
+
     <DeleteModal 
-    v-model="showDeleteModal"
-    :isLoading="isDeletingAccount"
-    @confirm="deleteUser" 
+      v-model="showDeleteModal"
+      :isLoading="isDeletingAccount"
+      @confirm="deleteUser" 
     />
 </template>
 
@@ -169,6 +171,7 @@ import { useAuthStore } from "@/stores/useAuthStore";
 import HeaderMain from '@/components/HeaderMain.vue';
 import Sidebar from '@/components/Sidebar.vue';
 import DeleteModal from '@/components/DeleteModal.vue';
+import CurrentPWModal from '@/components/CurrentPWModal.vue';
 
 const router = useRouter();
 const authStore = useAuthStore();
@@ -203,11 +206,15 @@ const password = ref('');
 const password_confirmation = ref('');
 const passwordVisible = ref(false);
 const passwordConfirmVisible = ref(false);
-const isLoading = ref(false);
+const showPasswordModal = ref(false);
+const current_password = ref('');
+
 const successMessage = ref('');
+const isLoading = ref(false);
 const errors = ref({
   password: '',
-  confirmation: ''
+  confirmation: '',
+  current_password: ''
 });
 
 const profileImage = ref(null);
@@ -237,12 +244,26 @@ const validatePasswords = () => {
     return false;
   }
 
+  if (!current_password.value) {
+    errors.value.current_password = 'Current password is required';
+    return false;
+  }
+
   return true;
 };
 
-// Passwortänderung übermitteln
-const handleSubmit = async () => {
-  successMessage.value = '';
+// Modal öffnen und schließen
+const openCurrentPWModal = () => {
+  showPasswordModal.value = true;
+};
+
+const closeCurrentPWModal = () => {
+  showPasswordModal.value = false;
+};
+
+// Passwortänderung absenden, wenn das Modal bestätigt wurde
+const submitPasswordChange = async (currentPassword) => {
+  current_password.value = currentPassword;
   
   if (!validatePasswords()) {
     return;
@@ -251,16 +272,19 @@ const handleSubmit = async () => {
   isLoading.value = true;
 
   try {
+    // API-Aufruf mit aktuellem Passwort und neuen Passwörtern
     await authStore.updatePassword({
-      current_password: authUser.value.current_password,
+      current_password: current_password.value,
       password: password.value,
       password_confirmation: password_confirmation.value
     });
 
     successMessage.value = 'Password changed ';
     // Formular zurücksetzen
+    current_password.value = '';
     password.value = '';
     password_confirmation.value = '';
+    closeCurrentPWModal();
     
   } catch (error) {
     if (error.response && error.response.data) {
@@ -554,7 +578,8 @@ input.password-input {
 }
 
 button[type="submit"],
-.btn-danger {
+.btn-danger,
+.btn-set {
     border-radius: 15px;
     border: solid 1px #000000;
     padding: 10px 15px;
@@ -570,12 +595,12 @@ button[type="submit"],
     color: #FFFFFF;
 }
 
-.btn-1 {
+.btn-save {
     background-color: #9E15D9;
     color: white;
 }
 
-.btn-2 {
+.btn-set {
     background-color: #FFFFFF;
 }
 
@@ -585,13 +610,13 @@ button[type="submit"],
     background-color: #D91544;
 }
 
-.btn-1:hover {
+.btn-save:hover {
     background-color: #d74cf6;
     color: #000000;
     cursor: pointer;
 }
 
-.btn-2:hover {
+.btn-set:hover {
     background-color: #000000;
     color: #FFFFFF;
     border: solid 1px #FFFFFF;
