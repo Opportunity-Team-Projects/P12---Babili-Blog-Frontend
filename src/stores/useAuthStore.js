@@ -38,6 +38,20 @@ export const useAuthStore = defineStore('auth', () => {
     }
   };
 
+  const deleteAccount = async () => {
+    try {
+      loading.value = true;
+      const response = await AuthService.deleteAccount();
+      user.value = null;
+      return response.data;
+    } catch (err) {
+      error.value = err.response?.data?.message || 'Error deleting account';
+      throw err;
+    } finally {
+      loading.value = false;
+    }
+  };
+
   const updatePassword = async (passwordData) => {
     try {
       loading.value = true;
@@ -81,5 +95,6 @@ export const useAuthStore = defineStore('auth', () => {
     logout,
     updateUser,
     updatePassword,
+    deleteAccount,
   };
 });

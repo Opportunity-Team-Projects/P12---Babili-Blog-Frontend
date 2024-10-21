@@ -94,7 +94,7 @@
                             @click="togglePasswordVisibility"
                           />
                         </div>
-                        <span class="error-message" v-if="errors.password">{{ errors.password }}</span>
+                        
                       </div>
 
                       <div class="input-group">
@@ -115,7 +115,9 @@
                             @click="togglePasswordConfirmVisibility"
                           />
                         </div>
+                        <span class="error-message" v-if="errors.password">{{ errors.password }}</span>
                         <span class="error-message" v-if="errors.confirmation">{{ errors.confirmation }}</span>
+                        
                       </div>
 
                       <div class="submit-section">
@@ -143,7 +145,9 @@
                         <li>Allow your username to become available to anyone.</li>   
                     </ol>
 
-                    <button @click="openDeleteModal(authUser.id)" class="btn-danger">Delete account</button>
+                    <button @click="openDeleteModal" class="btn-danger" :disabled="isDeletingAccount">
+                      {{ isDeletingAccount ? 'Deleting...' : 'Delete account' }}
+                    </button>
                 </section>
             </div>
 
@@ -152,7 +156,8 @@
 
     <DeleteModal 
     v-model="showDeleteModal"
-    @confirm="deleteUser(authUser?.id)" 
+    :isLoading="isDeletingAccount"
+    @confirm="deleteUser" 
     />
 </template>
 
@@ -172,16 +177,11 @@ const isSubmitting = ref(false);
 const updateMessage = ref('');
 const updateError = ref(false);
 
-const handleToggle = (collapsed) => {
-  isSidebarCollapsed.value = collapsed;
-};
-
-const triggerFileInput = () => {
-  fileInput.value.click();
-};
-
 const isSidebarCollapsed = ref(true);
+
 const showDeleteModal = ref(false);
+const isDeletingAccount = ref(false);
+
 const joinedDate = ref(''); // das Beitrittsdatum speichern
 
 const authUser = ref({  // Benutzerinformationen hier speichern
@@ -190,6 +190,14 @@ const authUser = ref({  // Benutzerinformationen hier speichern
         email: ''
     }
 }); 
+
+const handleToggle = (collapsed) => {
+  isSidebarCollapsed.value = collapsed;
+};
+
+const triggerFileInput = () => {
+  fileInput.value.click();
+};
 
 const password = ref('');
 const password_confirmation = ref('');
@@ -244,6 +252,7 @@ const handleSubmit = async () => {
 
   try {
     await authStore.updatePassword({
+      current_password: authUser.value.current_password,
       password: password.value,
       password_confirmation: password_confirmation.value
     });
@@ -253,17 +262,22 @@ const handleSubmit = async () => {
     password.value = '';
     password_confirmation.value = '';
     
-    if (err.response && err.response.data) {
-      // Serverseitige Fehlermeldungen anzeigen
+  } catch (error) {
+    if (error.response && error.response.data) {
       console.error('Error saving password:', error.response.data);
-      errors.value.password = err.response.data.message || 'Error saving password';
-      if (err.response.data.errors) {
-        // Detailierte Validierungsfehler anzeigen (wenn vorhanden)
-        if (err.response.data.errors.password) {
-          errors.value.password = err.response.data.errors.password[0];
+
+      // Fehlernachrichten behandeln
+      errors.value.password = error.response.data.message || 'Error saving password';
+      
+      if (error.response.data.errors) {
+        if (error.response.data.errors.password) {
+          errors.value.password = error.response.data.errors.password[0];
         }
-        if (err.response.data.errors.password_confirmation) {
-          errors.value.confirmation = err.response.data.errors.password_confirmation[0];
+        if (error.response.data.errors.password_confirmation) {
+          errors.value.confirmation = error.response.data.errors.password_confirmation[0];
+        }
+        if (error.response.data.errors.current_password) {
+          errors.value.current_password = error.response.data.errors.current_password[0]; // Aktuelles Passwort Fehler
         }
       }
     } else {
@@ -332,22 +346,26 @@ const submit = async () => {
 };
 
 // Modal zum Löschen öffnen
-const openDeleteModal = (userId) => {
+const openDeleteModal = () => {
   showDeleteModal.value = true;
 };
 
 // Funktion zum Löschen des Benutzers
-const deleteUser = async (userId) => {
-    try {
-        await AuthService.delete(`/api/users/${userId}`);
-        showDeleteModal.value = false;
-        // Kurze Verzögerung für die Modal-Animation
-        setTimeout(() => {
-            router.push('/login');
-        }, 300);
-    } catch (error) {
-        console.error('Error:', error);
-    }
+const deleteUser = async () => {
+  try {
+    isDeletingAccount.value = true;
+    
+    await authStore.deleteAccount();
+    showDeleteModal.value = false;
+    
+    // Redirect zur Login-Seite nach erfolgreichem Löschen
+    router.push('/login');
+  } catch (error) {
+    console.error('Error deleting account:', error);
+    alert(error.response?.data?.message || 'Failed to delete account. Please try again later.');
+  } finally {
+    isDeletingAccount.value = false;
+  }
 };
 
 // Funktion zum Hochladen des Bildes und zum Anzeigen der Vorschau
