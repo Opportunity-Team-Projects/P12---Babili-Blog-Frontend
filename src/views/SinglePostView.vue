@@ -45,7 +45,12 @@
           <span>{{ likeCount }} likes</span>
           <i @click="scrollToComments" class="fas fa-comment action-icon"></i>
           <span>{{ post.comments.length }} comments</span>
-          <i class="fas fa-bookmark action-icon"></i>
+          <BookmarkIcon
+            :postId="post.id"
+            :initiallyBookmarked="post.is_bookmarked"
+            :isOwnPost="post.user.id === currentUserId"
+            @update-bookmark="handleBookmarkUpdate"
+          />
         </div>
       </div>
     </div>
@@ -118,6 +123,7 @@ import { useRoute, useRouter } from "vue-router";
 import { authClient } from "@/services/AuthService";
 import HeaderMain from "@/components/HeaderMain.vue";
 import HeartIcon from "@/components/HeartIcon.vue";
+import BookmarkIcon from "@/components/BookmarkIcon.vue";
 import Sidebar from "@/components/Sidebar.vue";
 import PostService from "@/services/PostService";
 import { useAuthStore } from "@/stores/useAuthStore";
@@ -223,6 +229,10 @@ const toggleFollow = async () => {
   } catch (error) {
     console.error("Error toggling follow:", error);
   }
+};
+
+const handleBookmarkUpdate = (isBookmarked) => {
+  post.value.is_bookmarked = isBookmarked;
 };
 
 onMounted(async () => {

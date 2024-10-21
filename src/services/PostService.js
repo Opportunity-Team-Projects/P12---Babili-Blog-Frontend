@@ -104,6 +104,36 @@ export default {
       throw error;
     }
   },
+
+  async bookmarkPost(postId) {
+    try {
+      const response = await authClient.post(`/api/posts/${postId}/bookmark`);
+      return response.data; // { message }
+    } catch (error) {
+      console.error("Error bookmarking post:", error);
+      throw error;
+    }
+  },
+
+  async unbookmarkPost(postId) {
+    try {
+      const response = await authClient.delete(`/api/posts/${postId}/unbookmark`);
+      return response.data; // { message }
+    } catch (error) {
+      console.error("Error unbookmarking post:", error);
+      throw error;
+    }
+  },
+
+  async getBookmarkedPosts() {
+    try {
+      const response = await authClient.get(`/api/bookmarked-posts`);
+      return response.data.bookmarked_posts; // Angenommen, die API gibt die Posts unter 'bookmarked_posts' zurück
+    } catch (error) {
+      console.error("Error fetching bookmarked posts:", error);
+      throw error;
+    }
+  },
   
 };
 
