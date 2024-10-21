@@ -44,7 +44,16 @@
 
     <!-- Post Container -->
     <div class="post-container">
-      <div v-for="post in posts" :key="post.id" class="post-card">
+      <div
+        v-for="post in posts"
+        :key="post.id"
+        class="post-card"
+        @click="navigateToPost(post.id)"
+        tabindex="0"
+        @keyup.enter="navigateToPost(post.id)"
+        role="button"
+        aria-label="View post details"
+      >
         <!-- Post Header -->
         <div class="post-header">
           <div class="profile-placeholder">
@@ -61,14 +70,26 @@
 
         <!-- Post Details -->
         <div class="post-details">
-          <h2 class="post-title" @click="navigateToPost(post.id)">
+          <h2 class="post-title">
             {{ post.contentTitle }}
           </h2>
 
-          <!-- Post Image -->
-          <div class="post-image-placeholder" @click="navigateToPost(post.id)">
-            <i class="fas fa-image"></i>
+          <!-- Post Image oder Content Preview -->
+          <div
+            v-if="post.contentImg && !imageError[post.id]"
+            class="image-container"
+          >
+            <img
+              :src="getImageUrl(post.contentImg)"
+              alt="Post Image"
+              class="post-image"
+              @error="handleImageError(post.id)"
+            />
           </div>
+          <div v-else class="content-preview">
+            {{ post.content }}
+          </div>
+
           <p class="post-author">
             by {{ post.user ? post.user.name : "Unknown" }}
           </p>
@@ -76,7 +97,7 @@
         </div>
 
         <!-- Post Actions -->
-        <div class="post-actions">
+        <div class="post-actions" @click.stop>
           <div class="icon-left">
             <HeartIcon
               :type="'post'"
@@ -90,7 +111,9 @@
             />
             <span>{{ post.likes_count }}</span>
 
+            <!-- Comment Icon and Count -->
             <i class="fas fa-comment action-icon"></i>
+            <span>{{ post.comments_count || 0 }} </span>
           </div>
           <i class="fas fa-bookmark action-icon"></i>
         </div>
@@ -126,9 +149,22 @@ const isSidebarCollapsed = ref(true);
 const showCustomFeed = ref(false);
 const sortOption = ref("recent");
 
+// Reaktive Referenz für Bildfehler
+const imageError = ref({});
+
+const getImageUrl = (imagePath) => {
+  return `${import.meta.env.VITE_APP_BACKEND_URL}/storage/${imagePath}`;
+};
+
+// Fehlerbehandlungsfunktion, die das Bildfehler-Flag für den spezifischen Post setzt
+const handleImageError = (postId) => {
+  imageError.value = { ...imageError.value, [postId]: true };
+};
+
 const { user } = storeToRefs(authStore);
 
 const currentUserId = computed(() => user.value?.user?.id);
+
 const props = defineProps({
   query: {
     type: String, // Passe den Typ entsprechend an
@@ -145,7 +181,7 @@ const sortPosts = () => {
   if (sortOption.value === "recent") {
     posts.value.sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
   } else if (sortOption.value === "popular") {
-    posts.value.sort((a, b) => (b.likesCount || 0) - (a.likesCount || 0));
+    posts.value.sort((a, b) => (b.likes_count || 0) - (a.likes_count || 0));
   }
 };
 
@@ -338,13 +374,15 @@ watch(
   border: 1px solid transparent;
   border-radius: 8px;
   padding: 20px;
-  width: 340px;
+  width: 355px;
   min-height: 400px;
   display: flex;
   flex-direction: column;
   transition: border-color 0.3s ease, box-shadow 0.3s ease,
     transform 0.2s ease-in-out;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(255, 255, 255, 0.1);
+  overflow: hidden; /* Verhindert das Überlaufen von Inhalten */
+  cursor: pointer; /* Ändert den Mauszeiger, um Klickbarkeit anzuzeigen */
 }
 
 .post-card:hover {
@@ -363,8 +401,8 @@ watch(
   width: 40px;
   height: 40px;
   border-radius: 50%;
-  background-color: white;
-  border: 1px solid black;
+
+  border: 1px solid violet;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -421,17 +459,41 @@ watch(
   margin-top: 2px;
 }
 
-.post-image-placeholder {
+.content-preview {
+  width: 100%;
+  height: 150px; /* Gleiche Höhe wie das Bild */
+  font-weight: 300;
+  border-radius: 8px;
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-line-clamp: 3; /* Begrenzung auf 3 Zeilen */
+  -webkit-box-orient: vertical;
+  text-overflow: ellipsis;
+  color: white;
+  font-size: 1em;
+}
+
+.post-image {
   width: 100%;
   height: 150px;
-  background-color: white;
+  object-fit: cover; /* Verhindert das Verzerren der Bilder */
+  border-radius: 8px; /* Gleiche Border-Radius wie die Karte */
   margin-bottom: 10px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  font-size: 3em;
-  color: rgba(0, 0, 0, 0.699);
-  cursor: pointer;
+}
+
+/* Neue Klasse für Content-Preview */
+.content-preview {
+  width: 100%;
+  height: 150px; /* Gleiche Höhe wie das Bild */
+  font-weight: 300;
+  border-radius: 8px;
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-line-clamp: 3; /* Begrenzung auf 3 Zeilen */
+  -webkit-box-orient: vertical;
+  text-overflow: ellipsis;
+  color: white;
+  font-size: 1em;
 }
 
 .post-actions {
@@ -454,6 +516,7 @@ watch(
   color: white;
   transition: color 0.3s ease, transform 0.3s ease;
   padding: 2px;
+  margin-left: 10px;
 }
 
 .action-icon:hover {
@@ -493,6 +556,11 @@ watch(
 
   .post-card {
     width: 100%;
+  }
+
+  .post-image,
+  .content-preview {
+    height: 200px; /* Optional: Größere Höhe für kleinere Bildschirme */
   }
 }
 </style>
