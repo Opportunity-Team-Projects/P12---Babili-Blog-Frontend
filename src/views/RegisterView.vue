@@ -1,4 +1,4 @@
-<!-- <script setup>
+<script setup>
 import { ref } from "vue";
 import { useAuthStore } from "@/stores/useAuthStore";
 import router from "../router";
@@ -31,7 +31,7 @@ const handleRegister = async () => {
 
 <template>
 
-<main>
+<div class="bodycontainer">
     
   <div class="register-container">
     <form @submit.prevent="handleRegister">
@@ -40,7 +40,7 @@ const handleRegister = async () => {
     <div>
         <div class="header">
             <div class="logo">
-                <img src="../assets/Nexus0.jpg" alt="Das Logo" class="logo">
+                <img src="" alt="" class="logo">
             </div>
      
             <div>
@@ -104,94 +104,19 @@ const handleRegister = async () => {
     </div>
   </div>   
 
-</main>
+</div>
 </template>
 
-<style>
+<style scoped>
 
 
-body {
+.bodycontainer {
   background-image: url('../assets/bg.svg');
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
+  height: 100vh;
 }
-@media (max-width: 767px){
-    .register-container{
-     margin-left: 7%; 
-     color: #FFFF;
-    }  
-
-    .logo{
-      margin-top: 5%;
-      margin-left: 5%;
-      
-      width: 106px;
-      height: 64px;
-      border-radius: 40px;
-    }
-    .without-logging-in{
-      padding-top: 3%;
-      
-    }
-    h1{
-      color: #D7A8FC;
-      padding-top: 5%;
-      font-size: 32px;
-    }
-    .text{
-      padding-top: 5;
-      color: #FFFF;
-      width: 352px;
-      font-size: 24px;
-    }
-    .container-regist{
-      display: flex;
-      flex-direction: column;
-      color: #FFFF;
-      margin-right: 5%;
-      gap: 10px;
-    }
-    .form-group{
-      display: flex;
-      flex-direction: column;
-    }
-    .placholder{
-      width: 379px;
-      height: 43px;
-      border-radius: 10px;
-      padding-left: 15px;
-    }
-    .footer{
-        color: #FFFF;
-        display: flex;
-        justify-content: center;
-        bottom: 15px;
-        position: fixed;
-        width: 100%;
-        font-size: 16px;
-    }
-    .button{
-        height: 34px;
-        width: 107px;
-        background-color: #D7A8FC;
-        border-radius: 10px;
-        color: #FFFF;
-        margin-left: 170px;
-    }
-    .login-button{
-        width: 107px;
-        height: 34px;
-        font-size: 20px;
-        color: #FFFF;
-        background-color: black;
-        border-radius: 10px;
-    }
-    
-
-
-}
-
 
 @media (min-width: 768px) {
   .register-container{
