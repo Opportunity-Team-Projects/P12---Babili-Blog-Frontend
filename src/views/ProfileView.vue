@@ -187,7 +187,7 @@ const joinedDate = ref(''); // das Beitrittsdatum speichern
 const authUser = ref({  // Benutzerinformationen hier speichern
     user: {
         name: '',
-        email: ''
+        email: '',
     }
 }); 
 
