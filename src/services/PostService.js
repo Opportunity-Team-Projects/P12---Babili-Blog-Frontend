@@ -33,6 +33,10 @@ export default {
     return authClient.get("/api/search/user-categories", { params: { query } });
   },
 
+  searchBookmarkedPosts(query) {
+    return authClient.get("/api/search/bookmarked", { params: { query } });
+  },
+
   /**
    * Ruft einen einzelnen Post anhand der ID ab.
    * @param {Number|String} postId - Die ID des Posts.

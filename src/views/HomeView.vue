@@ -172,6 +172,8 @@ const searchPosts = async (query) => {
     let res;
     if (route.path === "/my-feed") {
       res = await PostService.searchPostsInUserCategories(query);
+    } else if (route.path === "/bookmarks") {
+      res = await PostService.searchBookmarkedPosts(query);
     } else {
       res = await PostService.searchPosts(query);
     }
