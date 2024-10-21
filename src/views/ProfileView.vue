@@ -513,7 +513,7 @@ input[type="password"]  {
     color: white;
 }
 
-input[type="password"]  {
+input.password-input {
   padding-right: 40px;  /* Platz für das Auge-Icon reservieren */
   padding-left: 4%;
 }
