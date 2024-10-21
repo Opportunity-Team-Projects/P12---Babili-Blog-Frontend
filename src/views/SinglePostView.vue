@@ -29,7 +29,7 @@
       <div class="post-content">
         <img
           v-if="post.contentImg"
-          :src="post.contentImg"
+          :src="getImageUrl(post.contentImg)"
           alt="Post image"
           class="post-image"
         />
@@ -135,6 +135,10 @@ const likeCount = ref(0);
 const isLiked = ref(false);
 const currentUserId = computed(() => user.value?.user?.id);
 const commentSection = ref(null);
+
+const getImageUrl = (imagePath) => {
+  return `${import.meta.env.VITE_APP_BACKEND_URL}/storage/${imagePath}`;
+};
 
 const updateCommentLike = (commentId, likes_count, is_liked) => {
   const comment = post.value.comments.find((c) => c.id === commentId);

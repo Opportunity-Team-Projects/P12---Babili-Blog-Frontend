@@ -372,7 +372,7 @@ watch(
   border: 1px solid transparent;
   border-radius: 8px;
   padding: 20px;
-  width: 340px;
+  width: 355px;
   min-height: 400px;
   display: flex;
   flex-direction: column;
@@ -514,6 +514,7 @@ watch(
   color: white;
   transition: color 0.3s ease, transform 0.3s ease;
   padding: 2px;
+  margin-left: 10px;
 }
 
 .action-icon:hover {
