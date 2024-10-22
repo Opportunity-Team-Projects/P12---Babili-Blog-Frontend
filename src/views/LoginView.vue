@@ -98,7 +98,9 @@ const handleLogin = async () => {
             <div class="sign-up">
               Don't have an account?
               <RouterLink to="/register" v-if="!authUser"
-                ><button class="sign-button">Sign Up</button></RouterLink
+                ><button class="sign-button" type="button">
+                  Sign Up
+                </button></RouterLink
               >
             </div>
             <div class="login-one-container">
