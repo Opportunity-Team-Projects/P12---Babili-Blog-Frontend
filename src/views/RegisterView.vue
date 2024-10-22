@@ -31,80 +31,86 @@ const handleRegister = async () => {
 
 <template>
 
-<div class="bodycontainer">
-    
-  <div class="register-container">
-    <form @submit.prevent="handleRegister">
-        
-        
-    <div>
-        <div class="header">
-            <div class="logo">
-                <img src="" alt="" class="logo">
-            </div>
-     
-            <div>
-                <p class="without-logging-in">Continue without logging in?</p>
-            </div>
-        </div>
-    </div>
-            <div class="text-container">
-                <H1>Tech & Game Nexus</H1>
-    
-                <div class="text">
-                    <p>
-                        Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. 
-                    </p>
-                </div>
-            </div>
-
-    <div class="container-regist">
-        <div class="form-group">
-            <label for="name">Name:</label>
-            <input class="placholder" type="text" id="name" name="name" v-model="name" required>
-        </div>
-
-        <div class="form-group">
-            <label for="email">E-mail:</label>
-            <input class="placholder" type="email" id="email" name="email" v-model="email" required>
-        </div>
-
-        <div class="form-group">
-            <label for="password">Password:</label>
-            <input class="placholder" type="password" id="password" name="password" v-model="password" required>
-        </div>
-
-        <div class="form-group">
-            <label for="password_confirmation">Confirm password:</label>
-            <input class="placholder" type="password" id="password_confirmation" name="password_confirmation" v-model="password_confirmation" required>
-        </div>
-     
-
-    
-      <div>
-        <p>Already have an account?</p>
-      </div> 
-
-      <div class="button-container"> 
-        <RouterLink to="/login" v-if="!authUser"><button class="login-button">Login</button></RouterLink>
-        <button class="button" type="submit">Sign Up</button>
-      </div> 
+  <div class="bodycontainer">
       
-      <div class="policy">
-        <p>By signing up I accept the Terms of Service and the Privacy Policy.</p>
+    <div class="register-container">
+      <form @submit.prevent="handleRegister">
+          
+          
+      <div>
+          <div class="header">
+              <div class="logo">
+                  <img src="" alt="" class="logo">
+              </div>
+      
+              <div>
+              <RouterLink to="/" class="without-logging-in"
+                >Continue without logging in?</RouterLink
+              >
+            </div>
+          </div>
       </div>
-    
-    </div> 
-    
-  </form>
-    <div>
-      <div class="footer">
-        <p>© 2024 Tech & Game Nexus       Terms</p>
-      </div>
-    </div>
-  </div>   
+                <div class="text-container">
+                    <H1>Tech & Game Nexus</H1>
+        
+                    <div class="text">
+                        <p>
+                            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. 
+                        </p>
+                    </div>
+                </div>
 
-</div>
+        <div class="container-regist">
+            <div class="form-group">
+                <label for="name">Name</label>
+                <input class="placholder" type="text" id="name" name="name" v-model="name" required>
+            </div>
+
+            <div class="form-group">
+                <label for="email">Email</label>
+                <input class="placholder" type="email" id="email" name="email" v-model="email" required>
+            </div>
+
+            <div class="form-group">
+                <label for="password">Password</label>
+                <input class="placholder" type="password" id="password" name="password" v-model="password" required>
+            </div>
+
+            <div class="form-group">
+                <label for="password_confirmation">Confirm password</label>
+                <input class="placholder" type="password" id="password_confirmation" name="password_confirmation" v-model="password_confirmation" required>
+            </div>
+        
+
+        
+          <div class="already">
+            <p>Already have an account?</p>
+          </div> 
+
+          <div class="button-container"> 
+            <RouterLink to="/login" v-if="!authUser"><button class="login-button">Login</button></RouterLink>
+            <button class="button" type="submit">Sign Up</button>
+          </div> 
+          
+          <div class="policy">
+            <p>By signing up I accept the Terms of Service and the Privacy Policy.</p>
+          </div>
+        
+        </div> 
+        
+      </form>
+    </div>
+    <footer>
+      
+        <div class="footer">
+          <p>© 2024 Tech & Game Nexus</p>       
+          <p>Terms</p>
+        </div>
+      </div>
+      
+
+    </footer>
+  </div>
 </template>
 
 <style scoped>
@@ -198,8 +204,13 @@ h1{
   background-color: black;
   border-radius: 10px;
 }
+
+.already {
+  font-size: 14px;
+}
 .policy{
-  padding-top: 10px;
+  padding-top: 20px;
+  font-size: 12px;
 }
 </style>
 
