@@ -4,7 +4,6 @@
     class="action-icon-button"
     :class="{ bookmarked: isBookmarked }"
     @click="toggleBookmark"
-    :disabled="isOwnPost"
     aria-label="Bookmark Post"
   >
     <svg

@@ -118,7 +118,6 @@
           <BookmarkIcon
             :postId="post.id"
             :initiallyBookmarked="post.is_bookmarked"
-            :isOwnPost="post.user.id === currentUserId"
             @update-bookmark="updateBookmarkStatus(post.id, $event)"
           />
         </div>
