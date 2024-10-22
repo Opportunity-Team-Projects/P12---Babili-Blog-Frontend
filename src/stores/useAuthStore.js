@@ -7,16 +7,31 @@ export const useAuthStore = defineStore('auth', () => {
   const user = ref(null);
   const loading = ref(false);
   const error = ref(null);
+  const profileImage = ref('');
 
   const isAuthenticated = computed(() => user.value !== null);
 
   const fetchUser = async () => {
+    loading.value = true;
+    error.value = null;
+
     try {
       const response = await AuthService.getAuthUser();
       user.value = response.data;
-    } catch (error) {
-      console.error("Error fetching authenticated user:", error);
+
+      // Überprüfen, ob ein Profilbild existiert
+      if (user.value && user.value.user && user.value.user.profile_pic_url) {
+        profileImage.value = user.value.user.profile_pic_url;
+      } else {
+        profileImage.value = '../user-profile-icon.jpg'; // Standardbild
+      }
+    } catch (err) {
+      console.error("Error fetching authenticated user:", err);
+      error.value = err;
       user.value = null;
+      profileImage.value = '../user-profile-icon.jpg'; // Standardbild bei Fehler
+    } finally {
+      loading.value = false;
     }
   };
 
@@ -98,6 +113,7 @@ export const useAuthStore = defineStore('auth', () => {
 
   return {
     user,
+    profileImage,
     loading,
     error,
     isAuthenticated,

@@ -26,7 +26,7 @@
           <div class="profileImage">
             <div class="image-preview">
               <img
-                :src="profileImage || defaultProfilePicture"
+                :src="profileImage"
                 alt="Profile Picture"
                 class="profile-picture"
               />
@@ -225,14 +225,6 @@ const authUser = ref({
   },
 });
 
-const handleToggle = (collapsed) => {
-  isSidebarCollapsed.value = collapsed;
-};
-
-const triggerFileInput = () => {
-  fileInput.value.click();
-};
-
 const password = ref("");
 const password_confirmation = ref("");
 const passwordVisible = ref(false);
@@ -242,6 +234,7 @@ const current_password = ref("");
 
 const successMessage = ref("");
 const isLoading = ref(false);
+const { profileImage } = useAuthStore();
 
 const errors = ref({
   password: "",
@@ -249,8 +242,16 @@ const errors = ref({
   current_password: "",
 });
 
-const profileImage = ref(null);
-const defaultProfilePicture = "../user-profile-icon.jpg";
+/* const profileImage = ref(null);
+const defaultProfilePicture = "../user-profile-icon.jpg"; */
+
+const handleToggle = (collapsed) => {
+  isSidebarCollapsed.value = collapsed;
+};
+
+const triggerFileInput = () => {
+  fileInput.value.click();
+};
 
 // Funktion zum Umschalten der Passwortsichtbarkeit
 const togglePasswordVisibility = () => {
@@ -456,7 +457,7 @@ const handleFileUpload = async (event) => {
 };
 
 // Optional: Profilbild beim Laden der Seite abrufen
-onMounted(async () => {
+/* onMounted(async () => {
   try {
     await authStore.fetchUser();
     if (authStore.user && authStore.user.user.profile_pic_url) {
@@ -467,7 +468,7 @@ onMounted(async () => {
   } catch (error) {
     console.error("Fehler beim Laden des Profilbildes:", error);
   }
-});
+}); */
 </script>
 
 <style scoped>
