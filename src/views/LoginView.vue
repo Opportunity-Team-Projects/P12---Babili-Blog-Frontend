@@ -45,25 +45,24 @@ const handleLogin = async () => {
 
 <template>
   <div class="bodycontainer">
-    <div class="container">
-      <div class="a">
-        <div class="header">
-          <div class="logo">
-            <img src="" alt="" class="logo" />
-          </div>
-          <div>
-            <RouterLink to="/" class="without-logging-in"
-              >Continue without logging in?</RouterLink
-            >
-          </div>
+
+      <header>
+
+        <div>
+          <RouterLink to="/" class="without-logging-in"
+            >Continue without logging in?</RouterLink
+          >
         </div>
-      </div>
+      </header>
+      
+    <div class="login-container">  
+
       <div class="text-container">
         <h1>Tech & Game Nexus</h1>
         <div class="text">
           <p>
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-            eiusmod tempor incididunt ut labore et dolore magna aliqua.
+            Der zentrale Treffpunkt, an dem Gaming und Technologie aufeinandertreffen - hier erfährst du 
+            alles, was Gamer und Tech-Enthusiasten wissen müssen.
           </p>
         </div>
       </div>
@@ -72,7 +71,7 @@ const handleLogin = async () => {
           <h2>Login</h2>
           <div>
             <div class="formgroup">
-              <label class="email" for="email">E-Mail</label>
+              <label for="email">Email</label>
               <input
                 id="email"
                 class="placeholder"
@@ -82,7 +81,7 @@ const handleLogin = async () => {
               />
             </div>
             <div class="formgroup">
-              <label class="email" for="password">Passwort</label>
+              <label for="password">Password</label>
               <input
                 id="password"
                 class="placeholder"
@@ -94,16 +93,16 @@ const handleLogin = async () => {
           </div>
         </div>
         <div>
-          <div class="sign-up-container">
+          <div class="button-container">
             <div class="sign-up">
-              Don't have an account?
-              <RouterLink to="/register" v-if="!authUser"
+              <p class="haveacc">Don't have an account?</p>
+              <RouterLink to="/register"
                 ><button class="sign-button">Sign Up</button></RouterLink
               >
             </div>
             <div class="login-one-container">
-              <RouterLink to="/register" v-if="!authUser"
-                ><p class="forgot-password">Forgot password?</p></RouterLink
+              <RouterLink to="/register"
+                ><p class="forgotpw">Forgot password?</p></RouterLink
               >
               <button class="login-button" type="submit">Login</button>
             </div>
@@ -113,9 +112,19 @@ const handleLogin = async () => {
       <p v-if="error" class="error-message">{{ error }}</p>
     </div>
     <CookieBanner />
-    <div class="footer">
-      <p>© 2024 Tech & Game Nexus Terms</p>
-    </div>
+
+    <footer>
+      
+      <div class="footer-info">
+        <div class="footer-left">
+          <p>© 2024 Tech & Game Nexus</p>   
+        </div>
+        <RouterLink to="/terms" class="footer-right">    
+          <p>Terms</p></RouterLink>
+
+      </div>           
+
+  </footer>
   </div>
 </template>
 
@@ -125,68 +134,78 @@ const handleLogin = async () => {
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
-  height: 100vh;
+  min-height: 100vh;
+  /* Füge den Gradienten als zusätzliches Hintergrundbild hinzu */
 }
 
 .header {
   display: flex;
   flex-direction: row;
-  justify-content: space-between;
-  margin-right: 117px;
+  justify-content: end;
+  margin-right: 100px;
+  padding-top: 3%;
 }
+
 .without-logging-in {
   color: #ffff;
   font-size: 16px;
 }
-.container {
-  padding-left: 174px;
-  padding-top: 38px;
+.login-container {
+  margin-left: 100px;
+  max-width: 380px; 
 }
-.logo {
-  width: 106px;
-  height: 64px;
-  border-radius: 40px;
-}
+
 h1 {
-  color: #d7a8fc;
-  padding-top: 22px;
+  font-family: "Audiowide", sans-serif;
   font-size: 32px;
+  color: #d7a8fc;
+  width: 100%;
 }
 .text {
   padding-top: 22px;
-  color: #ffff;
-  width: 352px;
+  color: #FFFF;
+  width: 100%;
   font-size: 24px;
 }
+
 h2 {
-  color: #ffff;
-  padding-top: 22px;
-  font-size: 24px;
+  font-size: 24;
+  font-weight: 900;
+  color: white;
+  margin-top: 30px;
+  margin-bottom: 10px;
 }
+
 .login-container {
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-  padding-bottom: 22px;
-}
-.email {
-  font-size: 20px;
-  margin-bottom: 5px;
+  margin-left: 100px;
+  max-width: 380px;  
 }
 
 .formgroup {
   display: flex;
   flex-direction: column;
-  color: #ffff;
+  width: 100%;
 }
-.placeholder {
-  width: 400px;
-  padding-left: 10px;
+
+label {
+  font-size: 18px;
+  font-weight: 400;
+  margin: 5px 0;
+  color: #FFFF;
 }
-.sign-up-container {
+
+.placholder{
+  width: 100%;
+  height: 43px;
+  border-radius: 5px;
+  padding-left: 15px;
+}
+
+.button-container {
   display: flex;
-  flex-direction: row;
+  justify-content: space-between;
 }
+
 .sign-up {
   color: #ffff;
   font-size: 20px;
@@ -209,7 +228,13 @@ h2 {
   background-color: black;
   border-radius: 10px;
 }
-.forgot-password {
+
+.haveacc {
+  font-size: 12px;
+}
+
+.forgotpw {
+  font-size: 12px;
   color: #ffff;
   text-decoration: underline;
   text-decoration-color: white;
@@ -222,13 +247,26 @@ h2 {
   color: #ffff;
   font-size: 20px;
 }
-.footer {
-  color: #ffff;
+
+.footer-info{
+  color: #FFFF;
   display: flex;
   justify-content: center;
-  bottom: 15px;
-  position: fixed;
+  align-items: center;
+  left: 0;
+  right: 0;
+  margin: 0 auto;
   width: 100%;
+  max-width: 500px;
+  font-size: 16px;
+  gap: 40px;
+  padding: 0 15px;
+  margin-top: 10px;
+  bottom: 0;
+}
+
+.footer-right {
+  color: #ffff;
   font-size: 16px;
 }
 

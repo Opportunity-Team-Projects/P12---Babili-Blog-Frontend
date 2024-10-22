@@ -42,7 +42,7 @@ const handleRegister = async () => {
                   >Continue without logging in?</RouterLink
                 >
               </div>
-            </header>
+      </header>
         
     <div class="register-container">       
                   <div class="text-container">
@@ -79,9 +79,7 @@ const handleRegister = async () => {
                   <label for="password_confirmation">Confirm password</label>
                   <input class="placholder" type="password" id="password_confirmation" name="password_confirmation" v-model="password_confirmation" required>
               </div>
-          
 
-          
             <div class="already">
               <p>Already have an account?</p>
             </div> 
@@ -190,7 +188,6 @@ label {
   border-radius: 5px;
   padding-left: 15px;
 }
-
 
 .button-container{
   display: flex;
