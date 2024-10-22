@@ -158,7 +158,7 @@ const sortOption = ref("recent");
 const imageError = ref({});
 
 const getImageUrl = (imagePath) => {
-  return `${import.meta.env.VITE_APP_BACKEND_URL}/storage/${imagePath}`;
+  return `${import.meta.env.VITE_BASE_URL}/storage/${imagePath}`;
 };
 
 // Fehlerbehandlungsfunktion, die das Bildfehler-Flag für den spezifischen Post setzt

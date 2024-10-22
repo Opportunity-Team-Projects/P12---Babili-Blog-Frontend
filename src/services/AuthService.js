@@ -51,4 +51,12 @@ export default {
     deleteAccount() {
       return authClient.delete("api/user/delete");
     },
+
+    uploadProfilePicture(formData) {
+      return authClient.post('api/user/update/pic', formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data', // Header für den Dateiupload
+        },
+      });
+    },
   };

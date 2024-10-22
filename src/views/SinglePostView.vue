@@ -128,8 +128,7 @@ import Sidebar from "@/components/Sidebar.vue";
 import PostService from "@/services/PostService";
 import { useAuthStore } from "@/stores/useAuthStore";
 import { storeToRefs } from "pinia";
-import { marked } from 'marked';
-
+import { marked } from "marked";
 
 const route = useRoute();
 const router = useRouter();
@@ -146,7 +145,7 @@ const currentUserId = computed(() => user.value?.user?.id);
 const commentSection = ref(null);
 
 const getImageUrl = (imagePath) => {
-  return `${import.meta.env.VITE_APP_BACKEND_URL}/storage/${imagePath}`;
+  return `${import.meta.env.VITE_BASE_URL}/storage/${imagePath}`;
 };
 
 const updateCommentLike = (commentId, likes_count, is_liked) => {

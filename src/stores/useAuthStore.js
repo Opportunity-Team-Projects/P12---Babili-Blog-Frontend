@@ -84,11 +84,24 @@ export const useAuthStore = defineStore('auth', () => {
     }
   };
 
+  const uploadProfilePicture = async (formData) => {
+    try {
+      const response = await AuthService.uploadProfilePicture(formData); // Aufruf des AuthService
+      user.value = response.data; // Aktualisiere den Benutzerzustand mit den neuen Daten
+    } catch (err) {
+      error.value = err.response?.data?.message || 'Fehler beim Hochladen des Bildes';
+      throw err;
+    }
+  };
+
+
+
   return {
     user,
     loading,
     error,
     isAuthenticated,
+    uploadProfilePicture,
     fetchUser,
     setUser,
     login,
