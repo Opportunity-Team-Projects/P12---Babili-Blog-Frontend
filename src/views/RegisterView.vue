@@ -50,7 +50,8 @@ const handleRegister = async () => {
           
                       <div class="text">
                           <p>
-                              Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. 
+                            Der zentrale Treffpunkt, an dem Gaming und Technologie aufeinandertreffen - hier erfährst du 
+                            alles, was Gamer und Tech-Enthusiasten wissen müssen.
                           </p>
                       </div>
                   </div>
@@ -122,13 +123,6 @@ const handleRegister = async () => {
   background-repeat: no-repeat;
   min-height: 100vh;
   /* Füge den Gradienten als zusätzliches Hintergrundbild hinzu */
-  background-image: linear-gradient(
-    to right,
-    rgba(0, 0, 0, 1) 0%,
-    rgba(0, 0, 0, 0.9) 10%,
-    rgba(0, 0, 0, 0.75) 25%,
-    rgba(0, 0, 0, 0) 100%
-  ), url("../assets/bg.svg");
 }
 
 header {
@@ -271,6 +265,18 @@ label {
 .footer-right {
   color: #ffff;
   font-size: 16px;
+}
+
+@media (max-width: 768px) {
+  .bodycontainer {
+    background-image: linear-gradient(
+    to right,
+    rgba(0, 0, 0, 1) 0%,
+    rgba(0, 0, 0, 0.9) 15%,
+    rgba(0, 0, 0, 0.75) 40%,
+    rgba(0, 0, 0, 0) 100%
+  ), url("../assets/bg.svg");
+  }
 }
 
 @media (max-width: 580px) {
