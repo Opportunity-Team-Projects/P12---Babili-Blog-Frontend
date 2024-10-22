@@ -116,11 +116,19 @@ const handleRegister = async () => {
 
 <style scoped>
 .bodycontainer {
-  background-image: url('../assets/bg.svg');
+  background-image: url("../assets/bg.svg");
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
-  height: 100vh;
+  min-height: 100vh;
+  /* Füge den Gradienten als zusätzliches Hintergrundbild hinzu */
+  background-image: linear-gradient(
+    to right,
+    rgba(0, 0, 0, 1) 0%,
+    rgba(0, 0, 0, 0.9) 10%,
+    rgba(0, 0, 0, 0.75) 25%,
+    rgba(0, 0, 0, 0) 100%
+  ), url("../assets/bg.svg");
 }
 
 header {
@@ -248,7 +256,6 @@ label {
   display: flex;
   justify-content: center;
   align-items: center;
-  bottom: 15px;
   left: 0;
   right: 0;
   margin: 0 auto;
@@ -258,6 +265,7 @@ label {
   gap: 40px;
   padding: 0 15px;
   margin-top: 10px;
+  bottom: 0;
 }
 
 .footer-right {
@@ -278,6 +286,15 @@ label {
   header {
     justify-content:center;
     margin: 10px auto;
+  }
+  .bodycontainer {
+  background-image: linear-gradient(
+    to right,
+    rgba(0, 0, 0, 1) 0%,
+    rgba(0, 0, 0, 0.9) 30%,
+    rgba(0, 0, 0, 0.75) 60%,
+    rgba(0, 0, 0, 0) 100%
+  ), url("../assets/bg.svg");
   }
 }
 
