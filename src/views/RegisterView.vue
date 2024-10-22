@@ -33,25 +33,20 @@ const handleRegister = async () => {
 
   <div class="bodycontainer">
       
-    <div class="register-container">
-      <form @submit.prevent="handleRegister">
-          
-          
-        <div>
-            <div class="header">
-                <div class="logo">
-                    <img src="" alt="" class="logo">
-                </div>
-        
-                <div>
+    
+
+      <header>
+
+              <div>
                 <RouterLink to="/" class="without-logging-in"
                   >Continue without logging in?</RouterLink
                 >
               </div>
-            </div>
-        </div>
+            </header>
+        
+    <div class="register-container">       
                   <div class="text-container">
-                      <H1>Tech & Game Nexus</H1>
+                      <h1>Tech & Game Nexus</h1>
           
                       <div class="text">
                           <p>
@@ -60,6 +55,9 @@ const handleRegister = async () => {
                       </div>
                   </div>
 
+        <h2>Register</h2>
+    
+      <form @submit.prevent="handleRegister">            
           <div class="container-regist">
               <div class="form-group">
                   <label for="name">Name</label>
@@ -88,8 +86,8 @@ const handleRegister = async () => {
             </div> 
 
             <div class="button-container"> 
-              <RouterLink to="/login" v-if="!authUser"><button class="login-button">Login</button></RouterLink>
-              <button class="button" type="submit">Sign Up</button>
+              <RouterLink to="/login"><button class="login-button">Log in</button></RouterLink>
+              <button class="btn-signup" type="submit">Sign Up</button>
             </div> 
             
             <div class="policy">
@@ -98,13 +96,17 @@ const handleRegister = async () => {
           
           </div> 
         
-      </form>
+        </form>
     </div>
-    <footer>
+  <footer>
       
         <div class="footer-info">
-          <p>© 2024 Tech & Game Nexus</p>       
-          <p>Terms</p>
+          <div class="footer-left">
+            <p>© 2024 Tech & Game Nexus</p>   
+          </div>
+          <RouterLink to="/terms" class="footer-right">    
+            <p>Terms</p></RouterLink>
+
         </div>           
 
     </footer>
@@ -121,95 +123,168 @@ const handleRegister = async () => {
   height: 100vh;
 }
 
-  .register-container{
-  margin-left: 117px;
-  
-}
-  .header{
+header {
   display: flex;
   flex-direction: row;
-  justify-content: space-between;
-  margin-right: 117px;
-  padding-top: 5%;
+  justify-content: end;
+  margin-right: 100px;
+  padding-top: 3%;
 }
+
+.register-container{
+  margin-left: 100px;
+  max-width: 380px;  
+}
+
 .without-logging-in{
   color: #FFFF;
   font-size: 16px;
 }
 
-.logo{
-  width: 106px;
-  height: 64px;
-  border-radius: 40px;
-  margin-left: 5%;
-}
 h1{
-  color: #D7A8FC;
-  padding-top: 22px;
+  font-family: "Audiowide", sans-serif;
   font-size: 32px;
+  color: #d7a8fc;
+  width: 100%;
 }
 .text{
   padding-top: 22px;
   color: #FFFF;
-  width: 352px;
+  width: 100%;
   font-size: 24px;
+}
+
+h2 {
+  font-size: 24;
+  font-weight: 900;
+  color: white;
+  margin-top: 30px;
+  margin-bottom: 10px;
 }
 .container-regist{
   display: flex;
   flex-direction: column;
   color: #FFFF;
-  width: 379px;
-  height: 269px;
-  padding-top: 30px;
+  width: 100%;
+  max-width: 380px;
   gap: 10px;
+  /* margin: 0 auto; */
 }
 .form-group{
-    display: flex;
-    flex-direction: column;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
 }
+
+label {
+  font-size: 18px;
+  font-weight: 400;
+  margin: 5px 0;
+}
+
 .placholder{
-  width: 379px;
+  width: 100%;
   height: 43px;
-  border-radius: 10px;
+  border-radius: 5px;
   padding-left: 15px;
 }
-.footer{
-  color: #FFFF;
-  display: flex;
-  justify-content: center;
-  bottom: 15px;
-  position: fixed;
-  width: 100%;
-  font-size: 16px;
-}
+
+
 .button-container{
   display: flex;
-        
+  justify-content: space-between;
+}
 
-}
-.button{
-  height: 34px;
-  width: 107px;
-  background-color: #D7A8FC;
-  border-radius: 10px;
+.btn-signup {
+  width: fit-content;
+  background-color: #9D67C7;
   color: #FFFF;
-  margin-left: 170px;
+  font-weight: 600;
+  font-size: 16px;
+  border-radius: 14px;
+  text-align: center;
+  padding: 10px 15px;
 }
+
+.btn-signup:hover {
+  background-color: #D7A8FC;
+  color: black;
+  cursor: pointer;
+  /* border: solid 1px black; */
+}
+
 .login-button{
-  width: 107px;
-  height: 34px;
-  font-size: 20px;
+  width: fit-content;
+  font-weight: 600;
+  font-size: 16px;
   color: #FFFF;
   background-color: black;
-  border-radius: 10px;
+  border-radius: 14px;
+  text-align: center;
+  padding: 10px 15px;
+  cursor: pointer;
+  border: solid 1px white;
+}
+
+.login-button:hover {
+  background-color: white;
+  color: black;
+  border: black;
+  cursor: pointer;
 }
 
 .already {
-  font-size: 14px;
-}
-.policy{
-  padding-top: 20px;
   font-size: 12px;
+  margin-top: 20px;
+}
+
+.policy{
+  padding-top: 10px;
+  font-size: 12px;
+}
+
+.footer-info{
+  color: #FFFF;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  bottom: 15px;
+  left: 0;
+  right: 0;
+  margin: 0 auto;
+  width: 100%;
+  max-width: 500px;
+  font-size: 16px;
+  gap: 40px;
+  padding: 0 15px;
+  margin-top: 10px;
+}
+
+.footer-right {
+  color: #ffff;
+  font-size: 16px;
+}
+
+@media (max-width: 580px) {
+  .register-container {
+    margin: 0 auto;
+  }
+  .text-container {
+    text-align: center;
+  }
+  h2 {
+    text-align: center;
+  }
+  header {
+    justify-content:center;
+    margin: 10px auto;
+  }
+}
+
+@media (max-width: 390px) {
+  .register-container {
+    margin: 0 5px;
+  }
 }
 </style>
 
