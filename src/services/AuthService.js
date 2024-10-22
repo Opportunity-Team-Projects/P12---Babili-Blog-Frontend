@@ -47,4 +47,8 @@ export default {
     updateUser(payload) {
       return authClient.put("api/user/profile-information", payload);
     },
+
+    deleteAccount() {
+      return authClient.delete("api/user/delete");
+    },
   };
