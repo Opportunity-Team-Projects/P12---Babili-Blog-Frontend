@@ -46,16 +46,27 @@
                     </div>
                     
                     <form @submit.prevent="submit">
-                                    
-                        <input
-                            id="username" class="placeholder" type="text" name="username" placeholder="Username"
-                            v-model="authUser.username">                        
+                      <input
+                          id="username" 
+                          class="placeholder" 
+                          type="text" 
+                          name="username" 
+                          v-model="authUser.user.name">
+                      
+                      <input
+                          id="email" 
+                          class="placeholder" 
+                          type="email" 
+                          name="email" 
+                          v-model="authUser.user.email">
                         
-                        <input
-                            id="email" class="placeholder" type="email" name="email" placeholder="Email"
-                            v-model="authUser.email">
-                        
-                        <button type="submit" class="btn-1">Save changes</button>
+                          <button type="submit" class="btn-save" :disabled="isSubmitting">
+                            {{ isSubmitting ? 'Saving...' : 'Save changes' }}
+                          </button>
+
+                      <p v-if="updateMessage" :class="{ 'success-message': !updateError, 'error-message': updateError }">
+                        {{ updateMessage }}
+                      </p>
                     </form>
                 </section>
 
@@ -64,24 +75,59 @@
 
                     <p>Please enter your new password</p>
 
-                    <form @submit.prevent="submit">
-                        
+                    <form @submit.prevent="handleSubmit" class="password-form">
+                      <div class="input-group">
                         <div class="input-container">
-                            <input
-                                :type="passwordVisible ? 'text' : 'password'"
-                                class="placeholder"
-                                id="password"
-                                v-model="password"
-                                required
-                                placeholder="Password"/>
-                                <i class="fas" :class="passwordVisible ? 'fa-eye-slash' : 'fa-eye'" @click="togglePasswordVisibility"></i>
-                                
+                          <input
+                            :type="passwordVisible ? 'text' : 'password'"
+                            class="placeholder password-input"
+                            id="password"
+                            v-model="password"
+                            required
+                            placeholder="Password"
+                            minlength="8"
+                          />
+                            <!-- Auge-Icon für Passwortsichtbarkeit -->
+                          <font-awesome-icon 
+                            :icon="passwordVisible ? 'eye-slash' : 'eye'" 
+                            class="eye-icon"
+                            @click="togglePasswordVisibility"
+                          />
                         </div>
                         
-                        <input type="password" class="placeholder" id="password_confirmation" placeholder="Password confirmation"
-                        v-model="password_confirmation" required>
+                      </div>
+
+                      <div class="input-group">
+                        <div class="input-container">
+                          <input 
+                            :type="passwordConfirmVisible ? 'text' : 'password'"
+                            class="placeholder password-input"
+                            id="password_confirmation"
+                            v-model="password_confirmation"
+                            required
+                            placeholder="Password confirmation"
+                            minlength="8"
+                          />
+                          <!-- Auge-Icon für Passwortsichtbarkeit -->
+                          <font-awesome-icon 
+                            :icon="passwordConfirmVisible ? 'eye-slash' : 'eye'" 
+                            class="eye-icon"
+                            @click="togglePasswordConfirmVisibility"
+                          />
+                        </div>
+                        <span class="error-message" v-if="errors.password">{{ errors.password }}</span>
+                        <span class="error-message" v-if="errors.confirmation">{{ errors.confirmation }}</span>
                         
-                        <button type="submit" class="btn-2">Set password</button>
+                      </div>
+                    
+                      <!-- Button zum Öffnen des Modals -->
+                      <div class="submit-section">
+                        <button @click="openPasswordModal" class="btn-set">
+                            Set Password
+                        </button>                         
+                        
+                        <span class="success-message" v-if="successMessage">{{ successMessage }}</span>
+                      </div>
                     </form>
                 </section>
 
@@ -96,16 +142,26 @@
                         <li>Allow your username to become available to anyone.</li>   
                     </ol>
 
-                    <button @click="openDeleteModal(authUser.id)" class="btn-danger">Delete account</button>
+                    <button @click="openDeleteModal" class="btn-danger" :disabled="isDeletingAccount">
+                      {{ isDeletingAccount ? 'Deleting...' : 'Delete account' }}
+                    </button>
                 </section>
             </div>
 
         </div>
     </div>
 
+
+    <PasswordModal
+      :isVisible="showPasswordModal"
+      @confirm="submitPasswordChange"
+      @close="closePasswordModal"
+    />
+
     <DeleteModal 
-    v-model="showDeleteModal"
-    @confirm="deleteUser(authUser?.id)" 
+      v-model="showDeleteModal"
+      :isLoading="isDeletingAccount"
+      @confirm="deleteUser" 
     />
 </template>
 
@@ -114,15 +170,32 @@
 import { ref, onMounted } from 'vue';
 import { useRouter } from 'vue-router';
 import { useAuthStore } from "@/stores/useAuthStore";
-import AuthService from "@/services/AuthService";
 import HeaderMain from '@/components/HeaderMain.vue';
 import Sidebar from '@/components/Sidebar.vue';
 import DeleteModal from '@/components/DeleteModal.vue';
-
-
+import PasswordModal from '@/components/PasswordModal.vue';
+import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 
 const router = useRouter();
 const authStore = useAuthStore();
+
+const isSubmitting = ref(false);
+const updateMessage = ref('');
+const updateError = ref(false);
+
+const isSidebarCollapsed = ref(true);
+
+const showDeleteModal = ref(false);
+const isDeletingAccount = ref(false);
+
+const joinedDate = ref(''); // das Beitrittsdatum speichern
+
+const authUser = ref({  // Benutzerinformationen hier speichern
+    user: {
+        name: '',
+        email: '',
+    }
+}); 
 
 const handleToggle = (collapsed) => {
   isSidebarCollapsed.value = collapsed;
@@ -132,129 +205,235 @@ const triggerFileInput = () => {
   fileInput.value.click();
 };
 
-const isSidebarCollapsed = ref(true);
-const showDeleteModal = ref(false);
-const authUser = ref({}); // Benutzerinformationen hier speichern
-const joinedDate = ref(''); // das Beitrittsdatum speichern
+const password = ref('');
+const password_confirmation = ref('');
+const passwordVisible = ref(false);
+const passwordConfirmVisible = ref(false);
+const showPasswordModal = ref(false);
+const current_password = ref('');
 
-const password_confirmation = ref("");
-const message = ref("");
+const successMessage = ref('');
+const isLoading = ref(false);
+
+const errors = ref({
+  password: '',
+  confirmation: '',
+  current_password: ''
+});
 
 const profileImage = ref(null);
-
-// Passwort Sichtbarkeit
-const passwordVisible = ref(false);
-const passwordConfirmationVisible = ref(false);
 
 // Funktion zum Umschalten der Passwortsichtbarkeit
 const togglePasswordVisibility = () => {
   passwordVisible.value = !passwordVisible.value;
 };
 
-const togglePasswordConfirmationVisibility = () => {
-  passwordConfirmationVisible.value = !passwordConfirmationVisible.value;
+const togglePasswordConfirmVisibility = () => {
+  passwordConfirmVisible.value = !passwordConfirmVisible.value;
 };
 
-// Passwortänderung übermitteln
-const submitPassword = async () => {
-  if (password.value !== password_confirmation.value) {
-    message.value = "Die Passwörter stimmen nicht überein.";
-    return;
-  }
+// Validierung der neuen Passwörter
+const validateNewPasswords = () => {
+  errors.value = {
+    password: '',
+    confirmation: ''
+  };
 
   if (password.value.length < 8) {
-    message.value = "Das Passwort muss mindestens 8 Zeichen lang sein.";
-    return;
+    errors.value.password = 'The password must be at least 8 characters long';
+    return false;
   }
 
-  try {
-    // API-Anfrage zum Ändern des Passworts
-    await AuthService.updatePassword({
-      password: password.value,
-      password_confirmation: password_confirmation.value,
-    });
-    message.value = "Das Passwort wurde erfolgreich geändert.";
-  } catch (error) {
-    console.error("Fehler bei der Passwortänderung:", error);
-    message.value = "Fehler beim Ändern des Passworts.";
+  if (password.value !== password_confirmation.value) {
+    errors.value.confirmation = 'The passwords do not match';
+    return false;
+  }
+
+  return true;
+};
+
+// Modal öffnen mit Validierung
+const openPasswordModal = () => {
+  if (!password.value || !password_confirmation.value) {
+    errors.value.password = 'Please enter new password';
+    return;
+};
+
+if (validateNewPasswords()) {
+    showPasswordModal.value = true;
   }
 };
 
-// Modal zum Löschen öffnen
-const openDeleteModal = (userId) => {
-  showDeleteModal.value = true;
+// Modal schließen Funktion
+const closePasswordModal = () => {
+  showPasswordModal.value = false;
+  current_password.value = '';
+  errors.value = {
+    password: '',
+    confirmation: '',
+    current_password: ''
+  };
+};
+
+// Passwortänderung absenden, wenn das Modal bestätigt wurde
+const submitPasswordChange = async (currentPassword) => {
+  if (!currentPassword) {
+    errors.value.current_password = 'Please enter your current password';
+    return;
+  }
+
+  isLoading.value = true;
+
+  try {
+    // API-Aufruf mit aktuellem Passwort und neuen Passwörtern
+    await authStore.updatePassword({
+      current_password: currentPassword,
+      password: password.value,
+      password_confirmation: password_confirmation.value
+    });
+
+    successMessage.value = 'Password changed successfully';
+    // Formular zurücksetzen
+    password.value = '';
+    password_confirmation.value = '';
+    closePasswordModal();
+      
+  } catch (error) {
+    if (error.response?.data) {
+      if (error.response.data.errors) {
+        if (error.response.data.errors.current_password) {
+          errors.value.current_password = error.response.data.errors.current_password[0];
+        }
+        if (error.response.data.errors.password) {
+          errors.value.password = error.response.data.errors.password[0];
+        }
+        if (error.response.data.errors.password_confirmation) {
+          errors.value.confirmation = error.response.data.errors.password_confirmation[0];
+        }
+      } else {
+        errors.value.password = error.response.data.message || 'Error saving password';
+      }
+    } else {
+      errors.value.password = 'Error saving password';
+    }
+  } finally {
+    isLoading.value = false;
+  }
 };
 
 // Benutzerdaten beim Laden der Seite abrufen
 onMounted(async () => {
-  await authStore.fetchUser(); // Lädt den Benutzer aus dem authStore
-  authUser.value = authStore.user; // Benutzerinformationen speichern
-
-    // Beitrittsdatum formatieren
-    if (authUser.value.created_at) {
-    const options = { day: 'numeric', month: 'long', year: 'numeric',   };
-    joinedDate.value = new Date(authUser.value.created_at).toLocaleDateString(undefined, options);
-  }
+    try {
+        await authStore.fetchUser();
+        // Ensure we're creating a proper structure
+        authUser.value = {
+            user: {
+                name: authStore.user?.user?.name || '',
+                email: authStore.user?.user?.email || '',
+                created_at: authStore.user?.user?.created_at
+            }
+        };        
+        // Format join date
+        if (authUser.value.user?.created_at) {
+            const options = { 
+                day: 'numeric', 
+                month: 'long', 
+                year: 'numeric' 
+            };
+            joinedDate.value = new Date(authUser.value.user.created_at)
+                .toLocaleDateString('de-DE', options);
+        }
+    } catch (error) {
+        console.error('Fehler beim Laden des Users:', error);
+    }
 });
 
 // Funktion zum Speichern von Änderungen (Name und E-Mail)
 const submit = async () => {
   try {
+      isSubmitting.value = true;
+      updateError.value = false;
+      updateMessage.value = '';
+    
+
     // Sende die geänderten Daten an das Backend
-    await AuthService.put('/api/user', {
-      username: authUser.value.username,
-      email: authUser.value.email,
-    });
-    console.log("Profileinformation saved");
+      const userData = {
+            name: authUser.value.user.name,
+            email: authUser.value.user.email,
+        };
+    // Call the store method to update user
+    await authStore.updateUser(userData);    
+
+    // Erfolgsmeldung
+    updateMessage.value = 'Profile updated successfully!';
+    updateError.value = false;
+    console.log("Profileinformation gespeichert");
   } catch (error) {
-    console.error("Error:", error);
-  }
+    console.error("Fehler beim Speichern:", error);
+    updateMessage.value = 'Failed to update profile. Please try again.';
+    updateError.value = true;
+  } 
+};
+
+// Modal zum Löschen öffnen
+const openDeleteModal = () => {
+  showDeleteModal.value = true;
 };
 
 // Funktion zum Löschen des Benutzers
-const deleteUser = (userId) => {
-    AuthService.delete(`/api/users/${userId}`)
-    .then(() => {
-      showDeleteModal.value = false;
-      router.push('/logout'); // Nach dem Löschen zur Logout-Seite navigieren
-    })
-    .catch(error => {
-      console.error('Error:', error);
-    });
-};
-
-// Funktion zum Hochladen des Bildes und zum Anzeigen der Vorschau
-const handleFileUpload = (event) => {
-  const file = event.target.files[0];
-  if (file) {
-    const reader = new FileReader();
-    reader.onload = (e) => {
-      post.value.contentImg = e.target.result;
-    };
-    reader.readAsDataURL(file);
+const deleteUser = async () => {
+  try {
+    isDeletingAccount.value = true;
+    
+    await authStore.deleteAccount();
+    showDeleteModal.value = false;
+    
+    // Redirect zur Login-Seite nach erfolgreichem Löschen
+    router.push('/login');
+  } catch (error) {
+    console.error('Error deleting account:', error);
+    alert(error.response?.data?.message || 'Failed to delete account. Please try again later.');
+  } finally {
+    isDeletingAccount.value = false;
   }
 };
-/* 
-// Lädt das aktuelle Profilbild beim Laden der Seite
-onMounted(async () => {
+
+// Funktion zum Hochladen des Bildes vervollständigen
+/* const handleFileUpload = async (event) => {
+  const file = event.target.files[0];
+  if (file) {
     try {
-        const response = await authClient.get('/api/user/profile-image'); // Backend-Route für das Profilbild
-        profileImage.value = response.data.profileImageUrl; // Profilbild-URL vom Server
+      const formData = new FormData();
+      formData.append('profile_picture', file);
+      
+      await authStore.uploadProfilePicture(formData);
+      // Optional: Erfolgsmeldung anzeigen
+      updateMessage.value = 'Profilbild erfolgreich aktualisiert';
+      updateError.value = false;
+      
+      // Optional: Profilbild neu laden
+      await authStore.fetchUser();
+      
     } catch (error) {
-        console.error("Fehler beim Laden des Profilbildes:", error);
+      console.error('Fehler beim Hochladen des Bildes:', error);
+      updateMessage.value = 'Fehler beim Hochladen des Bildes';
+      updateError.value = true;
     }
+  }
+}; */
+
+// Optional: Profilbild beim Laden der Seite abrufen
+/* onMounted(async () => {
+  try {
+    const userData = await authStore.fetchUser();
+    // Profilbild-URL setzen, falls vorhanden
+    if (userData?.user?.profile_picture) {
+      profileImage.value = userData.user.profile_picture;
+    }
+  } catch (error) {
+    console.error('Fehler beim Laden des Profilbildes:', error);
+  }
 }); */
-
-/* // den Upload des Bildes an das Backend auslösen
-const formData = new FormData();
-formData.append('profile_picture', file);
-authClient.post('/api/user/upload-profile-picture', formData)
-    .then(response => console.log('Bild erfolgreich hochgeladen'))
-    .catch(error => console.error('Fehler beim Hochladen:', error));
- */
-
-
-
 
 </script>
 
@@ -342,6 +521,16 @@ form {
   margin: 20px 0;
 }
 
+.success-message {
+    color: #4CAF50;
+    margin-top: 10px;
+}
+
+.error-message {
+    color: #f44336;
+    margin-top: 10px;
+}
+
 .placeholder {
     padding-left: 2%;
 }
@@ -376,23 +565,31 @@ input[type="password"]  {
     color: white;
 }
 
+input.password-input {
+  padding-right: 40px;  /* Platz für das Auge-Icon reservieren */
+  padding-left: 4%;
+}
+
 /* Passwortfeld mit Auge-Icon */
 .input-container {
   position: relative;
+  width: 320px;
 }
 
-/* Auge-Icon */
-i.fas {
-  position: absolute;
-  right: 10px;
+/* Stil für das SVG-Auge-Icon */
+.eye-icon {
+  position: absolute; 
+  right: 10px;      /* Abstand von der rechten Seite des Containers */
   top: 50%;
   transform: translateY(-50%);
   cursor: pointer;
   color: #ccc;
+  z-index: 1;  /* Setzt das Icon in den Vordergrund */
 }
 
 button[type="submit"],
-.btn-danger {
+.btn-danger,
+.btn-set {
     border-radius: 15px;
     border: solid 1px #000000;
     padding: 10px 15px;
@@ -408,12 +605,12 @@ button[type="submit"],
     color: #FFFFFF;
 }
 
-.btn-1 {
+.btn-save {
     background-color: #9E15D9;
     color: white;
 }
 
-.btn-2 {
+.btn-set {
     background-color: #FFFFFF;
 }
 
@@ -423,13 +620,13 @@ button[type="submit"],
     background-color: #D91544;
 }
 
-.btn-1:hover {
+.btn-save:hover {
     background-color: #d74cf6;
     color: #000000;
     cursor: pointer;
 }
 
-.btn-2:hover {
+.btn-set:hover {
     background-color: #000000;
     color: #FFFFFF;
     border: solid 1px #FFFFFF;

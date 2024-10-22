@@ -6,8 +6,18 @@
                     <h2>Delete account</h2>
                     <p>Warning: Deleting your account is permanent and cannot be undone.</p>
                     <div class="btns">
-                        <button @click="closeModal" class="btn-cancel">Cancel</button>
-                        <button @click="confirmAction" class="btn-del">Delete account</button>
+                        <button 
+                            @click="closeModal" 
+                            class="btn-cancel"
+                            :disabled="isLoading">
+                            Cancel
+                        </button>
+                        <button 
+                            @click="confirmAction" 
+                            class="btn-del"
+                            :disabled="isLoading">
+                            {{ isLoading ? 'Deleting...' : 'Delete account' }}
+                        </button>
                     </div>  
                 </div>
             </div>
@@ -16,25 +26,34 @@
 </template>
   
   <script setup>
-  import { ref, defineEmits } from 'vue'
+  import { defineEmits } from 'vue'
 
   const props = defineProps({
     modelValue: {
         type: Boolean,
         required: true
+    },
+    isLoading: {
+        type: Boolean,
+        default: false
     }
 })
 
   const emit = defineEmits(['update:modelValue', 'confirm']) // Event-Emitter für Schließen und Bestätigung
   
   const closeModal = () => {
-    emit('update:modelValue', false) // Emit event to update parent's v-model
+    if (!props.isLoading) {
+        emit('update:modelValue', false)
+    }
 }
   
-  const confirmAction = () => {
-    emit('confirm') // Sendet die Bestätigung des Löschens
-    closeModal() // Modal schließen
-  }
+const confirmAction = () => {
+    if (!props.isLoading) {
+        emit('confirm')
+        // Modal wird jetzt nicht mehr sofort geschlossen,
+        // sondern erst nach erfolgreicher Löschung
+    }
+}
   </script>
   
 <style scoped>
@@ -60,6 +79,7 @@
     border: solid 1px #909090;
     border-radius: 20px;
     color: white;
+    margin: 0 5px;
 }
 
 .modal-content {
@@ -115,6 +135,23 @@ button:hover {
     color: #000000;
     cursor: pointer;
     background-color: #D91544;
+}
+
+/* Neue Styles für den Loading-Zustand */
+button:disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
+}
+
+button:disabled:hover {
+    background-color: inherit;
+    color: inherit;
+    cursor: not-allowed;
+}
+
+.btn-del:disabled:hover {
+    background-color: #a80f33;
+    color: white;
 }
 
 /* Modal Animation */
