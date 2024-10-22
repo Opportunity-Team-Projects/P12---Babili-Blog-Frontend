@@ -394,7 +394,8 @@ watch(
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 10px;
+  margin-bottom: 8px;
+  margin-top: 8px;
 }
 
 .profile-placeholder {
@@ -427,7 +428,7 @@ watch(
 }
 
 .post-details {
-  margin-bottom: 10px;
+  margin-top: 10px;
 }
 
 .post-title {
@@ -448,11 +449,12 @@ watch(
 .post-date {
   margin: 0;
   font-size: 0.9em;
+  font-weight: 500;
   color: white;
 }
 
 .post-author {
-  margin-top: 5px;
+  margin-top: 8px;
 }
 
 .post-date {
@@ -478,7 +480,7 @@ watch(
   height: 150px;
   object-fit: cover; /* Verhindert das Verzerren der Bilder */
   border-radius: 8px; /* Gleiche Border-Radius wie die Karte */
-  margin-bottom: 10px;
+  margin-bottom: 8px;
 }
 
 /* Neue Klasse für Content-Preview */
