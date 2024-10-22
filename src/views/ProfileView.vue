@@ -119,14 +119,16 @@
                         <span class="error-message" v-if="errors.confirmation">{{ errors.confirmation }}</span>
                         
                       </div>
+                    
                       <!-- Button zum Öffnen des Modals -->
                       <div class="submit-section">
                         <button @click="openPasswordModal" class="btn-set">
-                            Set Password</button>                         
+                            Set Password
+                        </button>                         
                         
                         <span class="success-message" v-if="successMessage">{{ successMessage }}</span>
                       </div>
-                  </form>
+                    </form>
                 </section>
 
                 <section>
@@ -171,7 +173,8 @@ import { useAuthStore } from "@/stores/useAuthStore";
 import HeaderMain from '@/components/HeaderMain.vue';
 import Sidebar from '@/components/Sidebar.vue';
 import DeleteModal from '@/components/DeleteModal.vue';
-import CurrentPWModal from '@/components/CurrentPWModal.vue';
+import PasswordModal from '@/components/PasswordModal.vue';
+import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 
 const router = useRouter();
 const authStore = useAuthStore();
@@ -211,6 +214,7 @@ const current_password = ref('');
 
 const successMessage = ref('');
 const isLoading = ref(false);
+
 const errors = ref({
   password: '',
   confirmation: '',
@@ -228,7 +232,8 @@ const togglePasswordConfirmVisibility = () => {
   passwordConfirmVisible.value = !passwordConfirmVisible.value;
 };
 
-const validatePasswords = () => {
+// Validierung der neuen Passwörter
+const validateNewPasswords = () => {
   errors.value = {
     password: '',
     confirmation: ''
@@ -244,28 +249,36 @@ const validatePasswords = () => {
     return false;
   }
 
-  if (!current_password.value) {
-    errors.value.current_password = 'Current password is required';
-    return false;
-  }
-
   return true;
 };
 
-// Modal öffnen und schließen
-const openCurrentPWModal = () => {
-  showPasswordModal.value = true;
+// Modal öffnen mit Validierung
+const openPasswordModal = () => {
+  if (!password.value || !password_confirmation.value) {
+    errors.value.password = 'Please enter new password';
+    return;
 };
 
-const closeCurrentPWModal = () => {
+if (validateNewPasswords()) {
+    showPasswordModal.value = true;
+  }
+};
+
+// Modal schließen Funktion
+const closePasswordModal = () => {
   showPasswordModal.value = false;
+  current_password.value = '';
+  errors.value = {
+    password: '',
+    confirmation: '',
+    current_password: ''
+  };
 };
 
 // Passwortänderung absenden, wenn das Modal bestätigt wurde
 const submitPasswordChange = async (currentPassword) => {
-  current_password.value = currentPassword;
-  
-  if (!validatePasswords()) {
+  if (!currentPassword) {
+    errors.value.current_password = 'Please enter your current password';
     return;
   }
 
@@ -274,40 +287,34 @@ const submitPasswordChange = async (currentPassword) => {
   try {
     // API-Aufruf mit aktuellem Passwort und neuen Passwörtern
     await authStore.updatePassword({
-      current_password: current_password.value,
+      current_password: currentPassword,
       password: password.value,
       password_confirmation: password_confirmation.value
     });
 
-    successMessage.value = 'Password changed ';
+    successMessage.value = 'Password changed successfully';
     // Formular zurücksetzen
-    current_password.value = '';
     password.value = '';
     password_confirmation.value = '';
-    closeCurrentPWModal();
-    
-  } catch (error) {
-    if (error.response && error.response.data) {
-      console.error('Error saving password:', error.response.data);
-
-      // Fehlernachrichten behandeln
-      errors.value.password = error.response.data.message || 'Error saving password';
+    closePasswordModal();
       
+  } catch (error) {
+    if (error.response?.data) {
       if (error.response.data.errors) {
+        if (error.response.data.errors.current_password) {
+          errors.value.current_password = error.response.data.errors.current_password[0];
+        }
         if (error.response.data.errors.password) {
           errors.value.password = error.response.data.errors.password[0];
         }
         if (error.response.data.errors.password_confirmation) {
           errors.value.confirmation = error.response.data.errors.password_confirmation[0];
         }
-        if (error.response.data.errors.current_password) {
-          errors.value.current_password = error.response.data.errors.current_password[0]; // Aktuelles Passwort Fehler
-        }
+      } else {
+        errors.value.password = error.response.data.message || 'Error saving password';
       }
     } else {
-      // Generische Fehlermeldung
       errors.value.password = 'Error saving password';
-      console.error('Error saving password:', error);
     }
   } finally {
     isLoading.value = false;
@@ -325,8 +332,7 @@ onMounted(async () => {
                 email: authStore.user?.user?.email || '',
                 created_at: authStore.user?.user?.created_at
             }
-        };
-        
+        };        
         // Format join date
         if (authUser.value.user?.created_at) {
             const options = { 
@@ -392,38 +398,42 @@ const deleteUser = async () => {
   }
 };
 
-// Funktion zum Hochladen des Bildes und zum Anzeigen der Vorschau
-const handleFileUpload = async (event) => {
+// Funktion zum Hochladen des Bildes vervollständigen
+/* const handleFileUpload = async (event) => {
   const file = event.target.files[0];
   if (file) {
     try {
       const formData = new FormData();
       formData.append('profile_picture', file);
+      
       await authStore.uploadProfilePicture(formData);
-      // Erfolgsmeldung anzeigen
+      // Optional: Erfolgsmeldung anzeigen
+      updateMessage.value = 'Profilbild erfolgreich aktualisiert';
+      updateError.value = false;
+      
+      // Optional: Profilbild neu laden
+      await authStore.fetchUser();
+      
     } catch (error) {
-      // Fehlerbehandlung
+      console.error('Fehler beim Hochladen des Bildes:', error);
+      updateMessage.value = 'Fehler beim Hochladen des Bildes';
+      updateError.value = true;
     }
   }
-};
+}; */
 
-// Lädt das aktuelle Profilbild beim Laden der Seite
+// Optional: Profilbild beim Laden der Seite abrufen
 /* onMounted(async () => {
-    try {
-        const response = await authClient.get('/api/user/profile-image'); // Backend-Route für das Profilbild
-        profileImage.value = response.data.profileImageUrl; // Profilbild-URL vom Server
-    } catch (error) {
-        console.error("Fehler beim Laden des Profilbildes:", error);
+  try {
+    const userData = await authStore.fetchUser();
+    // Profilbild-URL setzen, falls vorhanden
+    if (userData?.user?.profile_picture) {
+      profileImage.value = userData.user.profile_picture;
     }
+  } catch (error) {
+    console.error('Fehler beim Laden des Profilbildes:', error);
+  }
 }); */
-
-// den Upload des Bildes an das Backend auslösen
-/* const formData = new FormData();
-formData.append('profile_picture', file);
-authClient.post('/api/user/upload-profile-picture', formData)
-    .then(response => console.log('Bild erfolgreich hochgeladen'))
-    .catch(error => console.error('Fehler beim Hochladen:', error));
- */
 
 </script>
 

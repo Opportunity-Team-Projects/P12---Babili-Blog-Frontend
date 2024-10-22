@@ -4,7 +4,7 @@
           
         <div class="modal-content">
 
-            <h2>Please Enter Current Password</h2>
+            <h2>Please enter current password</h2>
 
             <div class="input-container">    
                 <input
@@ -40,7 +40,10 @@ import { ref, } from 'vue';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 
 const props = defineProps({
-  isVisible: Boolean,
+  isVisible: {
+    type: Boolean,
+    required: true
+  }
 });
 
 const emit = defineEmits(['confirm', 'close']);
@@ -85,14 +88,14 @@ const cancel = () => {
 }
 
 .modal {
-    min-width: 320px;
-    max-width: 400px;
-    padding: 2rem;
-    background-color: #20252D;
-    border: solid 1px #909090;
-    border-radius: 20px;
-    color: white;
-    margin: 0 5px;
+  width: 350px;
+  max-width: 400px;
+  padding: 2rem;
+  background-color: #20252D;
+  border: solid 1px #909090;
+  border-radius: 20px;
+  color: white;
+  margin: 0 5px;
 }
 
 .modal-content {
@@ -105,6 +108,7 @@ const cancel = () => {
 .input-container {
   position: relative;
   margin-bottom: 20px;
+  max-width: 320px;
 }
 
 .eye-icon {
@@ -117,22 +121,36 @@ const cancel = () => {
 }
 
 h2 {
-    font-size: 1.5rem;
-    font-weight: 600;
+    font-size: 18px;
+    font-weight: 400;
     text-align: center;
+    margin-bottom: 15px;
+}
+
+input.password-input {
+  padding-right: 40px;  /* Platz für das Auge-Icon reservieren */
+  padding-left: 4%;
+  width: 100%;
+  height: 35px;
+  border-radius: 20px;
+  border: solid 1px #FFFFFF;
+  background-color: #20252D;
+  position: relative;
+  color: white;
 }
 
 .btns {
     display: flex;
     flex-direction: row;
     justify-content: space-between;
+    margin-top: 15px;
 }
 
 button {
     border-radius: 15px;
     border: solid 1px #000000;
     padding: 10px 15px;
-    font-size: 16px;
+    font-size: 14px;
     font-weight: 600;
     text-align: center;
     width: fit-content;
@@ -143,13 +161,11 @@ button:hover {
 }
 
 .btn-confirm {
-  background-color: #28a745;
+  background-color: #1c7731;
   color: white;
   padding: 10px 20px;
   border: none;
-  border-radius: 5px;
-  cursor: pointer;
-  margin-right: 10px;
+  border-radius: 15px;
 }
 
 .btn-cancel:hover {
@@ -161,7 +177,7 @@ button:hover {
 .btn-confirm:hover {
     color: #000000;
     cursor: pointer;
-    background-color: #D91544;
+    background-color: #4ed329;
 }
 
 </style>
