@@ -97,17 +97,17 @@ const submit = async () => {
           <div v-if="message" class="message">
             {{ message }}
           </div>
+          <footer>
+            <div class="footer-info">
+              <div class="footer-left">
+                <p>© 2024 Tech & Game Nexus</p>
+              </div>
+              <RouterLink to="/terms" class="footer-right"> <p>Terms</p></RouterLink>
+            </div>
+          </footer>
         </main>
       </div>
     </div>
-    <footer>
-      <div class="footer-info">
-        <div class="footer-left">
-          <p>© 2024 Tech & Game Nexus</p>
-        </div>
-        <RouterLink to="/terms" class="footer-right"> <p>Terms</p></RouterLink>
-      </div>
-    </footer>
   </div>
 
 </template>
@@ -231,6 +231,7 @@ button:hover {
 
 footer {
   margin-top: auto;
+  font-size: 16px;
 }
 
 .footer-info {
@@ -241,14 +242,12 @@ footer {
   margin: 0 auto;
   width: 100%;
   max-width: 500px;
-  font-size: 16px;
   gap: 40px;
   padding: 0 15px;
 }
 
 .footer-right {
   color: #ffff;
-  font-size: 16px;
 }
 
 /* Mobile Styles */
@@ -310,6 +309,10 @@ footer {
     font-size: 18px;
     width: 100%;
     height: 36px;
+  }
+
+  footer {
+    font-size: 14px;
   }
 }
 </style>
