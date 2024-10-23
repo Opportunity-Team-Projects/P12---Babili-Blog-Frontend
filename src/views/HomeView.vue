@@ -87,9 +87,11 @@
               @error="handleImageError(post.id)"
             />
           </div>
-          <div v-else class="content-preview">
-            {{ post.content }}
-          </div>
+          <div
+            v-else
+            class="content-preview"
+            v-html="parseAndSanitizeMarkdown(post.content)"
+          ></div>
 
           <p class="post-author">
             by {{ post.user ? post.user.name : "Unknown" }}
@@ -145,6 +147,8 @@ import BookmarkIcon from "@/components/BookmarkIcon.vue";
 import CustomFeed from "@/components/CustomFeed.vue";
 import { useAuthStore } from "@/stores/useAuthStore";
 import { storeToRefs } from "pinia";
+import { marked } from "marked";
+import DOMPurify from "dompurify";
 
 const router = useRouter();
 const route = useRoute();
@@ -190,10 +194,14 @@ const sortPosts = () => {
     posts.value.sort((a, b) => (b.likes_count || 0) - (a.likes_count || 0));
   }
 };
+const parseAndSanitizeMarkdown = (content) => {
+  return DOMPurify.sanitize(marked.parse(content));
+};
 
 const fetchAllPosts = async () => {
   try {
     const postsArray = await PostService.getAllPosts();
+    // Optional: Bereinigen und Parsen des Markdown-Inhalts hier
     posts.value = postsArray.sort(
       (a, b) => new Date(b.created_at) - new Date(a.created_at)
     );
@@ -368,7 +376,7 @@ onMounted(() => {
   font-size: 1em;
   font-weight: 550;
   color: #cf3df3d2;
-  background-color: white;
+  background-color: rgba(255, 255, 255, 0.945);
   border: none;
   border-radius: 14px;
   cursor: pointer;
@@ -377,7 +385,7 @@ onMounted(() => {
 }
 
 .filter-buttons button.active {
-  background-color: #ce3df3;
+  background-color: #cf3df3c0;
   color: white;
 }
 
