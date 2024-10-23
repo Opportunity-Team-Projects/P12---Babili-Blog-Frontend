@@ -15,8 +15,8 @@ const router = createRouter({
       name: "login",
       component: () => import("../views/LoginView.vue"),
     },
-    {
-      path: "/reset-password",
+    
+/*       path: "/reset-password",
       name: "ChangePassword",
       component: () => import("../views/ChangeView.vue"),
       beforeEnter: (to, from, next) => {
@@ -26,6 +26,12 @@ const router = createRouter({
           next({ name: "home" }); // oder zu einer anderen Seite umleiten
         }
       },
+    }, */
+
+    {
+      path: "/reset-password",
+      name: "ChangePassword",
+      component: () => import("../views/ChangeView.vue"),
     },
     {
       path: "/forgot-password",

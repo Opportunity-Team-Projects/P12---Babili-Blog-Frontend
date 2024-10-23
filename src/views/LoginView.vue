@@ -100,7 +100,7 @@ const handleLogin = async () => {
               >
             </div>
             <div class="login-one-container">
-              <RouterLink to="/register"
+              <RouterLink to="/forgot-password"
                 ><p class="forgotpw">Forgot password?</p></RouterLink
               >
               <button class="login-button" type="submit">Log in</button>

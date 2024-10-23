@@ -326,12 +326,13 @@ onMounted(() => {
   min-height: 100vh;
   transition: all 0.3s ease;
   padding: 20px;
-  background: radial-gradient(
+  background: radial-gradient(#813d9c 14%, #613583 35%, #3d3846 55%, #241f31 78%, #000000 94%);
+/*   background: radial-gradient(
     #813d9c 0%,
     #613583 43%,
     #3d3846 73%,
     #241f31 91%
-  );
+  ); */
   color: white;
 }
 
