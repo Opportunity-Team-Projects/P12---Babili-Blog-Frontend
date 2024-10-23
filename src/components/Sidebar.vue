@@ -66,7 +66,7 @@ const bottomMenuItems = [
   left: 0;
   height: 100vh;
   width: 66px;
-  background-color: rgba(14, 18, 23, 0.9);
+  background-color: #1c1f26;
   border-top-right-radius: 10px;
   border-bottom-right-radius: 14px;
 
@@ -80,7 +80,7 @@ const bottomMenuItems = [
 }
 
 .sidebar:hover {
-  width: 200px;
+  width: 180px;
 }
 
 .sidebar-content {
