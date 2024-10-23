@@ -25,8 +25,15 @@
         </div>
 
         <!-- Post Image -->
-        <div v-if="post.contentImg" class="post-image">
-          <img :src="post.contentImg" alt="Post image" />
+        <div
+          v-if="post.contentImg && post.contentImg.trim() !== ''"
+          class="post-image"
+        >
+          <img
+            :src="getImageUrl(post.contentImg)"
+            alt="Post image"
+            @error="handleImageError"
+          />
         </div>
 
         <!-- Post Content Preview -->
@@ -37,18 +44,18 @@
         <!-- Post Actions -->
         <div class="post-actions">
           <div class="action-stats">
-            <span
-              ><i class="fas fa-heart"></i>
-              {{ post.likes ? post.likes.length : 0 }}</span
-            >
-            <span
-              ><i class="fas fa-comment"></i>
-              {{ post.comments ? post.comments.length : 0 }}</span
-            >
-            <span
-              ><i class="fas fa-bookmark"></i>
-              {{ post.bookmarks ? post.bookmarks.length : 0 }}</span
-            >
+            <span>
+              <i class="fas fa-heart"></i>
+              {{ post.likes ? post.likes.length : 0 }}
+            </span>
+            <span>
+              <i class="fas fa-comment"></i>
+              {{ post.comments ? post.comments.length : 0 }}
+            </span>
+            <span>
+              <i class="fas fa-bookmark"></i>
+              {{ post.bookmarks ? post.bookmarks.length : 0 }}
+            </span>
           </div>
         </div>
 
@@ -63,7 +70,6 @@
     </div>
   </div>
 </template>
-
 <script setup>
 import { ref, onMounted } from "vue";
 import { useRouter } from "vue-router";
@@ -78,6 +84,16 @@ const posts = ref([]);
 const isSidebarCollapsed = ref(true);
 const authStore = useAuthStore();
 const { user } = storeToRefs(authStore);
+
+const getImageUrl = (imagePath) => {
+  if (!imagePath || imagePath.trim() === "") return "";
+  return `${import.meta.env.VITE_APP_BACKEND_URL}/storage/${imagePath}`;
+};
+
+const handleImageError = (event) => {
+  event.target.style.display = "none";
+  // Optional: event.target.src = '/path/to/placeholder-image.jpg';
+};
 
 const handleToggle = (collapsed) => {
   isSidebarCollapsed.value = collapsed;
@@ -96,7 +112,6 @@ const fetchMyPosts = async () => {
     console.log("Fetched my posts:", res.data);
   } catch (error) {
     console.error("Error fetching my posts:", error.response || error);
-    // Log more details about the error
     if (error.response) {
       console.error("Response status:", error.response.status);
       console.error("Response data:", error.response.data);
@@ -133,7 +148,6 @@ onMounted(() => {
   if (!user.value) {
     router.push("/login");
   } else {
-    // Laden Sie hier Ihre Posts oder führen Sie andere initiale Aktionen aus
     fetchMyPosts();
   }
 });
