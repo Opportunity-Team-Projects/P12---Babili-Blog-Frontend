@@ -13,8 +13,12 @@
         <h1 class="post-title">{{ post.contentTitle }}</h1>
         <div class="author-info">
           <img
-            :src="post.user.profile_photo_url"
-            alt="Author profile"
+            :src="
+              post.user && post.user.profile_pic_url
+                ? post.user.profile_pic_url
+                : defaultProfileImage
+            "
+            alt="Profilbild"
             class="profile-image"
           />
           <div class="author-details">
@@ -68,11 +72,14 @@
           <div class="comment-header">
             <div class="author-info" v-if="post.user">
               <img
-                :src="post.user.profile_photo_url"
-                alt="Author profile"
+                :src="
+                  comment.user && comment.user.profile_pic_url
+                    ? comment.user.profile_pic_url
+                    : defaultProfileImage
+                "
+                alt="Profilbild"
                 class="profile-image"
               />
-              <!-- Rest of the template -->
             </div>
 
             <div class="comment-info">
@@ -128,8 +135,7 @@ import Sidebar from "@/components/Sidebar.vue";
 import PostService from "@/services/PostService";
 import { useAuthStore } from "@/stores/useAuthStore";
 import { storeToRefs } from "pinia";
-import { marked } from 'marked';
-
+import { marked } from "marked";
 
 const route = useRoute();
 const router = useRouter();
@@ -145,8 +151,10 @@ const isLiked = ref(false);
 const currentUserId = computed(() => user.value?.user?.id);
 const commentSection = ref(null);
 
+const defaultProfileImage = "../user-profile-icon.jpg";
+
 const getImageUrl = (imagePath) => {
-  return `${import.meta.env.VITE_APP_BACKEND_URL}/storage/${imagePath}`;
+  return `${import.meta.env.VITE_BASE_URL}/storage/${imagePath}`;
 };
 
 const updateCommentLike = (commentId, likes_count, is_liked) => {

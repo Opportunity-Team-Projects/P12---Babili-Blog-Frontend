@@ -58,14 +58,15 @@
         <div class="post-header">
           <div class="profile-placeholder">
             <img
-              v-if="post.user && post.user.avatarUrl"
-              :src="post.user.avatarUrl"
+              :src="
+                post.user && post.user.profile_pic_url
+                  ? post.user.profile_pic_url
+                  : defaultProfileImage
+              "
               alt="Profilbild"
               class="profile-image"
             />
-            <i v-else class="fas fa-user"></i>
           </div>
-          <i class="fas fa-ellipsis-h more-options-icon"></i>
         </div>
 
         <!-- Post Details -->
@@ -153,12 +154,12 @@ const posts = ref([]);
 const isSidebarCollapsed = ref(true);
 const showCustomFeed = ref(false);
 const sortOption = ref("recent");
-
+const defaultProfileImage = "../user-profile-icon.jpg";
 // Reaktive Referenz für Bildfehler
 const imageError = ref({});
 
 const getImageUrl = (imagePath) => {
-  return `${import.meta.env.VITE_APP_BACKEND_URL}/storage/${imagePath}`;
+  return `${import.meta.env.VITE_BASE_URL}/storage/${imagePath}`;
 };
 
 // Fehlerbehandlungsfunktion, die das Bildfehler-Flag für den spezifischen Post setzt
