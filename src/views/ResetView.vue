@@ -212,8 +212,8 @@ footer {
   background: linear-gradient(
     90deg,
     rgba(0, 0, 0, 0) 0%,
-    rgba(0, 0, 0, 0.6) 35%,
-    rgba(0, 0, 0, 0.8) 55%,
+    rgba(0, 0, 0, 0.6) 15%,
+    rgba(0, 0, 0, 0.9) 65%,
     #000000 100%
   );
   }

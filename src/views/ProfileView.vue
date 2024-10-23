@@ -142,11 +142,9 @@
               <button @click="openPasswordModal" class="btn-set">
                 Set Password
               </button>
-
-              <span class="success-message" v-if="successMessage">{{
-                successMessage
-              }}</span>
             </div>
+            <span class="success-message" v-if="successMessage">{{
+                successMessage }}</span>
           </form>
         </section>
 
@@ -443,14 +441,14 @@ const handleFileUpload = async (event) => {
 
       await authStore.uploadProfilePicture(formData);
       // Optional: Erfolgsmeldung anzeigen
-      updateMessage.value = "Profilbild erfolgreich aktualisiert";
+      updateMessage.value = "Profile picture updated successfully!";
       updateError.value = false;
 
       // Optional: Profilbild neu laden
       await authStore.fetchUser();
     } catch (error) {
       console.error("Fehler beim Hochladen des Bildes:", error);
-      updateMessage.value = "Fehler beim Hochladen des Bildes";
+      updateMessage.value = "Error uploading image";
       updateError.value = true;
     }
   }

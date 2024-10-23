@@ -38,7 +38,7 @@ const handleLogin = async () => {
     }
   } catch (err) {
     console.error(err);
-    error.value = "Login fehlgeschlagen. Bitte überprüfe deine Anmeldedaten.";
+    error.value = "Login failed. Please check your login details.";
   }
 };
 </script>

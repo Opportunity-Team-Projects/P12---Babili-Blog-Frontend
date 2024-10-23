@@ -258,6 +258,16 @@ footer {
     background-position: center;
   }
 
+  .background-fader {
+  background: linear-gradient(
+    90deg,
+    rgba(0, 0, 0, 0) 0%,
+    rgba(0, 0, 0, 0.6) 15%,
+    rgba(0, 0, 0, 0.9) 65%,
+    #000000 100%
+  );
+}
+
   .content-wrapper {
     margin-top: 60px;
     margin-right: 0;
