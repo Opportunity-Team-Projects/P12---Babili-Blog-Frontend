@@ -120,6 +120,8 @@ const handleRegister = async () => {
   background-position: center;
   background-repeat: no-repeat;
   min-height: 100vh;
+  display: flex;
+  flex-direction: column;
   /* Füge den Gradienten als zusätzliches Hintergrundbild hinzu */
 }
 
@@ -203,13 +205,14 @@ label {
   border-radius: 14px;
   text-align: center;
   padding: 10px 15px;
+  border: solid 1px black;
 }
 
 .btn-signup:hover {
   background-color: #D7A8FC;
   color: black;
   cursor: pointer;
-  /* border: solid 1px black; */
+  border: solid 1px black;
 }
 
 .login-button{
@@ -247,8 +250,6 @@ label {
   display: flex;
   justify-content: center;
   align-items: center;
-  left: 0;
-  right: 0;
   margin: 0 auto;
   width: 100%;
   max-width: 500px;
@@ -256,7 +257,6 @@ label {
   gap: 40px;
   padding: 0 15px;
   margin-top: 10px;
-  bottom: 0;
 }
 
 .footer-right {

@@ -67,9 +67,9 @@ const handleLogin = async () => {
         </div>
       </div>
       <form action="" method="post" @submit.prevent="handleLogin">
-        <div class="login-container">
+        <div class="container-login">
           <h2>Login</h2>
-          <div>
+          <div class="container-login">  
             <div class="formgroup">
               <label for="email">Email</label>
               <input
@@ -124,7 +124,7 @@ const handleLogin = async () => {
 
       </div>           
 
-  </footer>
+    </footer>
   </div>
 </template>
 
@@ -135,10 +135,12 @@ const handleLogin = async () => {
   background-position: center;
   background-repeat: no-repeat;
   min-height: 100vh;
+  display: flex;
+  flex-direction: column;
   /* Füge den Gradienten als zusätzliches Hintergrundbild hinzu */
 }
 
-.header {
+header {
   display: flex;
   flex-direction: row;
   justify-content: end;
@@ -176,9 +178,13 @@ h2 {
   margin-bottom: 10px;
 }
 
-.login-container {
-  margin-left: 100px;
-  max-width: 380px;  
+.container-login {
+  display: flex;
+  flex-direction: column;
+  color: #FFFF;
+  width: 100%;
+  max-width: 380px;
+  gap: 10px;
 }
 
 .formgroup {
@@ -191,10 +197,9 @@ label {
   font-size: 18px;
   font-weight: 400;
   margin: 5px 0;
-  color: #FFFF;
 }
 
-.placholder{
+.placeholder{
   width: 100%;
   height: 43px;
   border-radius: 5px;
@@ -204,6 +209,7 @@ label {
 .button-container {
   display: flex;
   justify-content: space-between;
+  margin-top: 20px;
 }
 
 .sign-up {
@@ -211,22 +217,34 @@ label {
   font-size: 20px;
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  gap: 10px;
 }
+
 .login-one-container {
   font-size: 20px;
   display: flex;
   flex-direction: column;
-  gap: 20px;
-  margin-left: 30px;
+  gap: 10px;
 }
+
 .sign-button {
-  width: 107px;
-  height: 34px;
-  font-size: 20px;
-  color: #ffff;
+  width: fit-content;
+  font-weight: 600;
+  font-size: 16px;
+  color: #FFFF;
   background-color: black;
-  border-radius: 10px;
+  border-radius: 14px;
+  text-align: center;
+  padding: 10px 15px;
+  cursor: pointer;
+  border: solid 1px white;
+}
+
+.sign-button:hover {
+  background-color: white;
+  color: black;
+  border: solid 1px black;
+  cursor: pointer;
 }
 
 .haveacc {
@@ -239,13 +257,28 @@ label {
   text-decoration: underline;
   text-decoration-color: white;
 }
+
 .login-button {
-  width: 107px;
-  height: 34px;
-  background-color: #d7a8fc;
-  border-radius: 10px;
-  color: #ffff;
-  font-size: 20px;
+  width: fit-content;
+  background-color: #9D67C7;
+  color: #FFFF;
+  font-weight: 600;
+  font-size: 16px;
+  border-radius: 14px;
+  text-align: center;
+  padding: 10px 15px;
+  border: solid 1px black;
+}
+
+.login-button:hover {
+  background-color: #D7A8FC;
+  color: black;
+  cursor: pointer;
+  border: solid 1px black;
+}
+
+footer {
+  margin-top: auto;
 }
 
 .footer-info{
@@ -253,21 +286,60 @@ label {
   display: flex;
   justify-content: center;
   align-items: center;
-  left: 0;
-  right: 0;
   margin: 0 auto;
   width: 100%;
   max-width: 500px;
   font-size: 16px;
   gap: 40px;
   padding: 0 15px;
-  margin-top: 10px;
-  bottom: 0;
 }
 
 .footer-right {
   color: #ffff;
   font-size: 16px;
+}
+
+@media (max-width: 768px) {
+  .bodycontainer {
+    background-image: linear-gradient(
+    to right,
+    rgba(0, 0, 0, 1) 0%,
+    rgba(0, 0, 0, 0.9) 15%,
+    rgba(0, 0, 0, 0.75) 40%,
+    rgba(0, 0, 0, 0) 100%
+  ), url("../assets/bg.svg");
+  }
+}
+
+@media (max-width: 580px) {
+  .login-container {
+    margin: 0 auto;
+  }
+  .text-container {
+    text-align: center;
+  }
+  h2 {
+    text-align: center;
+  }
+  header {
+    justify-content:center;
+    margin: 10px auto;
+  }
+  .bodycontainer {
+  background-image: linear-gradient(
+    to right,
+    rgba(0, 0, 0, 1) 0%,
+    rgba(0, 0, 0, 0.9) 30%,
+    rgba(0, 0, 0, 0.75) 60%,
+    rgba(0, 0, 0, 0) 100%
+  ), url("../assets/bg.svg");
+  }
+}
+
+@media (max-width: 390px) {
+  .login-container {
+    margin: 0 5px;
+  }
 }
 
 </style>
