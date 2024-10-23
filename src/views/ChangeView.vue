@@ -78,8 +78,8 @@ const submit = async () => {
         <main class="container">
           <h1 class="title">Tech & Game Nexus</h1>
           <p class="title-description">
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-            eiusmod tempor incididunt ut labore et dolore magna aliqua.
+            The central meeting point where gaming and technology meet - here you'll find out 
+            everything gamers and tech enthusiasts need to know.
           </p>
           <h2 class="subtitle">Change Password</h2>
           <form @submit.prevent="submit">
@@ -97,10 +97,19 @@ const submit = async () => {
           <div v-if="message" class="message">
             {{ message }}
           </div>
+          <footer>
+            <div class="footer-info">
+              <div class="footer-left">
+                <p>© 2024 Tech & Game Nexus</p>
+              </div>
+              <RouterLink to="/terms" class="footer-right"> <p>Terms</p></RouterLink>
+            </div>
+          </footer>
         </main>
       </div>
     </div>
   </div>
+
 </template>
 
 <style scoped>
@@ -116,6 +125,8 @@ const submit = async () => {
   box-shadow: 0px 2px 6px 0px #0000001a, 0px 0px 2px 0px #00000014,
     0px 0px 0px 1px #00000033;
   overflow: hidden;
+  display: flex;
+  flex-direction: column;
 }
 
 .background-fader {
@@ -205,10 +216,38 @@ button {
   width: 105px;
   height: 39px;
 }
+
+button:hover {
+  background-color: white;
+  color: black;
+  border: solid 1px black;
+}
+
 .message {
   margin-top: 20px;
   color: #4caf50; /* Grün für erfolgreiche Nachrichten */
   font-size: 16px;
+}
+
+footer {
+  margin-top: auto;
+  font-size: 16px;
+}
+
+.footer-info {
+  color: #ffff;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 0 auto;
+  width: 100%;
+  max-width: 500px;
+  gap: 40px;
+  padding: 0 15px;
+}
+
+.footer-right {
+  color: #ffff;
 }
 
 /* Mobile Styles */
@@ -217,6 +256,16 @@ button {
     background-size: cover;
     background-position: center;
   }
+
+  .background-fader {
+  background: linear-gradient(
+    90deg,
+    rgba(0, 0, 0, 0) 0%,
+    rgba(0, 0, 0, 0.6) 15%,
+    rgba(0, 0, 0, 0.9) 65%,
+    #000000 100%
+  );
+}
 
   .content-wrapper {
     margin-top: 60px;
@@ -260,6 +309,10 @@ button {
     font-size: 18px;
     width: 100%;
     height: 36px;
+  }
+
+  footer {
+    font-size: 14px;
   }
 }
 </style>

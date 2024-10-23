@@ -38,7 +38,7 @@ const handleLogin = async () => {
     }
   } catch (err) {
     console.error(err);
-    error.value = "Login fehlgeschlagen. Bitte überprüfe deine Anmeldedaten.";
+    error.value = "Login failed. Please check your login details.";
   }
 };
 </script>
@@ -100,7 +100,7 @@ const handleLogin = async () => {
               >
             </div>
             <div class="login-one-container">
-              <RouterLink to="/register"
+              <RouterLink to="/forgot-password"
                 ><p class="forgotpw">Forgot password?</p></RouterLink
               >
               <button class="login-button" type="submit">Log in</button>
