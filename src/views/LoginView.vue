@@ -45,34 +45,33 @@ const handleLogin = async () => {
 
 <template>
   <div class="bodycontainer">
-    <div class="container">
-      <div class="a">
-        <div class="header">
-          <div class="logo">
-            <img src="" alt="" class="logo" />
-          </div>
-          <div>
-            <RouterLink to="/" class="without-logging-in"
-              >Continue without logging in?</RouterLink
-            >
-          </div>
+
+      <header>
+
+        <div>
+          <RouterLink to="/" class="without-logging-in"
+            >Continue without logging in?</RouterLink
+          >
         </div>
-      </div>
+      </header>
+      
+    <div class="login-container">  
+
       <div class="text-container">
         <h1>Tech & Game Nexus</h1>
         <div class="text">
           <p>
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-            eiusmod tempor incididunt ut labore et dolore magna aliqua.
+            Der zentrale Treffpunkt, an dem Gaming und Technologie aufeinandertreffen - hier erfährst du 
+            alles, was Gamer und Tech-Enthusiasten wissen müssen.
           </p>
         </div>
       </div>
       <form action="" method="post" @submit.prevent="handleLogin">
-        <div class="login-container">
+        <div class="container-login">
           <h2>Login</h2>
-          <div>
+          <div class="container-login">  
             <div class="formgroup">
-              <label class="email" for="email">E-Mail</label>
+              <label for="email">Email</label>
               <input
                 id="email"
                 class="placeholder"
@@ -82,7 +81,7 @@ const handleLogin = async () => {
               />
             </div>
             <div class="formgroup">
-              <label class="email" for="password">Passwort</label>
+              <label for="password">Password</label>
               <input
                 id="password"
                 class="placeholder"
@@ -94,18 +93,16 @@ const handleLogin = async () => {
           </div>
         </div>
         <div>
-          <div class="sign-up-container">
+          <div class="button-container">
             <div class="sign-up">
-              Don't have an account?
-              <RouterLink to="/register" v-if="!authUser"
-                ><button class="sign-button" type="button">
-                  Sign Up
-                </button></RouterLink
+              <p class="haveacc">Don't have an account?</p>
+              <RouterLink to="/register"
+                ><button class="sign-button">Sign Up</button></RouterLink
               >
             </div>
             <div class="login-one-container">
-              <RouterLink to="/register" v-if="!authUser"
-                ><p class="forgot-password">Forgot password?</p></RouterLink
+              <RouterLink to="/register"
+                ><p class="forgotpw">Forgot password?</p></RouterLink
               >
               <button class="login-button" type="submit">Login</button>
             </div>
@@ -115,9 +112,19 @@ const handleLogin = async () => {
       <p v-if="error" class="error-message">{{ error }}</p>
     </div>
     <CookieBanner />
-    <div class="footer">
-      <p>© 2024 Tech & Game Nexus Terms</p>
-    </div>
+
+    <footer>
+      
+      <div class="footer-info">
+        <div class="footer-left">
+          <p>© 2024 Tech & Game Nexus</p>   
+        </div>
+        <RouterLink to="/terms" class="footer-right">    
+          <p>Terms</p></RouterLink>
+
+      </div>           
+
+    </footer>
   </div>
 </template>
 
@@ -127,111 +134,212 @@ const handleLogin = async () => {
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
-  height: 100vh;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  /* Füge den Gradienten als zusätzliches Hintergrundbild hinzu */
 }
 
-.header {
+header {
   display: flex;
   flex-direction: row;
-  justify-content: space-between;
-  margin-right: 117px;
+  justify-content: end;
+  margin-right: 100px;
+  padding-top: 3%;
 }
+
 .without-logging-in {
   color: #ffff;
   font-size: 16px;
 }
-.container {
-  padding-left: 174px;
-  padding-top: 38px;
+.login-container {
+  margin-left: 100px;
+  max-width: 380px; 
 }
-.logo {
-  width: 106px;
-  height: 64px;
-  border-radius: 40px;
-}
+
 h1 {
-  color: #d7a8fc;
-  padding-top: 22px;
+  font-family: "Audiowide", sans-serif;
   font-size: 32px;
+  color: #d7a8fc;
+  width: 100%;
 }
 .text {
   padding-top: 22px;
-  color: #ffff;
-  width: 352px;
+  color: #FFFF;
+  width: 100%;
   font-size: 24px;
 }
+
 h2 {
-  color: #ffff;
-  padding-top: 22px;
-  font-size: 24px;
+  font-size: 24;
+  font-weight: 900;
+  color: white;
+  margin-top: 30px;
+  margin-bottom: 10px;
 }
-.login-container {
+
+.container-login {
   display: flex;
   flex-direction: column;
-  gap: 20px;
-  padding-bottom: 22px;
-}
-.email {
-  font-size: 20px;
-  margin-bottom: 5px;
+  color: #FFFF;
+  width: 100%;
+  max-width: 380px;
+  gap: 10px;
 }
 
 .formgroup {
   display: flex;
   flex-direction: column;
-  color: #ffff;
+  width: 100%;
 }
-.placeholder {
-  width: 400px;
-  padding-left: 10px;
+
+label {
+  font-size: 18px;
+  font-weight: 400;
+  margin: 5px 0;
 }
-.sign-up-container {
+
+.placeholder{
+  width: 100%;
+  height: 43px;
+  border-radius: 5px;
+  padding-left: 15px;
+}
+
+.button-container {
   display: flex;
-  flex-direction: row;
+  justify-content: space-between;
+  margin-top: 20px;
 }
+
 .sign-up {
   color: #ffff;
   font-size: 20px;
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  gap: 10px;
 }
+
 .login-one-container {
   font-size: 20px;
   display: flex;
   flex-direction: column;
-  gap: 20px;
-  margin-left: 30px;
+  gap: 10px;
 }
+
 .sign-button {
-  width: 107px;
-  height: 34px;
-  font-size: 20px;
-  color: #ffff;
+  width: fit-content;
+  font-weight: 600;
+  font-size: 16px;
+  color: #FFFF;
   background-color: black;
-  border-radius: 10px;
+  border-radius: 14px;
+  text-align: center;
+  padding: 10px 15px;
+  cursor: pointer;
+  border: solid 1px white;
 }
-.forgot-password {
+
+.sign-button:hover {
+  background-color: white;
+  color: black;
+  border: solid 1px black;
+  cursor: pointer;
+}
+
+.haveacc {
+  font-size: 12px;
+}
+
+.forgotpw {
+  font-size: 12px;
   color: #ffff;
   text-decoration: underline;
   text-decoration-color: white;
 }
+
 .login-button {
-  width: 107px;
-  height: 34px;
-  background-color: #d7a8fc;
-  border-radius: 10px;
-  color: #ffff;
-  font-size: 20px;
+  width: fit-content;
+  background-color: #9D67C7;
+  color: #FFFF;
+  font-weight: 600;
+  font-size: 16px;
+  border-radius: 14px;
+  text-align: center;
+  padding: 10px 15px;
+  border: solid 1px black;
 }
-.footer {
-  color: #ffff;
+
+.login-button:hover {
+  background-color: #D7A8FC;
+  color: black;
+  cursor: pointer;
+  border: solid 1px black;
+}
+
+footer {
+  margin-top: auto;
+}
+
+.footer-info{
+  color: #FFFF;
   display: flex;
   justify-content: center;
-  bottom: 15px;
-  position: fixed;
+  align-items: center;
+  margin: 0 auto;
   width: 100%;
+  max-width: 500px;
   font-size: 16px;
+  gap: 40px;
+  padding: 0 15px;
+}
+
+.footer-right {
+  color: #ffff;
+  font-size: 16px;
+}
+
+@media (max-width: 768px) {
+  .bodycontainer {
+    background-image: linear-gradient(
+    to right,
+    rgba(0, 0, 0, 1) 0%,
+    rgba(0, 0, 0, 0.9) 15%,
+    rgba(0, 0, 0, 0.75) 40%,
+    rgba(0, 0, 0, 0) 100%
+  ), url("../assets/bg.svg");
+  }
+}
+
+@media (max-width: 580px) {
+  .login-container {
+    margin: 0 auto;
+  }
+  .text-container {
+    text-align: center;
+  }
+  h2 {
+    text-align: center;
+  }
+  header {
+    justify-content:center;
+    margin: 10px auto;
+  }
+  .bodycontainer {
+  background-image: linear-gradient(
+    to right,
+    rgba(0, 0, 0, 1) 0%,
+    rgba(0, 0, 0, 0.9) 30%,
+    rgba(0, 0, 0, 0.75) 60%,
+    rgba(0, 0, 0, 0) 100%
+  ), url("../assets/bg.svg");
+  }
+}
+
+@media (max-width: 390px) {
+  .login-container {
+    margin: 0 5px;
+  }
 }
 
 </style>
