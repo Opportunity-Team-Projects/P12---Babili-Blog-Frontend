@@ -219,6 +219,7 @@ label {
   font-size: 20px;
   display: flex;
   flex-direction: column;
+  align-items: end;
   gap: 10px;
 }
 
