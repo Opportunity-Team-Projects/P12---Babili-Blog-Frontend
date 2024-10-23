@@ -10,11 +10,11 @@ const router = createRouter({
       component: HomeView,
       props: (route) => ({ query: route.query.q }),
     },
-/*     {
+    {
       path: "/register",
       name: "register",
       component: () => import("../views/RegisterView.vue"),
-    }, */
+    },
     {
       path: "/login",
       name: "login",

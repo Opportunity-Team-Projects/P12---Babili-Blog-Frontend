@@ -30,87 +30,111 @@ const handleRegister = async () => {
 </script>
 
 <template>
-
   <div class="bodycontainer">
-      
-    
+    <header>
+      <div>
+        <RouterLink to="/" class="without-logging-in"
+          >Continue without logging in?</RouterLink
+        >
+      </div>
+    </header>
 
-      <header>
+    <div class="register-container">
+      <div class="text-container">
+        <h1>Tech & Game Nexus</h1>
 
-              <div>
-                <RouterLink to="/" class="without-logging-in"
-                  >Continue without logging in?</RouterLink
-                >
-              </div>
-      </header>
-        
-    <div class="register-container">       
-                  <div class="text-container">
-                      <h1>Tech & Game Nexus</h1>
-          
-                      <div class="text">
-                          <p>
-                            Der zentrale Treffpunkt, an dem Gaming und Technologie aufeinandertreffen - hier erfährst du 
-                            alles, was Gamer und Tech-Enthusiasten wissen müssen.
-                          </p>
-                      </div>
-                  </div>
+        <div class="text">
+          <p>
+            Der zentrale Treffpunkt, an dem Gaming und Technologie
+            aufeinandertreffen - hier erfährst du alles, was Gamer und
+            Tech-Enthusiasten wissen müssen.
+          </p>
+        </div>
+      </div>
 
-        <h2>Register</h2>
-    
-      <form @submit.prevent="handleRegister">            
-          <div class="container-regist">
-              <div class="form-group">
-                  <label for="name">Name</label>
-                  <input class="placholder" type="text" id="name" name="name" v-model="name" required>
-              </div>
+      <h2>Register</h2>
 
-              <div class="form-group">
-                  <label for="email">Email</label>
-                  <input class="placholder" type="email" id="email" name="email" v-model="email" required>
-              </div>
-
-              <div class="form-group">
-                  <label for="password">Password</label>
-                  <input class="placholder" type="password" id="password" name="password" v-model="password" required>
-              </div>
-
-              <div class="form-group">
-                  <label for="password_confirmation">Confirm password</label>
-                  <input class="placholder" type="password" id="password_confirmation" name="password_confirmation" v-model="password_confirmation" required>
-              </div>
-
-            <div class="already">
-              <p>Already have an account?</p>
-            </div> 
-
-            <div class="button-container"> 
-              <RouterLink to="/login"><button class="login-button">Log in</button></RouterLink>
-              <button class="btn-signup" type="submit">Sign Up</button>
-            </div> 
-            
-            <div class="policy">
-              <p>By signing up I accept the Terms of Service and the Privacy Policy.</p>
-            </div>
-          
-          </div> 
-        
-        </form>
-    </div>
-  <footer>
-      
-        <div class="footer-info">
-          <div class="footer-left">
-            <p>© 2024 Tech & Game Nexus</p>   
+      <form @submit.prevent="handleRegister">
+        <div class="container-regist">
+          <div class="form-group">
+            <label for="name">Name</label>
+            <input
+              class="placholder"
+              type="text"
+              id="name"
+              name="name"
+              v-model="name"
+              required
+            />
           </div>
-          <RouterLink to="/terms" class="footer-right">    
-            <p>Terms</p></RouterLink>
 
-        </div>           
+          <div class="form-group">
+            <label for="email">Email</label>
+            <input
+              class="placholder"
+              type="email"
+              id="email"
+              name="email"
+              v-model="email"
+              required
+            />
+          </div>
 
+          <div class="form-group">
+            <label for="password">Password</label>
+            <input
+              class="placholder"
+              type="password"
+              id="password"
+              name="password"
+              v-model="password"
+              required
+            />
+          </div>
+
+          <div class="form-group">
+            <label for="password_confirmation">Confirm password</label>
+            <input
+              class="placholder"
+              type="password"
+              id="password_confirmation"
+              name="password_confirmation"
+              v-model="password_confirmation"
+              required
+            />
+          </div>
+
+          <div class="already">
+            <p>Already have an account?</p>
+          </div>
+
+          <div class="button-container">
+            <RouterLink to="/login"
+              ><button class="login-button" type="button">
+                Log in
+              </button></RouterLink
+            >
+            <button class="btn-signup" type="submit">Sign Up</button>
+          </div>
+
+          <div class="policy">
+            <p>
+              By signing up I accept the Terms of Service and the Privacy
+              Policy.
+            </p>
+          </div>
+        </div>
+      </form>
+    </div>
+    <footer>
+      <div class="footer-info">
+        <div class="footer-left">
+          <p>© 2024 Tech & Game Nexus</p>
+        </div>
+        <RouterLink to="/terms" class="footer-right"> <p>Terms</p></RouterLink>
+      </div>
     </footer>
   </div>
-
 </template>
 
 <style scoped>
@@ -133,25 +157,25 @@ header {
   padding-top: 3%;
 }
 
-.register-container{
+.register-container {
   margin-left: 100px;
-  max-width: 380px;  
+  max-width: 380px;
 }
 
-.without-logging-in{
-  color: #FFFF;
+.without-logging-in {
+  color: #ffff;
   font-size: 16px;
 }
 
-h1{
+h1 {
   font-family: "Audiowide", sans-serif;
   font-size: 32px;
   color: #d7a8fc;
   width: 100%;
 }
-.text{
+.text {
   padding-top: 22px;
-  color: #FFFF;
+  color: #ffff;
   width: 100%;
   font-size: 24px;
 }
@@ -163,16 +187,16 @@ h2 {
   margin-top: 30px;
   margin-bottom: 10px;
 }
-.container-regist{
+.container-regist {
   display: flex;
   flex-direction: column;
-  color: #FFFF;
+  color: #ffff;
   width: 100%;
   max-width: 380px;
   gap: 10px;
   /* margin: 0 auto; */
 }
-.form-group{
+.form-group {
   display: flex;
   flex-direction: column;
   width: 100%;
@@ -184,22 +208,22 @@ label {
   margin: 5px 0;
 }
 
-.placholder{
+.placholder {
   width: 100%;
   height: 43px;
   border-radius: 5px;
   padding-left: 15px;
 }
 
-.button-container{
+.button-container {
   display: flex;
   justify-content: space-between;
 }
 
 .btn-signup {
   width: fit-content;
-  background-color: #9D67C7;
-  color: #FFFF;
+  background-color: #9d67c7;
+  color: #ffff;
   font-weight: 600;
   font-size: 16px;
   border-radius: 14px;
@@ -209,17 +233,17 @@ label {
 }
 
 .btn-signup:hover {
-  background-color: #D7A8FC;
+  background-color: #d7a8fc;
   color: black;
   cursor: pointer;
   border: solid 1px black;
 }
 
-.login-button{
+.login-button {
   width: fit-content;
   font-weight: 600;
   font-size: 16px;
-  color: #FFFF;
+  color: #ffff;
   background-color: black;
   border-radius: 14px;
   text-align: center;
@@ -240,13 +264,13 @@ label {
   margin-top: 20px;
 }
 
-.policy{
+.policy {
   padding-top: 10px;
   font-size: 12px;
 }
 
-.footer-info{
-  color: #FFFF;
+.footer-info {
+  color: #ffff;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -267,12 +291,13 @@ label {
 @media (max-width: 768px) {
   .bodycontainer {
     background-image: linear-gradient(
-    to right,
-    rgba(0, 0, 0, 1) 0%,
-    rgba(0, 0, 0, 0.9) 15%,
-    rgba(0, 0, 0, 0.75) 40%,
-    rgba(0, 0, 0, 0) 100%
-  ), url("../assets/bg.svg");
+        to right,
+        rgba(0, 0, 0, 1) 0%,
+        rgba(0, 0, 0, 0.9) 15%,
+        rgba(0, 0, 0, 0.75) 40%,
+        rgba(0, 0, 0, 0) 100%
+      ),
+      url("../assets/bg.svg");
   }
 }
 
@@ -287,17 +312,18 @@ label {
     text-align: center;
   }
   header {
-    justify-content:center;
+    justify-content: center;
     margin: 10px auto;
   }
   .bodycontainer {
-  background-image: linear-gradient(
-    to right,
-    rgba(0, 0, 0, 1) 0%,
-    rgba(0, 0, 0, 0.9) 30%,
-    rgba(0, 0, 0, 0.75) 60%,
-    rgba(0, 0, 0, 0) 100%
-  ), url("../assets/bg.svg");
+    background-image: linear-gradient(
+        to right,
+        rgba(0, 0, 0, 1) 0%,
+        rgba(0, 0, 0, 0.9) 30%,
+        rgba(0, 0, 0, 0.75) 60%,
+        rgba(0, 0, 0, 0) 100%
+      ),
+      url("../assets/bg.svg");
   }
 }
 
@@ -307,4 +333,3 @@ label {
   }
 }
 </style>
-

@@ -45,31 +45,29 @@ const handleLogin = async () => {
 
 <template>
   <div class="bodycontainer">
+    <header>
+      <div>
+        <RouterLink to="/" class="without-logging-in"
+          >Continue without logging in?</RouterLink
+        >
+      </div>
+    </header>
 
-      <header>
-
-        <div>
-          <RouterLink to="/" class="without-logging-in"
-            >Continue without logging in?</RouterLink
-          >
-        </div>
-      </header>
-      
-    <div class="login-container">  
-
+    <div class="login-container">
       <div class="text-container">
         <h1>Tech & Game Nexus</h1>
         <div class="text">
           <p>
-            Der zentrale Treffpunkt, an dem Gaming und Technologie aufeinandertreffen - hier erfährst du 
-            alles, was Gamer und Tech-Enthusiasten wissen müssen.
+            Der zentrale Treffpunkt, an dem Gaming und Technologie
+            aufeinandertreffen - hier erfährst du alles, was Gamer und
+            Tech-Enthusiasten wissen müssen.
           </p>
         </div>
       </div>
       <form action="" method="post" @submit.prevent="handleLogin">
         <div class="container-login">
           <h2>Login</h2>
-          <div class="container-login">  
+          <div class="container-login">
             <div class="formgroup">
               <label for="email">Email</label>
               <input
@@ -97,7 +95,9 @@ const handleLogin = async () => {
             <div class="sign-up">
               <p class="haveacc">Don't have an account?</p>
               <RouterLink to="/register"
-                ><button class="sign-button">Sign Up</button></RouterLink
+                ><button class="sign-button" type="button">
+                  Sign Up
+                </button></RouterLink
               >
             </div>
             <div class="login-one-container">
@@ -114,16 +114,12 @@ const handleLogin = async () => {
     <CookieBanner />
 
     <footer>
-      
       <div class="footer-info">
         <div class="footer-left">
-          <p>© 2024 Tech & Game Nexus</p>   
+          <p>© 2024 Tech & Game Nexus</p>
         </div>
-        <RouterLink to="/terms" class="footer-right">    
-          <p>Terms</p></RouterLink>
-
-      </div>           
-
+        <RouterLink to="/terms" class="footer-right"> <p>Terms</p></RouterLink>
+      </div>
     </footer>
   </div>
 </template>
@@ -154,7 +150,7 @@ header {
 }
 .login-container {
   margin-left: 100px;
-  max-width: 380px; 
+  max-width: 380px;
 }
 
 h1 {
@@ -165,7 +161,7 @@ h1 {
 }
 .text {
   padding-top: 22px;
-  color: #FFFF;
+  color: #ffff;
   width: 100%;
   font-size: 24px;
 }
@@ -181,7 +177,7 @@ h2 {
 .container-login {
   display: flex;
   flex-direction: column;
-  color: #FFFF;
+  color: #ffff;
   width: 100%;
   max-width: 380px;
   gap: 10px;
@@ -199,7 +195,7 @@ label {
   margin: 5px 0;
 }
 
-.placeholder{
+.placeholder {
   width: 100%;
   height: 43px;
   border-radius: 5px;
@@ -231,7 +227,7 @@ label {
   width: fit-content;
   font-weight: 600;
   font-size: 16px;
-  color: #FFFF;
+  color: #ffff;
   background-color: black;
   border-radius: 14px;
   text-align: center;
@@ -260,8 +256,8 @@ label {
 
 .login-button {
   width: fit-content;
-  background-color: #9D67C7;
-  color: #FFFF;
+  background-color: #9d67c7;
+  color: #ffff;
   font-weight: 600;
   font-size: 16px;
   border-radius: 14px;
@@ -271,7 +267,7 @@ label {
 }
 
 .login-button:hover {
-  background-color: #D7A8FC;
+  background-color: #d7a8fc;
   color: black;
   cursor: pointer;
   border: solid 1px black;
@@ -281,8 +277,8 @@ footer {
   margin-top: auto;
 }
 
-.footer-info{
-  color: #FFFF;
+.footer-info {
+  color: #ffff;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -302,12 +298,13 @@ footer {
 @media (max-width: 768px) {
   .bodycontainer {
     background-image: linear-gradient(
-    to right,
-    rgba(0, 0, 0, 1) 0%,
-    rgba(0, 0, 0, 0.9) 15%,
-    rgba(0, 0, 0, 0.75) 40%,
-    rgba(0, 0, 0, 0) 100%
-  ), url("../assets/bg.svg");
+        to right,
+        rgba(0, 0, 0, 1) 0%,
+        rgba(0, 0, 0, 0.9) 15%,
+        rgba(0, 0, 0, 0.75) 40%,
+        rgba(0, 0, 0, 0) 100%
+      ),
+      url("../assets/bg.svg");
   }
 }
 
@@ -322,17 +319,18 @@ footer {
     text-align: center;
   }
   header {
-    justify-content:center;
+    justify-content: center;
     margin: 10px auto;
   }
   .bodycontainer {
-  background-image: linear-gradient(
-    to right,
-    rgba(0, 0, 0, 1) 0%,
-    rgba(0, 0, 0, 0.9) 30%,
-    rgba(0, 0, 0, 0.75) 60%,
-    rgba(0, 0, 0, 0) 100%
-  ), url("../assets/bg.svg");
+    background-image: linear-gradient(
+        to right,
+        rgba(0, 0, 0, 1) 0%,
+        rgba(0, 0, 0, 0.9) 30%,
+        rgba(0, 0, 0, 0.75) 60%,
+        rgba(0, 0, 0, 0) 100%
+      ),
+      url("../assets/bg.svg");
   }
 }
 
@@ -341,5 +339,4 @@ footer {
     margin: 0 5px;
   }
 }
-
 </style>
