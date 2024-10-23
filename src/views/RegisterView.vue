@@ -40,91 +40,92 @@ const handleRegister = async () => {
     </header>
 
     <div class="register-container">
+
       <div class="text-container">
         <h1>Tech & Game Nexus</h1>
 
         <div class="text">
           <p>
-            Der zentrale Treffpunkt, an dem Gaming und Technologie
-            aufeinandertreffen - hier erfährst du alles, was Gamer und
-            Tech-Enthusiasten wissen müssen.
+            The central meeting point where gaming and technology meet - here you'll find out 
+            everything gamers and tech enthusiasts need to know.
           </p>
         </div>
       </div>
-
-      <h2>Register</h2>
-
+      
       <form @submit.prevent="handleRegister">
         <div class="container-regist">
-          <div class="form-group">
-            <label for="name">Name</label>
-            <input
-              class="placholder"
-              type="text"
-              id="name"
-              name="name"
-              v-model="name"
-              required
-            />
-          </div>
+        
+          <h2>Register</h2>
+            <div class="form-group">
+              <label for="name">Name</label>
+              <input
+                class="placholder"
+                type="text"
+                id="name"
+                name="name"
+                v-model="name"
+                required
+              />
+            </div>
 
-          <div class="form-group">
-            <label for="email">Email</label>
-            <input
-              class="placholder"
-              type="email"
-              id="email"
-              name="email"
-              v-model="email"
-              required
-            />
-          </div>
+            <div class="form-group">
+              <label for="email">Email</label>
+              <input
+                class="placholder"
+                type="email"
+                id="email"
+                name="email"
+                v-model="email"
+                required
+              />
+            </div>
 
-          <div class="form-group">
-            <label for="password">Password</label>
-            <input
-              class="placholder"
-              type="password"
-              id="password"
-              name="password"
-              v-model="password"
-              required
-            />
-          </div>
+            <div class="form-group">
+              <label for="password">Password</label>
+              <input
+                class="placholder"
+                type="password"
+                id="password"
+                name="password"
+                v-model="password"
+                required
+              />
+            </div>
 
-          <div class="form-group">
-            <label for="password_confirmation">Confirm password</label>
-            <input
-              class="placholder"
-              type="password"
-              id="password_confirmation"
-              name="password_confirmation"
-              v-model="password_confirmation"
-              required
-            />
-          </div>
+            <div class="form-group">
+              <label for="password_confirmation">Confirm password</label>
+              <input
+                class="placholder"
+                type="password"
+                id="password_confirmation"
+                name="password_confirmation"
+                v-model="password_confirmation"
+                required
+              />
+            </div>
 
-          <div class="already">
-            <p>Already have an account?</p>
-          </div>
+            <div class="already">
+              <p>Already have an account?</p>
+            </div>
 
-          <div class="button-container">
-            <RouterLink to="/login"
-              ><button class="login-button" type="button">
-                Log in
-              </button></RouterLink
-            >
-            <button class="btn-signup" type="submit">Sign Up</button>
-          </div>
+            <div class="button-container">
+              <RouterLink to="/login"
+                ><button class="login-button" type="button">
+                  Log in
+                </button></RouterLink
+              >
+              <button class="btn-signup" type="submit">Sign up</button>
+            </div>
 
-          <div class="policy">
-            <p>
-              By signing up I accept the Terms of Service and the Privacy
-              Policy.
-            </p>
-          </div>
+            <div class="policy">
+              <p>
+                By signing up I accept the Terms of Service and the Privacy
+                Policy.
+              </p>
+            </div>
         </div>
       </form>
+       
     </div>
     <footer>
       <div class="footer-info">
@@ -181,7 +182,7 @@ h1 {
 }
 
 h2 {
-  font-size: 24;
+  font-size: 24px;
   font-weight: 900;
   color: white;
   margin-top: 30px;
@@ -194,7 +195,7 @@ h2 {
   width: 100%;
   max-width: 380px;
   gap: 10px;
-  /* margin: 0 auto; */
+
 }
 .form-group {
   display: flex;
@@ -261,12 +262,16 @@ label {
 
 .already {
   font-size: 12px;
-  margin-top: 20px;
+  margin-top: 10px;
 }
 
 .policy {
-  padding-top: 10px;
+  margin-top: 15px;
   font-size: 12px;
+}
+
+footer {
+  margin-top: auto;
 }
 
 .footer-info {

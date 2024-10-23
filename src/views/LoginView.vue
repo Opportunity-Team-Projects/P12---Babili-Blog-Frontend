@@ -58,9 +58,8 @@ const handleLogin = async () => {
         <h1>Tech & Game Nexus</h1>
         <div class="text">
           <p>
-            Der zentrale Treffpunkt, an dem Gaming und Technologie
-            aufeinandertreffen - hier erfährst du alles, was Gamer und
-            Tech-Enthusiasten wissen müssen.
+            The central meeting point where gaming and technology meet - here you'll find out 
+            everything gamers and tech enthusiasts need to know.
           </p>
         </div>
       </div>
@@ -96,7 +95,7 @@ const handleLogin = async () => {
               <p class="haveacc">Don't have an account?</p>
               <RouterLink to="/register"
                 ><button class="sign-button" type="button">
-                  Sign Up
+                  Sign up
                 </button></RouterLink
               >
             </div>
@@ -104,7 +103,7 @@ const handleLogin = async () => {
               <RouterLink to="/register"
                 ><p class="forgotpw">Forgot password?</p></RouterLink
               >
-              <button class="login-button" type="submit">Login</button>
+              <button class="login-button" type="submit">Log in</button>
             </div>
           </div>
         </div>
@@ -167,7 +166,7 @@ h1 {
 }
 
 h2 {
-  font-size: 24;
+  font-size: 24px;
   font-weight: 900;
   color: white;
   margin-top: 30px;
@@ -220,6 +219,7 @@ label {
   font-size: 20px;
   display: flex;
   flex-direction: column;
+  align-items: end;
   gap: 10px;
 }
 
