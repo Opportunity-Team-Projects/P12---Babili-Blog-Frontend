@@ -2,7 +2,12 @@
   <div class="sidebar">
     <div class="sidebar-content">
       <ul class="menu main-menu">
-        <li v-for="item in mainMenuItems" :key="item.name" class="menu-item">
+        <!-- Verwende die gefilterten Hauptmenüelemente -->
+        <li
+          v-for="item in filteredMainMenuItems"
+          :key="item.name"
+          class="menu-item"
+        >
           <router-link :to="item.path" class="menu-link">
             <span class="menu-icon">
               <i :class="item.icon"></i>
@@ -33,6 +38,7 @@
 </template>
 
 <script setup>
+import { computed } from "vue";
 import { useAuthStore } from "@/stores/useAuthStore";
 import { useRouter } from "vue-router";
 
@@ -45,12 +51,42 @@ const logout = async () => {
 };
 
 const mainMenuItems = [
-  { name: "Explore All", icon: "fas fa-compass", path: "/" },
-  { name: "Custom Feed", icon: "fas fa-list", path: "/my-feed" },
-  { name: "Bookmarks", icon: "fas fa-bookmark", path: "/bookmarks" },
-  { name: "My Posts", icon: "fas fa-edit", path: "/my-posts" },
-  /*   { name: "Explore All", icon: "fas fa-compass", path: "/explore" }, */
+  {
+    name: "Explore All",
+    icon: "fas fa-compass",
+    path: "/",
+    requiresAuth: true,
+  },
+  {
+    name: "Custom Feed",
+    icon: "fas fa-list",
+    path: "/my-feed",
+    requiresAuth: true,
+  },
+
+  {
+    name: "Bookmarks",
+    icon: "fas fa-bookmark",
+    path: "/bookmarks",
+    requiresAuth: true,
+  },
+  {
+    name: "My Posts",
+    icon: "fas fa-edit",
+    path: "/my-posts",
+    requiresAuth: true,
+  },
 ];
+
+// Berechnete Eigenschaft, die die Menüelemente basierend auf Authentifizierung filtert
+const filteredMainMenuItems = computed(() => {
+  return mainMenuItems.filter((item) => {
+    if (item.requiresAuth) {
+      return authStore.isAuthenticated;
+    }
+    return true;
+  });
+});
 
 const bottomMenuItems = [
   { name: "Contact", icon: "fas fa-envelope", path: "/contact" },
