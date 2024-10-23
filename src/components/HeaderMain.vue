@@ -1,8 +1,8 @@
 <template>
   <header class="app-header">
     <div class="header-left">
-      <router-link to="/" >
-        <img src="@/../public/logo-round.png" class="logo">
+      <router-link to="/">
+        <img src="@/../public/logo-round.png" class="logo" />
       </router-link>
     </div>
     <div class="header-center">
@@ -19,16 +19,27 @@
     </div>
     <div class="header-right">
       <!-- Zeigt "New Post" und "Profile" nur an, wenn der Nutzer eingeloggt ist -->
-      <router-link v-if="isAuthenticated" to="/create" class="new-post-btn">New Post</router-link>
-      <router-link v-if="isAuthenticated" to="/profile" custom v-slot="{ navigate }">
+      <router-link v-if="isAuthenticated" to="/create" class="new-post-btn"
+        >New Post</router-link
+      >
+      <router-link
+        v-if="isAuthenticated"
+        to="/profile"
+        custom
+        v-slot="{ navigate }"
+      >
         <div class="profile-image" @click="navigate" role="link">
           <img :src="profileImage" alt="Profile Picture" class="profile-icon" />
         </div>
       </router-link>
 
       <!-- Zeigt "Login" und "Sign up" nur an, wenn der Nutzer nicht eingeloggt ist -->
-      <router-link v-if="!isAuthenticated" to="/login" class="log-in-btn">Log in</router-link>
-      <router-link v-if="!isAuthenticated" to="/register" class="sign-up-btn">Sign up</router-link>
+      <router-link v-if="!isAuthenticated" to="/login" class="log-in-btn"
+        >Log in</router-link
+      >
+      <router-link v-if="!isAuthenticated" to="/register" class="sign-up-btn"
+        >Sign up</router-link
+      >
     </div>
   </header>
 </template>
@@ -43,7 +54,7 @@ const searchQuery = ref("");
 const router = useRouter();
 const route = useRoute();
 const { profileImage } = useAuthStore();
-const authStore = useAuthStore(); 
+const authStore = useAuthStore();
 
 // Damit das Suchfeld den aktuellen Wert aus der URL anzeigt
 searchQuery.value = route.query.q || "";
@@ -72,7 +83,6 @@ onMounted(async () => {
 
 // Reaktive Berechnung, ob der Nutzer eingeloggt ist
 const isAuthenticated = authStore.isAuthenticated;
-
 </script>
 
 <style scoped>
@@ -84,21 +94,22 @@ const isAuthenticated = authStore.isAuthenticated;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 0 20px;
-  /* background: linear-gradient(0deg, #3a0ca3 27%, #3a0ca3 58%, #241f31 88%); */
-  /* background: linear-gradient(0deg, #241f31 10%, #613583 25%, #813d9c 50%, #613583 75%, #241f31 90%); */
-  /* background: linear-gradient(0deg, #241f31 10%, #3a0ca3 32%, #3a0ca3 63%, #613583 89%); */
-  /* background: linear-gradient(0deg, #241f31 10%, #1a5fb4 25%, #1c71d8 50%, #1a5fb4 75%, #241f31 90%); */
-  /* background: linear-gradient(0deg, #241f31 10%, #1a5fb4 25%, #1c71d8 50%, #1a5fb4 75%); */
-  /* background: linear-gradient(0deg, #3584e4 25%, #1c71d8 50%, #1a5fb4 75%, #241f31 90%); */
-  /* background: linear-gradient(0deg, #613583 25%, #3A0CA3 54%, #241f31 90%); */
-  /* background: linear-gradient(0deg, #613583 23%, #3A0CA3 48%, #241f31 94%); */
-  /* background: linear-gradient(0deg, #813d9c 18%, #613583 35%, #3A0CA3 59%, #241f31 94%); */
-  background: linear-gradient(0deg, #241f31 10%, #613583 25%, #813d9c 50%, #613583 75%, #241f31 90%);
-  /* background-color: #0e1217; */
-  /* box-shadow: 0 -1px 5px rgba(206, 61, 243, 0.8); */
-}
+  padding: 0 60px;
+  background: linear-gradient(
+    0deg,
+    #241f31 0%,
+    #613583 20%,
+    #813d9c 50%,
+    #613583 80%,
+    #241f31 100%
+  );
 
+  /* background-color: #0e1217; */
+  /*   box-shadow: 0 -1px 5px rgba(206, 61, 243, 0.8); */
+}
+.header-center {
+  justify-content: center;
+}
 .header-left,
 .header-center,
 .header-right {
@@ -116,7 +127,6 @@ const isAuthenticated = authStore.isAuthenticated;
   position: relative;
   display: flex;
   align-items: center;
-  right: -10%;
 }
 
 .search-icon {
@@ -126,36 +136,38 @@ const isAuthenticated = authStore.isAuthenticated;
 }
 
 .search-bar {
-  background-color: #20252d;
+  background: transparent;
   border: solid 1px;
   color: white;
   width: 500px;
   padding: 10px 10px 10px 35px;
-  border: 1px solid white;
+  border: 1px solid rgba(255, 255, 255, 0.678);
   border-radius: 14px;
 }
 
-.new-post-btn, .log-in-btn {
+.search-bar::placeholder {
+  color: rgba(255, 255, 255, 0.712);
+}
+
+.new-post-btn {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  padding: 12px 24px;
-  background-color: black;
+  padding: 8px 24px;
+  background-color: #1c1f26;
   color: white;
-  border: solid 1px;
+  border: solid 1px rgba(238, 130, 238, 0.473);
   border-radius: 15px;
-  border-color: white;
   cursor: pointer;
   font-size: 16px;
   font-weight: 600;
   text-decoration: none;
   margin-right: 30px;
+  transition: all 0.3s ease;
 }
 
-.new-post-btn:hover,
-.log-in-btn:hover {
-  background-color: white;
-  color: black;
+.new-post-btn:hover {
+  border: solid 1px violet;
 }
 
 .sign-up-btn {
@@ -244,16 +256,16 @@ const isAuthenticated = authStore.isAuthenticated;
   .search-bar {
     width: 100%;
     max-width: 500px;
+    color: white;
   }
 
   .search-icon {
-  position: absolute;
-  left: 10px;
-  top: 50%;
-  transform: translateY(-50%);
-  color: white;
-  z-index: 1;
+    position: absolute;
+    left: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: white;
+    z-index: 1;
+  }
 }
-}
-
 </style>
