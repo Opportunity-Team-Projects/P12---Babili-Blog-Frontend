@@ -16,7 +16,7 @@ const password_confirmation = ref("");
 const message = ref("");
 const authStore = useAuthStore();
 
-/* onMounted(async () => {
+onMounted(async () => {
   await authStore.fetchUser();
   console.log("isAuthenticated:", authStore.isAuthenticated);
   if (authStore.isAuthenticated) {
@@ -26,7 +26,7 @@ const authStore = useAuthStore();
     email.value = route.query.email || "";
   }
 });
- */
+
 const submit = async () => {
   if (password.value !== password_confirmation.value) {
     message.value = "Die Passwörter stimmen nicht überein.";
