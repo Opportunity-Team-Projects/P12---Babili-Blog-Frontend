@@ -58,9 +58,8 @@ const handleLogin = async () => {
         <h1>Tech & Game Nexus</h1>
         <div class="text">
           <p>
-            Der zentrale Treffpunkt, an dem Gaming und Technologie
-            aufeinandertreffen - hier erfährst du alles, was Gamer und
-            Tech-Enthusiasten wissen müssen.
+            The central meeting point where gaming and technology meet - here you'll find out 
+            everything gamers and tech enthusiasts need to know.
           </p>
         </div>
       </div>
@@ -167,7 +166,7 @@ h1 {
 }
 
 h2 {
-  font-size: 24;
+  font-size: 24px;
   font-weight: 900;
   color: white;
   margin-top: 30px;
