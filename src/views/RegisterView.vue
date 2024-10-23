@@ -6,26 +6,40 @@ import router from "../router";
 // useAuthStore importieren
 const authStore = useAuthStore(); // Korrekte Zuweisung
 
-const { register, getAuthUser } = useAuthStore();
+const { register } = useAuthStore();
 
+const successMessage = ref("");
 const name = ref("");
 const email = ref("");
 const password = ref("");
 const password_confirmation = ref("");
 
 const handleRegister = async () => {
-  const resRegister = await register({
-    name: name.value,
-    email: email.value,
-    password: password.value,
-    password_confirmation: password_confirmation.value,
-  });
-  if (resRegister.status !== 201) {
-    return alert("Someting went wrong");
-  }
-  const resUser = await getAuthUser();
+  try {
+    // Registrierung durchführen
+    const resRegister = await register({
+      name: name.value,
+      email: email.value,
+      password: password.value,
+      password_confirmation: password_confirmation.value,
+    });
 
-  if (resUser.status == 200) router.push("/dashboard");
+    if (resRegister.status !== 201) {
+      return alert("Something went wrong with the registration");
+    }
+
+    // Erfolgsnachricht setzen
+    successMessage.value = "Registration successful! Redirecting to login...";
+
+    // Nach 2 Sekunden zur Login-Seite weiterleiten
+    setTimeout(() => {
+      successMessage.value = ""; // Erfolgsmeldung leeren (optional)
+      router.push("/login");
+    }, 2000);
+  } catch (error) {
+    console.error("Registration error:", error);
+    alert("An error occurred during registration");
+  }
 };
 </script>
 
@@ -40,92 +54,90 @@ const handleRegister = async () => {
     </header>
 
     <div class="register-container">
-
       <div class="text-container">
         <h1>Tech & Game Nexus</h1>
 
         <div class="text">
           <p>
-            The central meeting point where gaming and technology meet - here you'll find out 
-            everything gamers and tech enthusiasts need to know.
+            The central meeting point where gaming and technology meet - here
+            you'll find out everything gamers and tech enthusiasts need to know.
           </p>
         </div>
       </div>
-      
+
       <form @submit.prevent="handleRegister">
         <div class="container-regist">
-        
           <h2>Register</h2>
-            <div class="form-group">
-              <label for="name">Name</label>
-              <input
-                class="placholder"
-                type="text"
-                id="name"
-                name="name"
-                v-model="name"
-                required
-              />
-            </div>
+          <div class="form-group">
+            <label for="name">Name</label>
+            <input
+              class="placholder"
+              type="text"
+              id="name"
+              name="name"
+              v-model="name"
+              required
+            />
+          </div>
 
-            <div class="form-group">
-              <label for="email">Email</label>
-              <input
-                class="placholder"
-                type="email"
-                id="email"
-                name="email"
-                v-model="email"
-                required
-              />
-            </div>
+          <div class="form-group">
+            <label for="email">Email</label>
+            <input
+              class="placholder"
+              type="email"
+              id="email"
+              name="email"
+              v-model="email"
+              required
+            />
+          </div>
 
-            <div class="form-group">
-              <label for="password">Password</label>
-              <input
-                class="placholder"
-                type="password"
-                id="password"
-                name="password"
-                v-model="password"
-                required
-              />
-            </div>
+          <div class="form-group">
+            <label for="password">Password</label>
+            <input
+              class="placholder"
+              type="password"
+              id="password"
+              name="password"
+              v-model="password"
+              required
+            />
+          </div>
 
-            <div class="form-group">
-              <label for="password_confirmation">Confirm password</label>
-              <input
-                class="placholder"
-                type="password"
-                id="password_confirmation"
-                name="password_confirmation"
-                v-model="password_confirmation"
-                required
-              />
-            </div>
+          <div class="form-group">
+            <label for="password_confirmation">Confirm password</label>
+            <input
+              class="placholder"
+              type="password"
+              id="password_confirmation"
+              name="password_confirmation"
+              v-model="password_confirmation"
+              required
+            />
+          </div>
+          <p v-if="successMessage" class="message">{{ successMessage }}</p>
 
-            <div class="already">
-              <p>Already have an account?</p>
-            </div>
+          <div class="already">
+            <p>Already have an account?</p>
+          </div>
 
-            <div class="button-container">
-              <RouterLink to="/login"
-                ><button class="login-button" type="button">
-                  Log in
-                </button></RouterLink
-              >
-              <button class="btn-signup" type="submit">Sign up</button>
-            </div>
+          <div class="button-container">
+            <RouterLink to="/login"
+              ><button class="login-button" type="button">
+                Log in
+              </button></RouterLink
+            >
+            <button class="btn-signup" type="submit">Sign up</button>
+          </div>
 
-            <div class="policy">
-              <p>
-                By signing up I accept the Terms of Service and the Privacy
-                Policy.
-              </p>
-            </div>
+          <div class="policy">
+            <p>
+              By signing up I accept the Terms of Service and the Privacy
+              Policy.
+            </p>
+          </div>
         </div>
       </form>
-       
     </div>
     <footer>
       <div class="footer-info">
@@ -195,7 +207,6 @@ h2 {
   width: 100%;
   max-width: 380px;
   gap: 10px;
-
 }
 .form-group {
   display: flex;
@@ -290,6 +301,12 @@ footer {
 
 .footer-right {
   color: #ffff;
+  font-size: 16px;
+}
+
+.message {
+  margin-top: 20px;
+  color: #4caf50; /* Grün für erfolgreiche Nachrichten */
   font-size: 16px;
 }
 
