@@ -95,17 +95,19 @@
             {{ comment.commentContent || comment.content }}
           </p>
           <div class="comment-footer">
-            <HeartIcon
-              :type="'comment'"
-              :id="comment.id"
-              :initiallyLiked="comment.is_liked"
-              :isOwnItem="currentUserId === comment.user.id"
-              @update-like="
-                (likes_count, is_liked) =>
-                  updateCommentLike(comment.id, likes_count, is_liked)
-              "
-            />
-            <span>{{ comment.likes_count }} likes</span>
+            <div class="comment-footer-left">
+              <HeartIcon
+                :type="'comment'"
+                :id="comment.id"
+                :initiallyLiked="comment.is_liked"
+                :isOwnItem="currentUserId === comment.user.id"
+                @update-like="
+                  (likes_count, is_liked) =>
+                    updateCommentLike(comment.id, likes_count, is_liked)
+                "
+              />
+              <span>{{ comment.likes_count }} likes</span>
+            </div>
             <button
               v-if="
                 currentUserId &&
@@ -500,7 +502,6 @@ textarea {
 
 .comment-likes i {
   color: #ff4136;
-  margin-right: 6px; /* Reduced from 7px */
 }
 
 .delete-comment-button {

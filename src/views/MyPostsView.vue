@@ -342,8 +342,8 @@ onMounted(() => {
 /* Post Aktionen */
 .post-actions {
   display: flex;
-  justify-content: space-between; /* Platzieren der Aktionselemente auf gegenüberliegenden Seiten */
-  align-items: center; /* Vertikale Ausrichtung */
+  justify-content: space-between;
+  align-items: center;
   margin-top: 10px;
   padding-top: 10px;
   border-top: 1px solid rgba(255, 255, 255, 0.1);
@@ -360,7 +360,6 @@ onMounted(() => {
   gap: 5px;
 }
 
-/* Delete-Button */
 .delete-button {
   display: flex;
   align-items: center;
@@ -371,7 +370,7 @@ onMounted(() => {
   color: #f44336;
   cursor: pointer;
   transition: background-color 0.3s ease, transform 0.2s ease;
-  font-size: 0.9em;
+  font-size: 1.1em;
 }
 
 .delete-button i {
