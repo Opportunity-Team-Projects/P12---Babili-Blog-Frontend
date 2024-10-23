@@ -96,7 +96,7 @@ const handleLogin = async () => {
               <p class="haveacc">Don't have an account?</p>
               <RouterLink to="/register"
                 ><button class="sign-button" type="button">
-                  Sign Up
+                  Sign up
                 </button></RouterLink
               >
             </div>
@@ -104,7 +104,7 @@ const handleLogin = async () => {
               <RouterLink to="/register"
                 ><p class="forgotpw">Forgot password?</p></RouterLink
               >
-              <button class="login-button" type="submit">Login</button>
+              <button class="login-button" type="submit">Log in</button>
             </div>
           </div>
         </div>

@@ -114,7 +114,7 @@ const handleRegister = async () => {
                 Log in
               </button></RouterLink
             >
-            <button class="btn-signup" type="submit">Sign Up</button>
+            <button class="btn-signup" type="submit">Sign up</button>
           </div>
 
           <div class="policy">
@@ -267,6 +267,10 @@ label {
 .policy {
   padding-top: 10px;
   font-size: 12px;
+}
+
+footer {
+  margin-top: auto;
 }
 
 .footer-info {
