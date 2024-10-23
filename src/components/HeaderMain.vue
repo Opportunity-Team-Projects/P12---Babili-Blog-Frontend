@@ -170,23 +170,46 @@ const isAuthenticated = authStore.isAuthenticated;
   border: solid 1px violet;
 }
 
-.sign-up-btn {
+.log-in-btn {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  padding: 12px 24px;
-  background-color: white;
-  color: black;
-  border: solid 1px;
-  border-radius: 15px;
-  border-color: white;
+  padding: 10px 20px;
+  border-radius: 20px;
   cursor: pointer;
   font-size: 16px;
   font-weight: 600;
   text-decoration: none;
+  transition: all 0.3s ease;
+  border: 2px solid transparent;
+  background-color: transparent;
+  color: #ce3df3;
+  border-color: #ce3df3;
+}
+
+.log-in-btn:hover {
+  background-color: #ce3df3;
+  color: white;
+}
+
+.sign-up-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 10px 20px;
+  border-radius: 20px;
+  cursor: pointer;
+  font-size: 16px;
+  font-weight: 600;
+  text-decoration: none;
+  transition: all 0.3s ease;
+  border: 2px solid transparent;
+  background-color: transparent;
+  color: #ce3df3;
+  border-color: #ce3df3;
 }
 .sign-up-btn:hover {
-  background-color: black;
+  background-color: #ce3df3;
   color: white;
 }
 
