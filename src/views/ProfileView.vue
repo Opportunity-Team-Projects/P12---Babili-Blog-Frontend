@@ -320,34 +320,45 @@ const submitPasswordChange = async (currentPassword) => {
       password_confirmation: password_confirmation.value,
     });
 
-    successMessage.value = "Password changed successfully";
-    // Formular zurücksetzen
-    password.value = "";
-    password_confirmation.value = "";
-    closePasswordModal();
+    successMessage.value = "Password was changed successfully. You will now be logged out...";
+
+    // Kurze Verzögerung, damit der Benutzer die Erfolgsmeldung lesen kann
+    setTimeout(async () => {
+      // Benutzer ausloggen
+      await authStore.logout();
+      
+      // Zur Login-Seite weiterleiten mit zusätzlicher Nachricht
+      router.push({
+        path: '/login',
+        query: { 
+          message: 'Password changed successfully. Please log in with your new password.'
+        }
+      });
+    }, 2000);
+
   } catch (error) {
-    if (error.response?.data) {
-      if (error.response.data.errors) {
-        if (error.response.data.errors.current_password) {
-          errors.value.current_password =
-            error.response.data.errors.current_password[0];
-        }
-        if (error.response.data.errors.password) {
-          errors.value.password = error.response.data.errors.password[0];
-        }
-        if (error.response.data.errors.password_confirmation) {
-          errors.value.confirmation =
-            error.response.data.errors.password_confirmation[0];
-        }
-      } else {
-        errors.value.password =
-          error.response.data.message || "Error saving password";
-      }
-    } else {
-      errors.value.password = "Error saving password";
-    }
+    handlePasswordUpdateError(error);
   } finally {
     isLoading.value = false;
+  }
+};
+
+// Separate Funktion für die Fehlerbehandlung
+const handlePasswordUpdateError = (error) => {
+  if (error.response?.data) {
+    if (error.response.data.errors) {
+      const { current_password, password, password_confirmation } = error.response.data.errors;
+      
+      errors.value = {
+        current_password: current_password?.[0] || '',
+        password: password?.[0] || '',
+        confirmation: password_confirmation?.[0] || ''
+      };
+    } else {
+      errors.value.password = error.response.data.message || "Error saving password";
+    }
+  } else {
+    errors.value.password = "Error saving password";
   }
 };
 

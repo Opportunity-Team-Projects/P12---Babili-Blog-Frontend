@@ -3,6 +3,7 @@ import { useAuthStore } from "@/stores/useAuthStore";
 import AuthService from "@/services/AuthService.js";
 import { ref, onMounted } from "vue";
 import { useRouter } from "vue-router";
+import { useRoute } from 'vue-router';
 import CookieBanner from "@/components/CookieBanner.vue";
 
 const router = useRouter();
@@ -11,6 +12,9 @@ const password = ref("");
 const error = ref("");
 const authUser = ref(null);
 const authStore = useAuthStore();
+
+const route = useRoute();
+const message = ref('');
 
 //TODO Löschen vor Launch
 //Nur für Testzwecke
@@ -23,6 +27,13 @@ onMounted(async () => {
   await authStore.fetchUser();
   if (authStore.isAuthenticated) {
     router.push("/");
+  }
+});
+
+onMounted(() => {
+  // Nachricht aus der URL auslesen
+  if (route.query.message) {
+    message.value = route.query.message;
   }
 });
 
@@ -62,6 +73,9 @@ const handleLogin = async () => {
             everything gamers and tech enthusiasts need to know.
           </p>
         </div>
+      </div>
+      <div v-if="message" class="info-message">
+        {{ message }}
       </div>
       <form action="" method="post" @submit.prevent="handleLogin">
         <div class="container-login">
@@ -163,6 +177,15 @@ h1 {
   color: #ffff;
   width: 100%;
   font-size: 24px;
+}
+
+.info-message {
+  background-color: #4caf50;
+  color: white;
+  padding: 10px;
+  border-radius: 4px;
+  margin-top: 20px;
+  text-align: center;
 }
 
 h2 {

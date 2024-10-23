@@ -13,6 +13,7 @@
                     v-model="current_password"
                     required
                     placeholder="Current Password"
+                    @keyup.enter="submit"
                 />
         
                 <font-awesome-icon 
@@ -24,11 +25,12 @@
         </div>
         
         <div class="btns">
-            <button @click="cancel" class="btn-cancel">
+            <button @click="cancel" class="btn-cancel" :disabled="isSubmitting">
             Cancel
             </button>
-            <button @click="submit" class="btn-confirm">
+            <button @click="submit" class="btn-confirm" :disabled="isSubmitting || !current_password">
             Confirm
+            
             </button>
         </div>    
       </div>
@@ -57,10 +59,21 @@ const toggleCurrentPasswordVisibility = () => {
 };
 
 // Bei Klick auf Bestätigen das aktuelle Passwort übergeben
-const submit = () => {
+const submit = async () => {
   if (current_password.value) {
-    emit('confirm', current_password.value);
-    current_password.value = '';
+    // Bestätigungs-Button deaktivieren während der Verarbeitung
+    isSubmitting.value = true;
+    
+    try {
+      await emit('confirm', current_password.value);
+      // Modal wird automatisch geschlossen durch den Parent
+    } catch (error) {
+      // Fehlerbehandlung falls nötig
+      console.error('Error occured:', error);
+    } finally {
+      isSubmitting.value = false;
+      current_password.value = '';
+    }
   }
 };
 

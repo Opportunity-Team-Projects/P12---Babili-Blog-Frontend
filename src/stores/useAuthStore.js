@@ -1,4 +1,3 @@
-
 import { ref, computed } from 'vue';
 import { defineStore } from 'pinia';
 import AuthService from '@/services/AuthService';
@@ -108,8 +107,6 @@ export const useAuthStore = defineStore('auth', () => {
       throw err;
     }
   };
-
-
 
   return {
     user,
