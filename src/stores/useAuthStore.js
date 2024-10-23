@@ -109,6 +109,22 @@ export const useAuthStore = defineStore('auth', () => {
     }
   };
 
+  const register = async (userData) => {
+    try {
+      loading.value = true;
+      const response = await AuthService.registerUser(userData);
+      user.value = response.data.user; // Setze den registrierten Benutzer
+      return response;
+    } catch (err) {
+      error.value = err.response?.data?.message || 'Fehler bei der Registrierung';
+      throw err;
+    } finally {
+      loading.value = false;
+    }
+  };
+  
+  
+
 
 
   return {
@@ -125,5 +141,6 @@ export const useAuthStore = defineStore('auth', () => {
     updateUser,
     updatePassword,
     deleteAccount,
+    register,
   };
 });
