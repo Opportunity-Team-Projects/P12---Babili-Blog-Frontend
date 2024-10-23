@@ -19,8 +19,8 @@
       <router-link to="/create" class="new-post-btn">New Post</router-link>
 
       <router-link to="/profile" custom v-slot="{ navigate }">
-        <div class="profile-icon" @click="navigate" role="link">
-          <i class="fas fa-user"></i>
+        <div class="profile-image" @click="navigate" role="link">
+          <img :src="profileImage" alt="Profile Picture" class="profile-icon" />
         </div>
       </router-link>
     </div>
@@ -31,10 +31,12 @@
 import { ref, watch } from "vue";
 import { useRouter, useRoute } from "vue-router";
 import debounce from "lodash.debounce";
+import { useAuthStore } from "@/stores/useAuthStore";
 
 const searchQuery = ref("");
 const router = useRouter();
 const route = useRoute();
+const { profileImage } = useAuthStore();
 
 // Damit das Suchfeld den aktuellen Wert aus der URL anzeigt
 searchQuery.value = route.query.q || "";
@@ -136,6 +138,10 @@ const onSearchInput = debounce(() => {
   color: white;
 }
 
+.profile-image {
+  width: 60px;
+  height: 60px;
+}
 .profile-icon {
   width: 60px;
   height: 60px;

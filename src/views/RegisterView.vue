@@ -1,45 +1,31 @@
 <script setup>
+import { ref } from "vue";
 import { useAuthStore } from "@/stores/useAuthStore";
-import AuthService from "@/services/AuthService.js";
-import { ref, onMounted } from "vue";
-import { useRouter } from "vue-router";
-import CookieBanner from "@/components/CookieBanner.vue";
+import router from "../router";
 
-const router = useRouter();
+// useAuthStore importieren
+const authStore = useAuthStore(); // Korrekte Zuweisung
+
+const { register, getAuthUser } = useAuthStore();
+
+const name = ref("");
 const email = ref("");
 const password = ref("");
-const error = ref("");
-const authUser = ref(null);
-const authStore = useAuthStore();
+const password_confirmation = ref("");
 
-//TODO Löschen vor Launch
-//Nur für Testzwecke
-/* const user = ref({
-  email: "estella33@example.org",
-  password: "password",
-}); */
-
-onMounted(async () => {
-  await authStore.fetchUser();
-  if (authStore.isAuthenticated) {
-    router.push("/");
+const handleRegister = async () => {
+  const resRegister = await register({
+    name: name.value,
+    email: email.value,
+    password: password.value,
+    password_confirmation: password_confirmation.value,
+  });
+  if (resRegister.status !== 201) {
+    return alert("Someting went wrong");
   }
-});
+  const resUser = await getAuthUser();
 
-const handleLogin = async () => {
-  try {
-    const payload = {
-      email: email.value,
-      password: password.value,
-    };
-    await authStore.login(payload); // Nutzung der Login-Methode aus dem Store
-    if (authStore.isAuthenticated) {
-      router.push("/"); // Weiterleitung nach erfolgreichem Login
-    }
-  } catch (err) {
-    console.error(err);
-    error.value = "Login fehlgeschlagen. Bitte überprüfe deine Anmeldedaten.";
-  }
+  if (resUser.status == 200) router.push("/dashboard");
 };
 </script>
 
@@ -53,9 +39,10 @@ const handleLogin = async () => {
       </div>
     </header>
 
-    <div class="login-container">
+    <div class="register-container">
       <div class="text-container">
         <h1>Tech & Game Nexus</h1>
+
         <div class="text">
           <p>
             Der zentrale Treffpunkt, an dem Gaming und Technologie
@@ -64,55 +51,81 @@ const handleLogin = async () => {
           </p>
         </div>
       </div>
-      <form action="" method="post" @submit.prevent="handleLogin">
-        <div class="container-login">
-          <h2>Login</h2>
-          <div class="container-login">
-            <div class="formgroup">
-              <label for="email">Email</label>
-              <input
-                id="email"
-                class="placeholder"
-                type="email"
-                name="email"
-                v-model="email"
-              />
-            </div>
-            <div class="formgroup">
-              <label for="password">Password</label>
-              <input
-                id="password"
-                class="placeholder"
-                type="password"
-                name="password"
-                v-model="password"
-              />
-            </div>
+
+      <h2>Register</h2>
+
+      <form @submit.prevent="handleRegister">
+        <div class="container-regist">
+          <div class="form-group">
+            <label for="name">Name</label>
+            <input
+              class="placholder"
+              type="text"
+              id="name"
+              name="name"
+              v-model="name"
+              required
+            />
           </div>
-        </div>
-        <div>
+
+          <div class="form-group">
+            <label for="email">Email</label>
+            <input
+              class="placholder"
+              type="email"
+              id="email"
+              name="email"
+              v-model="email"
+              required
+            />
+          </div>
+
+          <div class="form-group">
+            <label for="password">Password</label>
+            <input
+              class="placholder"
+              type="password"
+              id="password"
+              name="password"
+              v-model="password"
+              required
+            />
+          </div>
+
+          <div class="form-group">
+            <label for="password_confirmation">Confirm password</label>
+            <input
+              class="placholder"
+              type="password"
+              id="password_confirmation"
+              name="password_confirmation"
+              v-model="password_confirmation"
+              required
+            />
+          </div>
+
+          <div class="already">
+            <p>Already have an account?</p>
+          </div>
+
           <div class="button-container">
-            <div class="sign-up">
-              <p class="haveacc">Don't have an account?</p>
-              <RouterLink to="/register"
-                ><button class="sign-button" type="button">
-                  Sign Up
-                </button></RouterLink
-              >
-            </div>
-            <div class="login-one-container">
-              <RouterLink to="/register"
-                ><p class="forgotpw">Forgot password?</p></RouterLink
-              >
-              <button class="login-button" type="submit">Login</button>
-            </div>
+            <RouterLink to="/login"
+              ><button class="login-button" type="button">
+                Log in
+              </button></RouterLink
+            >
+            <button class="btn-signup" type="submit">Sign Up</button>
+          </div>
+
+          <div class="policy">
+            <p>
+              By signing up I accept the Terms of Service and the Privacy
+              Policy.
+            </p>
           </div>
         </div>
       </form>
-      <p v-if="error" class="error-message">{{ error }}</p>
     </div>
-    <CookieBanner />
-
     <footer>
       <div class="footer-info">
         <div class="footer-left">
@@ -144,13 +157,14 @@ header {
   padding-top: 3%;
 }
 
+.register-container {
+  margin-left: 100px;
+  max-width: 380px;
+}
+
 .without-logging-in {
   color: #ffff;
   font-size: 16px;
-}
-.login-container {
-  margin-left: 100px;
-  max-width: 380px;
 }
 
 h1 {
@@ -173,17 +187,16 @@ h2 {
   margin-top: 30px;
   margin-bottom: 10px;
 }
-
-.container-login {
+.container-regist {
   display: flex;
   flex-direction: column;
   color: #ffff;
   width: 100%;
   max-width: 380px;
   gap: 10px;
+  /* margin: 0 auto; */
 }
-
-.formgroup {
+.form-group {
   display: flex;
   flex-direction: column;
   width: 100%;
@@ -195,7 +208,7 @@ label {
   margin: 5px 0;
 }
 
-.placeholder {
+.placholder {
   width: 100%;
   height: 43px;
   border-radius: 5px;
@@ -205,25 +218,28 @@ label {
 .button-container {
   display: flex;
   justify-content: space-between;
-  margin-top: 20px;
 }
 
-.sign-up {
+.btn-signup {
+  width: fit-content;
+  background-color: #9d67c7;
   color: #ffff;
-  font-size: 20px;
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
+  font-weight: 600;
+  font-size: 16px;
+  border-radius: 14px;
+  text-align: center;
+  padding: 10px 15px;
+  border: solid 1px black;
 }
 
-.login-one-container {
-  font-size: 20px;
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
+.btn-signup:hover {
+  background-color: #d7a8fc;
+  color: black;
+  cursor: pointer;
+  border: solid 1px black;
 }
 
-.sign-button {
+.login-button {
   width: fit-content;
   font-weight: 600;
   font-size: 16px;
@@ -236,45 +252,21 @@ label {
   border: solid 1px white;
 }
 
-.sign-button:hover {
+.login-button:hover {
   background-color: white;
   color: black;
-  border: solid 1px black;
+  border: black;
   cursor: pointer;
 }
 
-.haveacc {
+.already {
   font-size: 12px;
+  margin-top: 20px;
 }
 
-.forgotpw {
+.policy {
+  padding-top: 10px;
   font-size: 12px;
-  color: #ffff;
-  text-decoration: underline;
-  text-decoration-color: white;
-}
-
-.login-button {
-  width: fit-content;
-  background-color: #9d67c7;
-  color: #ffff;
-  font-weight: 600;
-  font-size: 16px;
-  border-radius: 14px;
-  text-align: center;
-  padding: 10px 15px;
-  border: solid 1px black;
-}
-
-.login-button:hover {
-  background-color: #d7a8fc;
-  color: black;
-  cursor: pointer;
-  border: solid 1px black;
-}
-
-footer {
-  margin-top: auto;
 }
 
 .footer-info {
@@ -288,6 +280,7 @@ footer {
   font-size: 16px;
   gap: 40px;
   padding: 0 15px;
+  margin-top: 10px;
 }
 
 .footer-right {
@@ -309,7 +302,7 @@ footer {
 }
 
 @media (max-width: 580px) {
-  .login-container {
+  .register-container {
     margin: 0 auto;
   }
   .text-container {
@@ -335,7 +328,7 @@ footer {
 }
 
 @media (max-width: 390px) {
-  .login-container {
+  .register-container {
     margin: 0 5px;
   }
 }
